@@ -818,11 +818,11 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
             if not hasattr(ctx.cultivate_detail.turn_info, 'race_search_attempted') and date <= 72:
                 ts_check_enabled = getattr(ctx.cultivate_detail, 'team_sirius_enabled', False)
                 ts_check_dates = getattr(ctx.cultivate_detail, 'team_sirius_available_dates', [])
-                ts_check_priority_order = [7, 5, 1, 4, 3]
-                if ts_check_enabled and ts_check_dates:
+                if ts_check_enabled and ts_check_dates and len(history) >= 2:
                     ts_check_pct = getattr(ctx.cultivate_detail, 'team_sirius_percentile', 26)
                     if percentile < ts_check_pct:
-                        matching = [d for d in ts_check_priority_order if d in ts_check_dates]
+                        from module.umamusume.script.cultivate_task.helpers import TRAINING_REPLACEMENT_DATES
+                        matching = [d for d in TRAINING_REPLACEMENT_DATES if d in ts_check_dates]
                         if matching:
                             ctx.cultivate_detail.turn_info.turn_operation = TurnOperation()
                             ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST
@@ -907,14 +907,14 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
     ts_enabled = getattr(ctx.cultivate_detail, 'team_sirius_enabled', False)
     ts_percentile = getattr(ctx.cultivate_detail, 'team_sirius_percentile', 26)
     ts_dates = getattr(ctx.cultivate_detail, 'team_sirius_available_dates', [])
-    ts_priority_order = [7, 5, 1, 4, 3]
+    from module.umamusume.script.cultivate_task.helpers import TRAINING_REPLACEMENT_DATES
     if ts_enabled and ts_dates:
         op_check = ctx.cultivate_detail.turn_info.turn_operation
         is_race_operation = (op_check is not None and
                              op_check.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_RACE)
         if not is_race_operation and len(history) >= 2:
             if percentile < ts_percentile:
-                matching = [d for d in ts_priority_order if d in ts_dates]
+                matching = [d for d in TRAINING_REPLACEMENT_DATES if d in ts_dates]
                 if matching:
                     ctx.cultivate_detail.turn_info.turn_operation = TurnOperation()
                     ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST

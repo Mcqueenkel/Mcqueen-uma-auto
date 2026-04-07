@@ -407,14 +407,23 @@ if __name__ == '__main__':
         pass
     
     print("UAT running on http://127.0.0.1:8071")
-    if os.environ.get("UAT_AUTORESTART", "0") != "1":
-        threading.Thread(target=lambda: (time.sleep(1), __import__('webbrowser').open("http://127.0.0.1:8071")), daemon=True).start()
-    
-    try:
-        run("bot.server.handler:server", host="127.0.0.1", port=8071, log_level="error")
-    finally:
-        if ":" in selected_device:
+    if os.environ.get("UAT_AUTORESTART", "0") == "1":
+        for attempt in range(10):
             try:
-                _run_adb(["disconnect", selected_device], timeout=5)
-            except Exception:
-                pass
+                run("bot.server.handler:server", host="127.0.0.1", port=8071, log_level="error")
+                break
+            except OSError as e:
+                if "10048" in str(e) and attempt < 9:
+                    time.sleep(1)
+                else:
+                    raise
+    else:
+        threading.Thread(target=lambda: (time.sleep(1), __import__('webbrowser').open("http://127.0.0.1:8071")), daemon=True).start()
+        try:
+            run("bot.server.handler:server", host="127.0.0.1", port=8071, log_level="error")
+        finally:
+            if ":" in selected_device:
+                try:
+                    _run_adb(["disconnect", selected_device], timeout=5)
+                except Exception:
+                    pass

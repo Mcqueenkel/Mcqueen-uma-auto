@@ -350,10 +350,6 @@ def purge_all(reason: str = ""):
         sc = getattr(fetch, 'shared_controller', None)
         if sc is not None:
             try:
-                sc.destroy()
-            except Exception:
-                pass
-            try:
                 fetch.shared_controller = None
             except Exception:
                 pass

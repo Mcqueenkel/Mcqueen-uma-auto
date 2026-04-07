@@ -44,7 +44,7 @@ def save_career_data(ctx):
                 return
             scores = score_history[-MAX_DATAPOINTS:]
             stat_only_history = getattr(ctx.cultivate_detail, 'stat_only_history', [])
-            stat_only = list(stat_only_history[-MAX_DATAPOINTS:])
+            stat_only = stat_only_history[-MAX_DATAPOINTS:]
             data = {
                 'score_history': scores,
                 'stat_only_history': stat_only,

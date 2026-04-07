@@ -40,6 +40,22 @@ def script_not_found_ui(ctx: UmamusumeContext):
             return
 
         try:
+            from module.umamusume.asset.template import REF_NEXT, REF_NEXT2
+            img_gray_full = getattr(ctx, 'current_screen_gray', None)
+            if img_gray_full is None:
+                img_gray_full = cv2.cvtColor(ctx.current_screen, cv2.COLOR_BGR2GRAY)
+            next_match = image_match(img_gray_full, REF_NEXT)
+            if next_match.find_match:
+                ctx.ctrl.click(next_match.center_point[0], next_match.center_point[1], "REF_NEXT")
+                return
+            next2_match = image_match(img_gray_full, REF_NEXT2)
+            if next2_match.find_match:
+                ctx.ctrl.click(next2_match.center_point[0], next2_match.center_point[1], "REF_NEXT2")
+                return
+        except Exception:
+            pass
+
+        try:
             from module.umamusume.asset.template import UI_CULTIVATE_RACE_LIST_2
             img_gray_full = getattr(ctx, 'current_screen_gray', None)
             if img_gray_full is None:

@@ -19,6 +19,7 @@ from module.umamusume.scenario.mant.shop import (
 
 log = logger.get_logger(__name__)
 
+
 ENERGY_ITEMS = {
     "Vita 20": 35, "Vita 40": 55, "Vita 65": 75,
     "Energy Drink MAX": 30, "Energy Drink MAX EX": 50,
@@ -46,6 +47,7 @@ ONE_TIME_BUFF_ITEMS = {
     "Reporter's Binoculars",
     'Master Practice Guide',
 }
+
 
 MAX_ENERGY_OCR_X1 = 456
 MAX_ENERGY_OCR_Y1 = 219
@@ -624,36 +626,31 @@ def scan_inventory(ctx, stop_when_found=None):
 
 
 
-def is_plus_disabled(frame, plus_x, plus_y):
-    h, w = frame.shape[:2]
-    x1 = max(0, min(w - 1, plus_x - 14))
-    x2 = max(0, min(w, plus_x + 14))
-    y1 = max(0, min(h - 1, plus_y - 14))
-    y2 = max(0, min(h, plus_y + 14))
-    if x2 <= x1 + 2 or y2 <= y1 + 2:
-        return False
-
-    patch = frame[y1:y2, x1:x2]
-    hsv = cv2.cvtColor(patch, cv2.COLOR_BGR2HSV)
-    s_mean = float(np.mean(hsv[:, :, 1]))
-    v_std = float(np.std(hsv[:, :, 2]))
-
-    return s_mean < 35 and v_std < 35
+def find_plus_buttons(frame):
+    from module.umamusume.asset.template import REF_MANT_PLUS
+    template = cv2.imread(REF_MANT_PLUS.template_path)
+    if template is None:
+        return []
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    tmpl_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+    th, tw = tmpl_gray.shape[:2]
+    result = cv2.matchTemplate(gray, tmpl_gray, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.8
+    loc = np.where(result >= threshold)
+    buttons = []
+    for pt in zip(*loc[::-1]):
+        cx = pt[0] + tw // 2
+        cy = pt[1] + th // 2
+        if any(abs(cx - bx) < 10 and abs(cy - by) < 10 for bx, by in buttons):
+            continue
+        buttons.append((cx, cy))
+    return buttons
 
 
 def try_click_item_plus_once(ctx, item_name: str) -> bool:
-    def find_item_y_on_current_screen(frame, target_name: str):
-        results = classify_names_only(frame)
-        for name, score, abs_y in results:
-            if name == target_name:
-                return abs_y
-        return None
-
     scroll_to_top(ctx)
-
     prev_cursor = -1
     stall_count = 0
-
     for _ in range(60):
         time.sleep(0.18)
         frame = ctx.ctrl.get_screen()
@@ -941,6 +938,7 @@ def handle_energy_recovery(ctx):
             energy += raw_energy
             qty -= 1
             used_any = True
+            ctx.cultivate_detail.turn_info.cached_energy = energy
         if energy > limit:
             break
 
@@ -949,6 +947,7 @@ def handle_energy_recovery(ctx):
         ok = use_item_and_update_inventory(ctx, smallest[0])
         if ok:
             used_any = True
+            ctx.cultivate_detail.turn_info.cached_energy = energy + smallest[1]
 
     if used_any:
         ctx.cultivate_detail.turn_info.parse_main_menu_finish = False

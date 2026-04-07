@@ -78,13 +78,13 @@ def log_detected_shop_items(items):
     preserved_rewards = {name: entry for name, entry in detected_shop_items_log.items()
                          if entry.get('race_reward')}
     detected_shop_items_log.clear()
-    for name, turns, purchased in items:
-        if purchased:
+    for name, turns, buyable in items:
+        if not buyable:
             continue
         detected_shop_items_log[name] = {
             "name": name,
             "turns": turns,
-            "purchased": purchased,
+            "purchased": False,
         }
     for name, entry in preserved_rewards.items():
         if name not in detected_shop_items_log:
@@ -148,6 +148,8 @@ class CultivateContextDetail:
     friendship_score_groups: list
     score_history: list[float]
     percentile_history: list[float]
+    last_title: str
+    same_title_count: int
 
     def __init__(self):
         self.expect_attribute = None
@@ -195,7 +197,10 @@ class CultivateContextDetail:
         self.team_sirius_percentile = 26
         self.team_sirius_available_dates = []
         self.team_sirius_last_date = -1
+        self.last_title = ""
+        self.same_title_count = 0
         self.sp_burst_skill_purchased = False
+
 
     def reset_skill_learn(self):
         self.learn_skill_done = False

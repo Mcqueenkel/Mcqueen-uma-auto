@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 
 import cv2
 
@@ -88,7 +89,7 @@ TITLE = [
     "Battle Confirmation", # TITLE[36]
     "Rewards Collected", # TITLE[37] after career if theres story
     "Event Story Unlocked", # TITLE[38] after career if theres story
-    "Connection Error", #39
+    "Connection Error", #39 
     "Data Update", #40
     "Data Download", #41
     "Date Changed", #42
@@ -108,7 +109,6 @@ TITLE = [
 
 
 def script_info(ctx: UmamusumeContext):
-
     try:
         mode_name = getattr(ctx.task.task_execute_mode, "name", "")
         if mode_name == "TASK_EXECUTE_MODE_TEAM_TRIALS":
@@ -124,30 +124,64 @@ def script_info(ctx: UmamusumeContext):
         title_text = ocr_line(title_img)
         log.debug(title_text)
         
+        # Debug: Log the original OCR text and similarity matching
         original_text = title_text
         title_text = find_similar_text(title_text, TITLE, 0.8)
+        
         if title_text == "":
             log.warning(f"Unknown option box - OCR: '{original_text}'")
+            # Try with lower threshold for better matching
             title_text = find_similar_text(original_text, TITLE, 0.6)
             if title_text == "":
                 log.warning(f"Still no match with lower threshold - OCR: '{original_text}'")
                 try:
+                    from module.umamusume.asset.template import REF_NEXT
+                    img_full = getattr(ctx, 'current_screen_gray', None)
+                    if img_full is None:
+                        img_full = cv2.cvtColor(ctx.current_screen, cv2.COLOR_BGR2GRAY)
+                    next_match = image_match(img_full, REF_NEXT)
+                    if next_match.find_match:
+                        ctx.ctrl.click(next_match.center_point[0], next_match.center_point[1], "REF_NEXT")
+                        time.sleep(0.5)
+                        return
+                except Exception:
+                    pass
+                try:
                     ctx.ctrl.click_by_point(ESCAPE)
-                    log.info("fallback click")
                     time.sleep(1)
                 except Exception as e:
                     log.error(f"Fallback ESCAPE click failed: {e}")
                 return
-            log.info(f"Found match with lower threshold: '{original_text}' -> '{title_text}'")
+            else:
+                log.info(f"Found match with lower threshold: '{original_text}' -> '{title_text}'")
         else:
             log.info(f"Found match: '{original_text}' -> '{title_text}'")
         
-        try:
-            title_index = TITLE.index(title_text)
-            log.info(f"DEBUG: title_text='{title_text}' matches TITLE[{title_index}]='{TITLE[title_index]}'")
-        except ValueError:
-            log.warning(f"DEBUG: title_text='{title_text}' not found in TITLE array")
+        if title_text == ctx.cultivate_detail.last_title:
+            ctx.cultivate_detail.same_title_count += 1
+        else:
+            ctx.cultivate_detail.same_title_count = 1
+            ctx.cultivate_detail.last_title = title_text
+
+        if ctx.cultivate_detail.same_title_count >= 3:
+            try:
+                from module.umamusume.asset.template import REF_NEXT, REF_NEXT2
+                img_full = getattr(ctx, 'current_screen_gray', None) or cv2.cvtColor(ctx.current_screen, cv2.COLOR_BGR2GRAY)
+                next_match = image_match(img_full, REF_NEXT)
+                if next_match.find_match:
+                    ctx.ctrl.click(next_match.center_point[0], next_match.center_point[1], "REF_NEXT")
+                    time.sleep(0.5)
+                next2_match = image_match(img_full, REF_NEXT2)
+                if next2_match.find_match:
+                    ctx.ctrl.click(next2_match.center_point[0], next2_match.center_point[1], "REF_NEXT2")
+                    time.sleep(0.5)
+            except Exception:
+                pass
+            ctx.cultivate_detail.same_title_count = 0
+            return
         
+        
+        # Force correct handler for "Confirm" - bypass TITLE array indexing issues
         if title_text == "Confirm":
             log.info("FORCED: Handling 'Confirm' (TP recovery) screen")
             if not ctx.cultivate_detail.allow_recover_tp:
@@ -155,15 +189,17 @@ def script_info(ctx: UmamusumeContext):
                 return
             else:
                 ctx.ctrl.click_by_point(TO_RECOVER_TP)
-            return
+            return  # Exit early to prevent wrong handler execution
         
+        # Force correct handler for "Recover TP" - bypass TITLE array indexing issues
         if title_text == "Recover TP":
             screen = ctx.ctrl.get_screen(to_gray=True)
             if image_match(screen, REF_RECOVER_TP_1).find_match:
-                if image_match(screen, REF_TP_RECOVER_DRINK).find_match:
+                if image_match(screen, REF_TP_RECOVER_DRINK).find_match: # tp, 
                     ctx.ctrl.click_by_point(USE_TP_DRINK)
                 else:
-                    if ctx.cultivate_detail.allow_recover_tp == 2:
+                    # TODO: 
+                    if ctx.cultivate_detail.allow_recover_tp == 2: # TP
                         ctx.ctrl.click_by_point(USE_CARROT_RECOVER_TP)
                     else: 
                         reset_task(ctx.task.task_id)
@@ -246,24 +282,32 @@ def script_info(ctx: UmamusumeContext):
             time.sleep(0.5)
             ctx.ctrl.click_by_point(SCENARIO_SHORTEN_CONFIRM)
         if title_text == TITLE[8]:
-            img = ctx.current_screen
-            img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            from module.umamusume.asset.template import UI_FRIEND_RECREATION, UI_FRIEND_RECREATION_COMPLETE
-
-            result_complete = image_match(img_gray, UI_FRIEND_RECREATION_COMPLETE)
-
-            if result_complete.find_match:
-                ctx.ctrl.click_by_point(CULTIVATE_TRIP_WITH_FRIEND_COMPLETE)
+            if getattr(ctx.cultivate_detail, 'team_sirius_enabled', False):
+                ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
             else:
-                result = image_match(img_gray, UI_FRIEND_RECREATION)
+                img = ctx.current_screen
+                img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                from module.umamusume.asset.template import UI_FRIEND_RECREATION, UI_FRIEND_RECREATION_COMPLETE
 
-                if result.find_match:
-                    ctx.ctrl.click_by_point(CULTIVATE_TRIP_WITH_FRIEND)
+                result_complete = image_match(img_gray, UI_FRIEND_RECREATION_COMPLETE)
+                log.info(f"Recreation complete match: {result_complete.find_match}")
+
+                if result_complete.find_match:
+                    log.info("Recreation complete")
+                    ctx.ctrl.click_by_point(CULTIVATE_TRIP_WITH_FRIEND_COMPLETE)
                 else:
-                    ctx.ctrl.click_by_point(ESCAPE)
-        if title_text == TITLE[9]:
+                    result = image_match(img_gray, UI_FRIEND_RECREATION)
+                    log.info(f"Friend recreation match: {result.find_match}")
+
+                    if result.find_match:
+                        log.info("Friend recreation")
+                        ctx.ctrl.click_by_point(CULTIVATE_TRIP_WITH_FRIEND)
+                    else:
+                        log.info("Regular recreation")
+                        ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
+        if title_text == TITLE[9]: #Confirmation
             ctx.ctrl.click_by_point(CULTIVATE_LEARN_SKILL_CONFIRM_AGAIN)
-        if title_text == TITLE[10]:
+        if title_text == TITLE[10]: #Skills Learned
             ctx.ctrl.click_by_point(CULTIVATE_LEARN_SKILL_DONE_CONFIRM)
             if getattr(ctx.cultivate_detail, 'final_skill_sweep_active', False) and getattr(ctx.cultivate_detail, 'learn_skill_selected', False):
                 try:
@@ -281,13 +325,13 @@ def script_info(ctx: UmamusumeContext):
                     pass
                 time.sleep(1)
                 ctx.ctrl.click_by_point(CULTIVATE_FINISH_LEARN_SKILL)
-        if title_text == TITLE[11]:
+        if title_text == TITLE[11]: #Complete Career
             ctx.ctrl.click_by_point(CULTIVATE_FINISH_CONFIRM_AGAIN)
-        if title_text == TITLE[12]:
+        if title_text == TITLE[12]: #Umamusume Details
             ctx.ctrl.click_by_point(CULTIVATE_RESULT_CONFIRM)
-        if title_text == TITLE[13]:
+        if title_text == TITLE[13]: #Fan Count Below Target Race Requirement
             ctx.ctrl.click_by_point(CULTIVATE_FAN_NOT_ENOUGH_RETURN)
-        if title_text == TITLE[43]:
+        if title_text == TITLE[43]:  
             ctx.ctrl.click_by_point(CULTIVATE_FAN_NOT_ENOUGH_RETURN)
             time.sleep(2)
 
@@ -311,16 +355,18 @@ def script_info(ctx: UmamusumeContext):
             if matching_races:
                 target_race_id = matching_races[0]
             else:
-                target_race_id = 0
+                target_race_id = 0  
 
             from module.umamusume.types import TurnOperation, TurnOperationType
             ctx.cultivate_detail.turn_info.turn_operation = TurnOperation()
             ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
             ctx.cultivate_detail.turn_info.turn_operation.race_id = target_race_id
+            log.info("racing for unmet requirements")
             ctx.ctrl.click_by_point(get_race_point(ctx))
 
+
             if not matching_races:
-                time.sleep(2)
+                time.sleep(2) 
 
                 img2 = ctx.ctrl.get_screen(to_gray=True)
                 from module.umamusume.asset import REF_SUITABLE_RACE
@@ -332,24 +378,30 @@ def script_info(ctx: UmamusumeContext):
                     ctx.ctrl.click(center_x, center_y, "Click suitable race")
                     log.info(f"Clicked suitable race at position ({center_x}, {center_y})")
                 else:
+                    log.info("Suitable race template not found - returning to main menu for normal logic")
                     ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
                     ctx.cultivate_detail.turn_info.turn_operation = None
 
         if title_text == TITLE[14]:
             ctx.ctrl.click_by_point(CULTIVATE_TRIP_WITH_FRIEND)
-        if title_text == TITLE[15]:
+        if title_text == TITLE[15]:  # Skip Confirmation
+            # Check if this might be a skill confirmation by looking for the template
             img = ctx.current_screen
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             from module.umamusume.asset.ui import CONFIRMATION_LEARNSKILL_BUTTON
             result = image_match(img_gray, CONFIRMATION_LEARNSKILL_BUTTON)
+            log.info(f"Skip Confirmation - Template matching result: {result.find_match}")
             if result.find_match:
+                # Use template matching coordinates for skill confirmation
                 center_x = (result.matched_area[0][0] + result.matched_area[1][0]) // 2
                 center_y = (result.matched_area[0][1] + result.matched_area[1][1]) // 2
                 ctx.ctrl.click(center_x, center_y, "Skill confirmation using template matching (Skip Confirmation)")
                 log.info(f"Found skill confirmation button at ({center_x}, {center_y}) via Skip Confirmation")
             else:
+                # Use CULTIVATE_LEARN_SKILL_CONFIRM_AGAIN coordinates for skill confirmations
                 ctx.ctrl.click_by_point(CULTIVATE_LEARN_SKILL_CONFIRM_AGAIN)
-        if title_text == TITLE[16]:
+                log.info("Using skill confirmation coordinates for Skip Confirmation - template not found")
+        if title_text == TITLE[16]: #Rest
             ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
         if title_text == TITLE[17]: #Race Recommendations
             ctx.ctrl.click_by_point(RACE_RECOMMEND_CONFIRM)
@@ -560,10 +612,6 @@ def script_info(ctx: UmamusumeContext):
                     ctx.cultivate_detail.turn_info.turn_operation = None
 
         if title_text == TITLE[22]:  # Consecutive Racing (was TITLE[20])
-            # Check if we should bypass the warning (G1 race with rival)
-            if getattr(ctx.cultivate_detail.turn_info, 'bypass_race_warning', False):
-                log.info("Bypassing 3 consecutive races warning (G1 race with rival)")
-                ctx.cultivate_detail.turn_info.bypass_race_warning = False
             ctx.ctrl.click_by_point(CULTIVATE_TOO_MUCH_RACE_WARNING_CONFIRM)
         if title_text == TITLE[23]:  # Infirmary Confirmation (was TITLE[21])
             ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)

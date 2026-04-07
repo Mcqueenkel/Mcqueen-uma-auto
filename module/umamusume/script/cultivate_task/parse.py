@@ -51,10 +51,10 @@ class LRUCache:
     def __contains__(self, key):
         return key in self.cache
 
-parse_event_cache = LRUCache(maxsize=PARSE_EVENT_CACHE_SIZE)
-ocr_cache = LRUCache(maxsize=OCR_CACHE_SIZE)
-gray_image_cache = LRUCache(maxsize=GRAY_IMAGE_CACHE_SIZE)
-template_match_cache = LRUCache(maxsize=TEMPLATE_MATCH_CACHE_SIZE)
+_parse_event_cache = LRUCache(maxsize=PARSE_EVENT_CACHE_SIZE)
+_ocr_cache = LRUCache(maxsize=OCR_CACHE_SIZE)
+_gray_image_cache = LRUCache(maxsize=GRAY_IMAGE_CACHE_SIZE)
+_template_match_cache = LRUCache(maxsize=TEMPLATE_MATCH_CACHE_SIZE)
 
 def _compute_image_hash(img):
     try:
@@ -69,11 +69,11 @@ def _compute_image_hash(img):
         return None
 
 def clear_parse_caches():
-    global parse_event_cache, ocr_cache, gray_image_cache, template_match_cache
-    parse_event_cache.clear()
-    ocr_cache.clear()
-    gray_image_cache.clear()
-    template_match_cache.clear()
+    global _parse_event_cache, _ocr_cache, _gray_image_cache, _template_match_cache
+    _parse_event_cache.clear()
+    _ocr_cache.clear()
+    _gray_image_cache.clear()
+    _template_match_cache.clear()
 
 
 def normalize_skill_name(skill_name: str) -> str:
@@ -212,7 +212,7 @@ def try_alt_cost_regions(skill_info_img):
         try:
             alt_cost_text = ocr_en(alt_region)
             alt_cost = re.sub("\\D", "", alt_cost_text)
-            if alt_cost:
+            if alt_cost and alt_cost != '':
                 return alt_cost, i+1
         except:
             continue
@@ -230,7 +230,7 @@ def parse_date(img, ctx: UmamusumeContext) -> int:
         
         year_text = ""
         for text in DATE_YEAR:
-            if text in date_text:
+            if date_text.__contains__(text):
                 year_text = text
 
         if year_text == "":
@@ -256,7 +256,7 @@ def parse_date(img, ctx: UmamusumeContext) -> int:
 
         month_text = ""
         for text in DATE_MONTH:
-            if text in date_text:
+            if date_text.__contains__(text):
                 month_text = text
         if month_text == "":
             month_text = find_similar_text(date_text, DATE_MONTH)
@@ -319,7 +319,7 @@ def parse_date(img, ctx: UmamusumeContext) -> int:
         
         year_text = ""
         for text in DATE_YEAR:
-            if text in date_text:
+            if date_text.__contains__(text):
                 year_text = text
 
         if year_text == "":
@@ -345,7 +345,7 @@ def parse_date(img, ctx: UmamusumeContext) -> int:
 
         month_text = ""
         for text in DATE_MONTH:
-            if text in date_text:
+            if date_text.__contains__(text):
                 month_text = text
         if month_text == "":
             month_text = find_similar_text(date_text, DATE_MONTH)
@@ -485,7 +485,8 @@ def parse_train_main_menu_operations_availability(ctx: UmamusumeContext, img):
 
 def parse_training_support_card(ctx: UmamusumeContext, img, train_type: TrainingType):
     support_card_info_list = ctx.cultivate_detail.scenario.parse_training_support_card(img)
-    if not support_card_info_list:
+    if len(support_card_info_list) == 0:
+        import time
         ctx.ctrl.reinit_connection()
         time.sleep(0.2)
         fresh_img = ctx.ctrl.get_screen()
@@ -550,6 +551,8 @@ def parse_training_result(ctx: UmamusumeContext, img, train_type: TrainingType):
 
 def parse_failure_rates(ctx: UmamusumeContext, img, train_type: TrainingType | None = None):
     try:
+        import cv2
+        from bot.recog.ocr import ocr_line
         y1, y2 = 916, 981
         x_ranges = [
             (75, 134),
@@ -566,6 +569,7 @@ def parse_failure_rates(ctx: UmamusumeContext, img, train_type: TrainingType | N
             roi = img[y1c:y2c, x1c:x2c]
             roi = cv2.copyMakeBorder(roi, 10, 10, 10, 10, cv2.BORDER_CONSTANT, None, (255, 255, 255))
             text = ocr_line(roi, lang="en")
+            import re
             digits = re.sub("\\D", "", text)
             if digits == "":
                 rates.append(-1)
@@ -634,7 +638,7 @@ def find_support_card(ctx: UmamusumeContext, img):
 def parse_cultivate_event(ctx: UmamusumeContext, img) -> tuple[str, list[int]]:
     img_hash = _compute_image_hash(img)
     if img_hash:
-        cached = parse_event_cache.get(img_hash)
+        cached = _parse_event_cache.get(img_hash)
         if cached is not None:
             return cached
     
@@ -642,30 +646,30 @@ def parse_cultivate_event(ctx: UmamusumeContext, img) -> tuple[str, list[int]]:
     
     name_hash = _compute_image_hash(event_name_img)
     if name_hash:
-        cached_name = ocr_cache.get(name_hash)
+        cached_name = _ocr_cache.get(name_hash)
         if cached_name is not None:
             event_name = cached_name
         else:
             event_name = ocr_line(event_name_img)
-            ocr_cache.set(name_hash, event_name)
+            _ocr_cache.set(name_hash, event_name)
     else:
         event_name = ocr_line(event_name_img)
     
     if not isinstance(event_name, str) or len(event_name.strip()) <= 1:
         if img_hash:
-            parse_event_cache.set(img_hash, ("", []))
+            _parse_event_cache.set(img_hash, ("", []))
         return "", []
     
     event_selector_list = []
     
     gray_hash = _compute_image_hash(img) if img_hash else None
     if gray_hash:
-        cached_gray = gray_image_cache.get(gray_hash)
+        cached_gray = _gray_image_cache.get(gray_hash)
         if cached_gray is not None:
             img_gray = cached_gray
         else:
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            gray_image_cache.set(gray_hash, img_gray)
+            _gray_image_cache.set(gray_hash, img_gray)
     else:
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
@@ -682,7 +686,7 @@ def parse_cultivate_event(ctx: UmamusumeContext, img) -> tuple[str, list[int]]:
         else:
             break
     
-    if not event_selector_list:
+    if len(event_selector_list) == 0:
         log.debug(f"REF_SELECTOR template missed for '{event_name}', using dialogue templates")
         
         from module.umamusume.asset.template import Template, UMAMUSUME_REF_TEMPLATE_PATH
@@ -734,13 +738,13 @@ def parse_cultivate_event(ctx: UmamusumeContext, img) -> tuple[str, list[int]]:
                     deduped.append(pt)
             event_selector_list = deduped[:5]
         
-    if not event_selector_list:
-        return event_name, []
+        if len(event_selector_list) == 0:
+            return event_name, []
     
     event_selector_list.sort(key=lambda x: x[1])
     result = (event_name, event_selector_list)
     if img_hash:
-        parse_event_cache.set(img_hash, result)
+        _parse_event_cache.set(img_hash, result)
     return result
 
 
@@ -757,93 +761,36 @@ def find_race(ctx: UmamusumeContext, img, race_id: int = 0) -> bool:
 
     log.info(f"Looking for race {race_id}: {RACE_LIST[race_id][1]}")
 
-    # Try multiple accuracy thresholds for more robust detection
-    # Start with standard threshold, then try lower if not found
-    accuracy_levels = [0.86, 0.80, 0.75]
-    
-    for attempt_idx, accuracy in enumerate(accuracy_levels):
-        iterations = 0
-        test_img = img.copy()
-        best_score = 0.0
-        best_pos = None
-        
-        while iterations < 100:
-            iterations += 1
-            match_result = image_match(test_img, REF_RACE_LIST_DETECT_LABEL)
-            if not match_result.find_match:
-                break
-            pos = match_result.matched_area
-            pos_center = match_result.center_point
-            if 685 < pos_center[1] < 1110:
-                y1 = max(0, pos[0][1] - 135)
-                y2 = min(img_height, pos[1][1] + 75)
-                x1 = max(0, pos[0][0] - 270)
-                x2 = min(img_width, pos[1][0] + 420)
-                race_name_img = test_img[y1:y2, x1:x2]
+    iterations = 0
+    while iterations < 100:
+        iterations += 1
+        match_result = image_match(img, REF_RACE_LIST_DETECT_LABEL)
+        if not match_result.find_match:
+            break
+        pos = match_result.matched_area
+        pos_center = match_result.center_point
+        if 685 < pos_center[1] < 1110:
+            y1 = max(0, pos[0][1] - 135)
+            y2 = min(img_height, pos[1][1] + 75)
+            x1 = max(0, pos[0][0] - 270)
+            x2 = min(img_width, pos[1][0] + 420)
+            race_name_img = img[y1:y2, x1:x2]
 
-                if race_name_img.shape[0] > 0 and race_name_img.shape[1] > 0:
-                    template_img = target_race_template.template_image
-                    if (template_img is not None and
-                        race_name_img.shape[0] >= template_img.shape[0] and
-                        race_name_img.shape[1] >= template_img.shape[1]):
-                        # Use custom accuracy for this attempt
-                        template_match_result = image_match_with_accuracy(
-                            race_name_img, target_race_template, accuracy)
-                        
-                        # Track best score for debugging
-                        if template_match_result.score > best_score:
-                            best_score = template_match_result.score
-                            best_pos = pos_center
-                        
-                        if template_match_result.find_match:
-                            log.info(f"Race {race_id} matched (accuracy: {accuracy}, score: {template_match_result.score:.3f})")
-                            ctx.ctrl.click(pos_center[0], pos_center[1],
-                                           f"Select race: {RACE_LIST[race_id][1]}")
-                            return True
+            if race_name_img.shape[0] > 0 and race_name_img.shape[1] > 0:
+                template_img = target_race_template.template_image
+                if (template_img is not None and
+                    race_name_img.shape[0] >= template_img.shape[0] and
+                    race_name_img.shape[1] >= template_img.shape[1]):
+                    template_match_result = image_match(race_name_img, target_race_template)
+                    if template_match_result.find_match:
+                        log.info(f"Race {race_id} matched")
+                        ctx.ctrl.click(pos_center[0], pos_center[1],
+                                       f"Select race: {RACE_LIST[race_id][1]}")
+                        return True
 
-            test_img[pos[0][1]:pos[1][1], pos[0][0]:pos[1][0]] = 0
-            test_img = test_img.copy()
-        
-        # Log best score for this attempt
-        if best_score > 0:
-            log.debug(f"Race {race_id} attempt {attempt_idx + 1} (threshold {accuracy}): best score={best_score:.3f} at {best_pos}")
-    
-    log.warning(f"Race {race_id} not detected after trying accuracy levels {accuracy_levels}")
+        img[pos[0][1]:pos[1][1], pos[0][0]:pos[1][0]] = 0
+        img = img.copy()
     return False
-
-
-def image_match_with_accuracy(target, template, accuracy: float):
-    """Custom image matching with specified accuracy threshold."""
-    from bot.recog.image_matcher import ImageMatchResult
-    from bot.recog.timeout_tracker import reset_timeout
-    
-    reset_timeout()
-    try:
-        arr = getattr(template, 'template_img', None)
-        if arr is None:
-            arr = getattr(template, 'template_image', None)
-        if arr is not None:
-            try:
-                th, tw = arr.shape[:2]
-            except Exception:
-                return ImageMatchResult()
-            
-            result = cv2.matchTemplate(target, arr, cv2.TM_CCOEFF_NORMED)
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-            match_result = ImageMatchResult()
-            
-            if max_val > accuracy:
-                match_result.find_match = True
-                match_result.center_point = (int(max_loc[0] + tw / 2), int(max_loc[1] + th / 2))
-                match_result.matched_area = ((max_loc[0], max_loc[1]), (max_loc[0] + tw, max_loc[1] + th))
-                match_result.score = max_val
-            else:
-                match_result.find_match = False
-                match_result.score = max_val
-            return match_result
-    except Exception as e:
-        log.debug(f"image_match_with_accuracy failed: {e}")
-    return ImageMatchResult()
 
 
 
@@ -935,9 +882,6 @@ def find_skill(ctx: UmamusumeContext, img, skill: list[str], learn_any_skill: bo
                                 log.info(f"Buying skill '{detected_text}' - Points: {pt}, Cost: {skill_pt_cost}")
                                 ctx.ctrl.click(match_result.center_point[0] + 128, match_result.center_point[1],
                                                f"Bonus Skills{detected_text}")
-                                target_name = target_match if target_match else detected_text
-                                ctx.cultivate_detail.learned_skill_names.add(target_name)
-                                ctx.cultivate_detail.learned_skill_names.add(detected_text)
                                 if target_match is not None and target_match in skill:
                                     skill.remove(target_match)
                                     log.info(f"Removed '{target_match}' from skill list. Remaining: {skill}")
@@ -959,7 +903,7 @@ def find_skill(ctx: UmamusumeContext, img, skill: list[str], learn_any_skill: bo
     return find
 
 
-def get_skill_list(img, skill: list[str], skill_blacklist: list[str], learned_skills: set | None = None) -> list:
+def get_skill_list(img, skill: list[str], skill_blacklist: list[str]) -> list:
     origin_img = img
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     res = []
@@ -1051,10 +995,6 @@ def get_skill_list(img, skill: list[str], skill_blacklist: list[str], learned_sk
                     priority = len(skill)
 
                 available = not image_match(skill_info_img, REF_SKILL_LEARNED).find_match
-
-                if available and learned_skills is not None:
-                    if name_for_match in learned_skills or detected_text in learned_skills:
-                        available = False
 
                 if priority != -1: # Exclude skills that appear in blacklist
                     res.append({"skill_name": detected_text,
