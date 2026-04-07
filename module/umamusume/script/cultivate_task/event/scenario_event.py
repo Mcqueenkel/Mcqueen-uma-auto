@@ -1,6 +1,6 @@
 from module.umamusume.context import UmamusumeContext
 from module.umamusume.define import TurnOperationType
-from module.umamusume.asset.template import REF_SELECTOR, REF_AOHARUHAI_TEAM_NAME
+from module.umamusume.asset.template import REF_DIALOGUE_SELECTOR, REF_AOHARUHAI_TEAM_NAME
 from bot.recog.image_matcher import image_match
 from bot.conn.fetch import read_energy
 import time
@@ -28,21 +28,29 @@ def scenario_event_2(ctx: UmamusumeContext) -> int:
         return 3
     else:
         return 1
+
+def _find_dialogue_selectors(img):
+    all_points = []
+    for template in REF_DIALOGUE_SELECTOR:
+        img_temp = img.copy()
+        for _ in range(20):
+            match_result = image_match(img_temp, template)
+            if not match_result.find_match:
+                break
+            all_points.append(match_result)
+            m = match_result.matched_area
+            img_temp[m[0][1]:m[1][1], m[0][0]:m[1][0]] = 0
+    all_points.sort(key=lambda p: p.matched_area[0][1])
+    result = [all_points[0]]
+    for mr in all_points[1:]:
+        if abs(mr.matched_area[0][1] - result[-1].matched_area[0][1]) > 20 or abs(mr.center_point[0] - result[-1].center_point[0]) > 80:
+            result.append(mr)
+    return result[:5]
     
 # Youth Cup team name selection event
 def aoharuhai_team_name_event(ctx: UmamusumeContext) -> int:
     img = ctx.ctrl.get_screen(to_gray=True)
-    event_selector_list = []
-    iterations = 0
-    while iterations < 10:
-        iterations += 1
-        match_result = image_match(img, REF_SELECTOR)
-        if match_result.find_match:
-            event_selector_list.append(match_result)
-            img[match_result.matched_area[0][1]:match_result.matched_area[1][1],
-            match_result.matched_area[0][0]:match_result.matched_area[1][0]] = 0
-        else:
-            break
+    event_selector_list = _find_dialogue_selectors(img)
 
     try:
         sel = int(getattr(ctx.task.detail.scenario_config.aoharu_config, 'aoharu_team_name_selection', 4))
