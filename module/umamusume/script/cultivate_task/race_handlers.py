@@ -80,9 +80,9 @@ def script_cultivate_goal_race(ctx: UmamusumeContext):
             log.info(f"This is a regular race (ID: {race_id}) - entering detail interface")
             if mant_cfg is not None and race_id == 0:
                 from module.umamusume.scenario.mant.inventory import (
-                    handle_energy_drink_fallback, handle_glow_sticks_before_race
+                    handle_energy_drink_max_before_race, handle_glow_sticks_before_race
                 )
-                handle_energy_drink_fallback(ctx)
+                handle_energy_drink_max_before_race(ctx)
                 handle_glow_sticks_before_race(ctx)
                 ctx.cultivate_detail.mant_climax_pending_train = True
                 ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
