@@ -148,16 +148,16 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
         log.info("extra race this turn, prioritizing")
         if ctx.cultivate_detail.turn_info.turn_operation is None:
             ctx.cultivate_detail.turn_info.turn_operation = TurnOperation()
-        ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
-        matching_races = [race_id for race_id in ctx.cultivate_detail.extra_race_list if race_id in ctx.cultivate_detail.turn_info.cached_available_races]
-        if matching_races:
-            target_race_id = matching_races[0]
-            ctx.cultivate_detail.turn_info.turn_operation.race_id = target_race_id
-            log.info(f"Set race: {target_race_id}")
-        else:
-            log.info("extra race not in available races")
-        ctx.cultivate_detail.turn_info.parse_train_info_finish = True
-        return
+            ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
+            matching_races = [race_id for race_id in ctx.cultivate_detail.extra_race_list if race_id in ctx.cultivate_detail.turn_info.cached_available_races]
+            if matching_races:
+                target_race_id = matching_races[0]
+                ctx.cultivate_detail.turn_info.turn_operation.race_id = target_race_id
+                log.info(f"Set race: {target_race_id}")
+            else:
+                log.info("extra race not in available races")
+            ctx.cultivate_detail.turn_info.parse_train_info_finish = True
+
     if has_extra_race and is_mant(ctx):
         log.info("MANT: extra race available but scanning training first")
 
