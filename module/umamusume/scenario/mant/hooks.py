@@ -8,7 +8,7 @@ def mant_after_hook(ctx, img):
     from module.umamusume.persistence import set_ignore_cat_food, set_ignore_grilled_carrots
 
     favor = detected_portraits_log.get("President Akikawa", {}).get("favor", 0)
-    if favor >= 3:
+    if favor >= 2:
         set_ignore_cat_food(True)
 
     all_rainbow = True
