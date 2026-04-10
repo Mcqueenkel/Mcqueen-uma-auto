@@ -863,6 +863,18 @@ def pick_best_energy_item(ctx):
     from module.umamusume.constants.game_constants import get_date_period_index
     period_idx = get_date_period_index(date)
 
+    race_count = 0
+    from module.umamusume.asset.race_data import get_races_for_period
+    for offset in range(1, 5):
+        future_date = date + offset
+        available = get_races_for_period(future_date)
+        if any(r in ctx.cultivate_detail.extra_race_list for r in available):
+            race_count += 1
+
+    projected = current_energy - (race_count * 20)
+    if projected <= 30:
+        return None
+
     best_item = None
     best_effective = 0
     for item_name, raw_energy in ENERGY_ITEMS.items():

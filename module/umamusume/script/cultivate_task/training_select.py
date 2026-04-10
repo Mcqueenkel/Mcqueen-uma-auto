@@ -64,10 +64,6 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
         return
 
     turn_op = ctx.cultivate_detail.turn_info.turn_operation
-    prev_was_race = (turn_op is not None and
-                     turn_op.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_RACE)
-    if prev_was_race:
-        ctx.cultivate_detail._prev_op_was_race = True
 
     if turn_op is not None:
         try:
@@ -443,6 +439,9 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
         except Exception:
             rest_threshold = DEFAULT_REST_THRESHOLD
         
+        energy_penalty_mult = ctx.cultivate_detail.scenario.compute_energy_penalty_for_race_chain(
+            ctx, current_energy, rest_threshold, date)
+        
         base_scores = getattr(ctx.cultivate_detail, 'base_score', DEFAULT_BASE_SCORES)
 
         base_energy = getattr(ctx.cultivate_detail.turn_info, 'base_energy', None)
@@ -577,7 +576,7 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                 hint_bonus = w_hint if bool(getattr(til, 'has_hint', False)) else 0.0
             score += hint_bonus
             energy_change_val = getattr(til, 'energy_change', 0.0)
-            energy_change_contrib = energy_change_val * w_energy_change
+            energy_change_contrib = energy_change_val * w_energy_change * energy_penalty_mult
             if base_energy is not None and base_energy >= 80 and energy_change_val < 0:
                 energy_change_contrib *= 0.9
             score += energy_change_contrib
@@ -878,9 +877,8 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
         ctx.cultivate_detail.turn_info.turn_operation = op_ai
         new_is_race = (op_ai.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_RACE)
 
-    if not new_is_race and getattr(ctx.cultivate_detail, '_prev_op_was_race', False):
+    if not new_is_race:
         ctx.cultivate_detail.mant_cleat_used = False
-        ctx.cultivate_detail._prev_op_was_race = False
 
     ts_enabled = getattr(ctx.cultivate_detail, 'team_sirius_enabled', False)
     ts_percentile = getattr(ctx.cultivate_detail, 'team_sirius_percentile', 26)

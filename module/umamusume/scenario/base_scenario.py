@@ -45,3 +45,6 @@ class BaseScenario(ABC):
 
     def compute_scenario_bonuses(self, ctx, idx, support_card_info_list, date, period_idx, current_energy):
         return (0.0, 1.0, [], [])
+
+    def compute_energy_penalty_for_race_chain(self, ctx, current_energy, rest_threshold, date):
+        return 1.0

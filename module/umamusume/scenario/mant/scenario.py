@@ -90,3 +90,33 @@ class MANTScenario(URAScenario):
             formula_parts.append(f"nrg_event(+{incoming},overflow:{wasted_diff:+.0f}):{penalty:+.3f}")
 
         return (additive, multiplier, formula_parts, mult_parts)
+
+    def compute_energy_penalty_for_race_chain(self, ctx, current_energy, rest_threshold, date):
+        if current_energy is None:
+            return 1.0
+        
+        race_count = 0
+        from module.umamusume.asset.race_data import get_races_for_period
+        for offset in range(1, 5):
+            future_date = date + offset
+            available = get_races_for_period(future_date)
+            if any(r in ctx.cultivate_detail.extra_race_list for r in available):
+                race_count += 1
+        
+        if race_count < 2:
+            return 1.0
+        
+        avg_energy_change = 0.0
+        for ti in ctx.cultivate_detail.turn_info.training_info_list:
+            avg_energy_change += getattr(ti, 'energy_change', 0.0)
+        avg_energy_change /= 5.0
+        
+        wit_training_count = max(1, race_count // 3)
+        wit_gain = wit_training_count * 20.0
+        projected = current_energy - (race_count * 20) + wit_gain + avg_energy_change * race_count
+        
+        if projected < 10:
+            return 0.0
+        elif projected < rest_threshold:
+            return 0.5
+        return 1.0
