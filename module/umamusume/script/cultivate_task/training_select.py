@@ -128,6 +128,7 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
         if should_use_pal_outing_simple(ctx):
             op.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_TRIP
             ctx.cultivate_detail.turn_info.turn_operation = op
+            ctx.cultivate_detail.last_decision_stats = None
             ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
             return
 
@@ -152,6 +153,7 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
         op = TurnOperation()
         op.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST
         ctx.cultivate_detail.turn_info.turn_operation = op
+        ctx.cultivate_detail.last_decision_stats = None
         ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
         return
 
@@ -854,7 +856,7 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                 ties = [i for i, v in enumerate(computed_scores) if abs(v - max_score) < eps]
                 chosen_idx = 4 if 4 in ties else (min(ties) if len(ties) > 0 else int(np.argmax(computed_scores)))
         local_training_type = TrainingType(chosen_idx + 1)
-     
+       
         ctx.cultivate_detail.turn_info.cached_training_type = local_training_type
         try:
             uma = ctx.cultivate_detail.turn_info.uma_attribute

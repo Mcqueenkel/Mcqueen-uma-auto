@@ -16,7 +16,6 @@ from module.umamusume.scenario.mant.shop import (
     _gauss_scan_x,
 )
 
-
 log = logger.get_logger(__name__)
 
 MAX_ENERGY_OCR_X1 = 456
@@ -1384,6 +1383,30 @@ def remaining_training_turns(date):
     return (MANT_CLIMAX_START - date) + len(MANT_CLIMAX_TRAINING_TURNS)
 
 
+def remaining_training_turns_real(ctx, date):
+    if date >= MANT_CLIMAX_START:
+        clim_turns = [73, 74, 75, 76, 77, 78]
+        training_count = 0
+        for t in clim_turns:
+            if t >= date and t % 2 == 1:
+                training_count += 1
+        return training_count
+    else:
+        extra_races = getattr(ctx.cultivate_detail, 'extra_race_list', [])
+        if not extra_races:
+            return (MANT_CLIMAX_START - date) + len(MANT_CLIMAX_TRAINING_TURNS)
+        
+        from module.umamusume.asset.race_data import get_races_for_period
+        races_in_window = 0
+        for future_date in range(date, MANT_CLIMAX_START):
+            available = get_races_for_period(future_date)
+            if any(r in extra_races for r in available):
+                races_in_window += 1
+        
+        total_turns = (MANT_CLIMAX_START - date) + len(MANT_CLIMAX_TRAINING_TURNS)
+        return total_turns - races_in_window
+
+
 def total_megaphone_turns(owned_map):
     total = 0
     for name, (tier, duration) in MEGAPHONE_TIERS.items():
@@ -1402,9 +1425,9 @@ def handle_megaphone_endgame(ctx):
     if date >= MANT_CLIMAX_START and date not in MANT_CLIMAX_TRAINING_TURNS:
         return False
 
-    remaining = remaining_training_turns(date)
+    training_remaining = remaining_training_turns_real(ctx, date)
     mega_turns = total_megaphone_turns(owned_map)
-    if mega_turns <= remaining:
+    if mega_turns <= training_remaining:
         return False
 
     for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: x[1][0]):
