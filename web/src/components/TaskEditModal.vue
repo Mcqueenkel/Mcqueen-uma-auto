@@ -3601,7 +3601,7 @@ export default {
         payload.attachment_data.pal_friendship_score = [0.08, 0.057, 0.018];
         payload.attachment_data.pal_card_multiplier = 0.1;
       }
-      payload.attachment_data.pal_card_store = Object.fromEntries(Object.entries(this.palCardStore).filter(([k, v]) => (Array.isArray(v) && v.length > 0) || (typeof v === 'object' && v !== null && v.group)));
+      payload.attachment_data.pal_card_store = Object.fromEntries(Object.entries(this.palCardStore).filter(([k, v]) => (Array.isArray(v) && v.length > 0) || (typeof v === 'object' && v !== null && v.group && !(v.group === 'team_sirius' && v.enabled === false))));
       payload.attachment_data.npc_score_value = [
         [...this.npcScoreJunior],
         [...this.npcScoreClassic],

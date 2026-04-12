@@ -189,7 +189,8 @@ def sb_drag(ctx, from_y, to_y):
 
 
 def scroll_to_top(ctx):
-    for _ in range(15):
+    from module.umamusume.asset.point import ESCAPE
+    for attempt in range(15):
         img = ctx.ctrl.get_screen()
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         if at_top(img_rgb):
@@ -198,6 +199,12 @@ def scroll_to_top(ctx):
         if thumb is None:
             continue
         sb_drag(ctx, (thumb[0] + thumb[1]) // 2, TRACK_TOP)
+    
+    ctx.ctrl.click_by_point(ESCAPE)
+    time.sleep(0.3)
+    ctx.ctrl.click_by_point(ESCAPE)
+    time.sleep(0.5)
+    ctx.ctrl.trigger_decision_reset = True
 
 
 def _gauss_scan_x():

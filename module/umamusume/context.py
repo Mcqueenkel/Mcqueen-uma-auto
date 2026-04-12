@@ -185,6 +185,7 @@ class CultivateContextDetail:
         self.event_overrides = {}
         self.use_last_parents = False
         self.pal_event_stage = 0
+        self.pal_stage_detection_done_this_turn = False
         self.pal_name = ""
         self.pal_friendship_score = list(DEFAULT_PAL_FRIENDSHIP_SCORES)
         self.pal_card_multiplier = DEFAULT_PAL_CARD_MULTIPLIER
@@ -313,8 +314,8 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
         pcs = getattr(task.detail, 'pal_card_store', None)
         if isinstance(pcs, dict):
             ts_data = pcs.get('team_sirius', None)
-            if isinstance(ts_data, dict) and ts_data.get('group') == 'team_sirius':
-                detail.team_sirius_enabled = bool(ts_data.get('enabled', False))
+            if isinstance(ts_data, dict) and ts_data.get('group') == 'team_sirius' and ts_data.get('enabled') is True:
+                detail.team_sirius_enabled = True
                 detail.team_sirius_percentile = int(ts_data.get('percentile', 26))
         
         try:

@@ -70,6 +70,7 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
         if current_date > 0:
             ctx.cultivate_detail.team_sirius_available_dates = []
             ctx.cultivate_detail.pal_event_stage = 0
+            ctx.cultivate_detail.pal_stage_detection_done_this_turn = False
             if hasattr(ctx.cultivate_detail, 'pal_last_detection_date'):
                 delattr(ctx.cultivate_detail, 'pal_last_detection_date')
 
@@ -114,7 +115,7 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
                 ctx.current_screen = img
 
         if not ts_enabled and ctx.cultivate_detail.prioritize_recreation:
-            if ctx.cultivate_detail.pal_event_stage <= 0:
+            if ctx.cultivate_detail.pal_event_stage <= 0 and not ctx.cultivate_detail.pal_stage_detection_done_this_turn:
                 img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 from module.umamusume.asset.template import UI_RECREATION_FRIEND_NOTIFICATION
                 result = image_match(img_gray, UI_RECREATION_FRIEND_NOTIFICATION)
@@ -128,6 +129,7 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
                     
                     calculated_stage = detect_pal_stage(ctx, img)
                     ctx.cultivate_detail.pal_event_stage = calculated_stage
+                    ctx.cultivate_detail.pal_stage_detection_done_this_turn = True
                     
                     pal_thresholds = ctx.cultivate_detail.pal_thresholds
                     if pal_thresholds and calculated_stage <= len(pal_thresholds):
