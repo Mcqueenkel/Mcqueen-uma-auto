@@ -273,6 +273,8 @@ def after_hook(ctx: UmamusumeContext):
                     ctx.cultivate_detail.turn_info.turn_operation.log_turn_operation()
                 else:
                     log.info("In training selection screen - skipping AI decision to avoid overriding training")
+            else:
+                log.info("Decision already set")
 
 
 
