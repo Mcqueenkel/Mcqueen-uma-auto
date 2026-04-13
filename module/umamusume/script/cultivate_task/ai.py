@@ -147,21 +147,7 @@ def get_operation(ctx: UmamusumeContext) -> TurnOperation | None:
             from module.umamusume.asset.race_data import get_races_for_period
             available_races = get_races_for_period(date)
             extra_race_this_turn = [r for r in ctx.cultivate_detail.extra_race_list if r in available_races]
-            if extra_race_this_turn:
-                skip_race = False
-                try:
-                    if ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT:
-                        from module.umamusume.scenario.mant.inventory import should_skip_race
-                        skip_race = should_skip_race(ctx)
-                except Exception:
-                    pass
-                if not skip_race:
-                    pass
-                else:
-                    log.info(f"rest threshold: energy={energy}, threshold={limit} - prioritizing rest")
-                    turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST
-                    return turn_operation
-            else:
+            if not extra_race_this_turn:
                 log.info(f"rest threshold: energy={energy}, threshold={limit} - prioritizing rest")
                 turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST
                 return turn_operation
@@ -320,17 +306,9 @@ def get_operation(ctx: UmamusumeContext) -> TurnOperation | None:
         available_races = _get_races_for_period_cached(ctx.cultivate_detail.turn_info.date)
         extra_race_this_turn = [race_id for race_id in ctx.cultivate_detail.extra_race_list if race_id in available_races]
         if len(extra_race_this_turn) != 0:
-            skip_race = False
-            try:
-                if ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT:
-                    from module.umamusume.scenario.mant.inventory import should_skip_race
-                    skip_race = should_skip_race(ctx)
-            except Exception:
-                pass
-            if not skip_race:
-                turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
-                turn_operation.race_id = extra_race_this_turn[0]
-                return turn_operation
+            turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
+            turn_operation.race_id = extra_race_this_turn[0]
+            return turn_operation
 
     medic = False
     if ctx.cultivate_detail.turn_info.medic_room_available and energy <= ENERGY_MEDIC_GENERAL:

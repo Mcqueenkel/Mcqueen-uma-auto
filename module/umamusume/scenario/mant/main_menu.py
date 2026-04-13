@@ -810,6 +810,6 @@ def handle_mant_rival_race(ctx, img):
     px = img_rgb[1089, rival_x]
     if color_match(px, RIVAL_COLOR_1, RIVAL_TOLERANCE) or color_match(px, RIVAL_COLOR_2, RIVAL_TOLERANCE):
         log.info("rival race detected")
-        ctx.cultivate_detail.turn_info.turn_operation = None
+        ctx.cultivate_detail.turn_info.mant_rival_detected = True
         ctx.cultivate_detail.turn_info.parse_train_info_finish = False
     ctx.cultivate_detail.turn_info.mant_rival_checked = True
