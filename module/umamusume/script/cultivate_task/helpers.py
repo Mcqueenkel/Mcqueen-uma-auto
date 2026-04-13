@@ -275,6 +275,7 @@ def should_use_pal_outing_simple(ctx: UmamusumeContext):
     thresholds = pal_thresholds[stage - 1]
     mood_threshold = thresholds[0]
     energy_threshold = thresholds[1]
+    score_threshold = thresholds[2] if len(thresholds) > 2 else 0
 
     from bot.conn.fetch import fetch_state
     state = fetch_state(img)
@@ -294,6 +295,66 @@ def should_use_pal_outing_simple(ctx: UmamusumeContext):
         log.info("Both conditions met - using pal outing instead of rest")
     else:
         log.info("Conditions not met - using rest")
+
+    ti.pal_outing_cached = should_outing
+    ti.pal_outing_cached_date = ti.date
+    return should_outing
+
+
+def should_use_pal_outing(ctx: UmamusumeContext, score_below: bool = False):
+    if not getattr(ctx.cultivate_detail, 'prioritize_recreation', False):
+        return False
+    if ctx.cultivate_detail.pal_event_stage <= 0:
+        return False
+
+    ti = ctx.cultivate_detail.turn_info
+    if ti is None:
+        return False
+    cached = getattr(ti, 'pal_outing_cached', None)
+    cached_date = getattr(ti, 'pal_outing_cached_date', -1)
+    if cached is not None and cached_date == ti.date:
+        return cached
+
+    img = ctx.current_screen
+    if img is None:
+        return False
+
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    from module.umamusume.asset.template import UI_RECREATION_FRIEND_NOTIFICATION
+    result = image_match(img_gray, UI_RECREATION_FRIEND_NOTIFICATION)
+    if not result.find_match:
+        ti.pal_outing_cached = False
+        ti.pal_outing_cached_date = ti.date
+        return False
+
+    pal_thresholds = ctx.cultivate_detail.pal_thresholds
+    if not pal_thresholds:
+        ti.pal_outing_cached = False
+        ti.pal_outing_cached_date = ti.date
+        return False
+
+    stage = ctx.cultivate_detail.pal_event_stage
+    if stage > len(pal_thresholds):
+        ti.pal_outing_cached = False
+        ti.pal_outing_cached_date = ti.date
+        return False
+
+    thresholds = pal_thresholds[stage - 1]
+    mood_threshold = thresholds[0]
+    energy_threshold = thresholds[1]
+    score_threshold = thresholds[2] if len(thresholds) > 2 else 0
+
+    from bot.conn.fetch import fetch_state
+    state = fetch_state(img)
+    current_energy = state.get("energy", 0)
+    current_mood_raw = state.get("mood")
+    current_mood = current_mood_raw if current_mood_raw is not None else 4
+
+    mood_below = current_mood <= mood_threshold
+    energy_below = current_energy <= energy_threshold
+
+    conditions_met = sum([mood_below, energy_below, score_below])
+    should_outing = conditions_met >= 2
 
     ti.pal_outing_cached = should_outing
     ti.pal_outing_cached_date = ti.date

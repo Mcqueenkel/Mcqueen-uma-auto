@@ -124,14 +124,6 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
     ctx.cultivate_detail.turn_info.cached_energy = energy
 
     if energy <= limit and not mant_skip:
-        op = TurnOperation()
-        if should_use_pal_outing_simple(ctx):
-            op.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_TRIP
-            ctx.cultivate_detail.turn_info.turn_operation = op
-            ctx.cultivate_detail.last_decision_stats = None
-            ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
-            return
-
         turn_info = ctx.cultivate_detail.turn_info
         date = turn_info.date
         from module.umamusume.asset.race_data import get_races_for_period
@@ -941,13 +933,10 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                     energy_below = current_energy <= energy_threshold
                     score_below = current_score <= score_threshold
                     
-                    log.info(f"PAL outing - Stage {stage}:")
-                    log.info(f"Mood: {current_mood} vs {mood_threshold} - {'<' if mood_below else '>'}")
-                    log.info(f"Energy: {current_energy} vs {energy_threshold} - {'<' if energy_below else '>'}")
-                    log.info(f"Score: {current_score:.3f} vs {score_threshold} - {'<' if score_below else '>'}")
+                    conditions_met = sum([mood_below, energy_below, score_below])
                     
-                    if mood_below and energy_below and score_below:
-                        log.info("All 3 conditions < thresholds - overriding to pal outing")
+                    if conditions_met >= 2:
+                        log.info("2/3 conditions met - overriding to pal outing")
                         if op_from_ai.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_RACE:
                             ctx.cultivate_detail.mant_cleat_used = False
                         op_from_ai.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_TRIP
