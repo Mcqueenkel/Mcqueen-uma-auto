@@ -390,6 +390,13 @@ if __name__ == '__main__':
     
     register_app(UmamusumeManifest)
     
+    try:
+        import paddleocr as pocr
+        from bot.recog.ocr import set_paddleocr
+        set_paddleocr(pocr)
+    except Exception:
+        pass
+    
     restored = False
     was_active = None
     try:
@@ -410,6 +417,24 @@ if __name__ == '__main__':
     
     print("UAT running on http://127.0.0.1:8071")
     if os.environ.get("UAT_AUTORESTART", "0") == "1":
+        try:
+            lock_path = os.path.join('userdata', 'restart.lock')
+            if os.path.exists(lock_path):
+                try:
+                    with open(lock_path, 'r') as f:
+                        old_pid = int(f.read().strip())
+                    import psutil
+                    wait_until = time.time() + 10
+                    while time.time() < wait_until and psutil.pid_exists(old_pid):
+                        time.sleep(0.3)
+                except Exception:
+                    time.sleep(1)
+                try:
+                    os.remove(lock_path)
+                except Exception:
+                    pass
+        except Exception:
+            pass
         for attempt in range(10):
             try:
                 run("bot.server.handler:server", host="127.0.0.1", port=8071, log_level="error")

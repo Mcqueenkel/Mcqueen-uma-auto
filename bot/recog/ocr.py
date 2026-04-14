@@ -104,6 +104,11 @@ def initialize_gpu_mode():
     except Exception as e:
         _USE_GPU = False
 
+def set_paddleocr(module):
+    global paddleocr
+    with _paddleocr_import_lock:
+        paddleocr = module
+
 def ensure_paddleocr():
     global paddleocr
     try:
@@ -112,11 +117,21 @@ def ensure_paddleocr():
         if hasattr(sys, "is_finalizing") and sys.is_finalizing():
             raise RuntimeError("Interpreter finalizing; skip paddleocr import")
         with _paddleocr_import_lock:
-            if paddleocr is None or 'paddleocr' not in sys.modules:
-                paddleocr = importlib.import_module('paddleocr')
+            if paddleocr is not None and 'paddleocr' in sys.modules:
+                return
+            for attempt in range(3):
+                try:
+                    paddleocr = importlib.import_module('paddleocr')
+                    break
+                except RuntimeError as e:
+                    if 'atexit' in str(e).lower() and attempt < 2:
+                        time.sleep(0.5)
+                        continue
+                    raise
+                except Exception:
+                    raise
     except Exception as e:
         log.error(f"Failed to import paddleocr: {e}")
-        raise
 
 def init_ocr_if_needed():
     initialize_gpu_mode()
@@ -235,15 +250,24 @@ def reset_ocr():
 
 
 
+ocr_broken = False
+
 def ocr(img, lang="en"):
+    global ocr_broken
     reset_timeout()
     cache_key = _compute_ocr_cache_key(img, lang)
     if cache_key:
         cached = _ocr_result_cache.get(cache_key)
         if cached is not None:
             return cached
-    o = get_ocr(lang)
-    result = o.ocr(img, cls=False)
+    try:
+        o = get_ocr(lang)
+        result = o.ocr(img, cls=False)
+    except Exception:
+        if not ocr_broken:
+            ocr_broken = True
+        return []
+    ocr_broken = False
     if cache_key:
         _ocr_result_cache.set(cache_key, result)
     if _USE_GPU:
