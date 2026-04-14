@@ -435,15 +435,19 @@ if __name__ == '__main__':
                     pass
         except Exception:
             pass
-        for attempt in range(10):
-            try:
-                run("bot.server.handler:server", host="127.0.0.1", port=8071, log_level="error")
-                break
-            except OSError as e:
-                if "10048" in str(e) and attempt < 9:
-                    time.sleep(2 ** attempt)
-                else:
-                    raise
+        import subprocess
+        subprocess.run("powershell -Command \"Get-NetTCPConnection -LocalPort 8071 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }\"",
+                      shell=True, capture_output=True)
+        try:
+            run("bot.server.handler:server", host="127.0.0.1", port=8071, log_level="error")
+        except OSError as e:
+            if "10048" not in str(e):
+                raise
+            print("Port in use, killing and retrying...")
+            subprocess.run("powershell -Command \"Get-NetTCPConnection -LocalPort 8071 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }\"",
+                          shell=True, capture_output=True)
+            time.sleep(2)
+            run("bot.server.handler:server", host="127.0.0.1", port=8071, log_level="error")
     else:
         threading.Thread(target=lambda: (time.sleep(1), __import__('webbrowser').open("http://127.0.0.1:8071")), daemon=True).start()
         try:
