@@ -79,7 +79,7 @@ def script_scenario_select(ctx: UmamusumeContext):
     target_scenario = ctx.cultivate_detail.scenario.scenario_type()
     time.sleep(2)
 
-    for i in range(1, len(ScenarioType)):
+    for i in range(1, 15):
         img = ctx.ctrl.get_screen(to_gray=True)
 
         if image_match(img, UI_SCENARIO[target_scenario]).find_match:

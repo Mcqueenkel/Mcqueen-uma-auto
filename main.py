@@ -441,7 +441,7 @@ if __name__ == '__main__':
                 break
             except OSError as e:
                 if "10048" in str(e) and attempt < 9:
-                    time.sleep(1)
+                    time.sleep(2 ** attempt)
                 else:
                     raise
     else:
