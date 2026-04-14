@@ -252,48 +252,54 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
         handle_mant_rival_race(ctx, img)
 
     if not ctx.cultivate_detail.turn_info.parse_train_info_finish:
-        limit = int(getattr(ctx.cultivate_detail, 'rest_threshold', getattr(ctx.cultivate_detail, 'rest_treshold', getattr(ctx.cultivate_detail, 'fast_path_energy_limit', 48))))
-        if has_extra_race and not is_mant(ctx):
-            ctx.cultivate_detail.turn_info.parse_train_info_finish = True
-            return
-        if limit == 0:
-            energy = 100
+        # If a non-training operation is already decided (race/rest/trip/medic),
+        # execute it from main menu instead of entering training-select and bouncing back.
+        if (turn_operation is not None and
+                turn_operation.turn_operation_type != TurnOperationType.TURN_OPERATION_TYPE_TRAINING):
+            pass
         else:
-            from bot.conn.fetch import read_energy
-            energy = read_energy()
-            if energy == 0:
-                time.sleep(0.15)
-                energy = read_energy()
-        if is_mant(ctx) and energy <= limit:
-            ctx.cultivate_detail.turn_info.cached_energy = energy
-            if has_extra_race:
-                from module.umamusume.scenario.mant.inventory import has_energy_recovery
-                if has_energy_recovery(ctx):
-                    ctx.cultivate_detail.turn_info.energy_recovery_deferred = True
+            limit = int(getattr(ctx.cultivate_detail, 'rest_threshold', getattr(ctx.cultivate_detail, 'rest_treshold', getattr(ctx.cultivate_detail, 'fast_path_energy_limit', 48))))
+            if has_extra_race and not is_mant(ctx):
+                ctx.cultivate_detail.turn_info.parse_train_info_finish = True
+                return
+            if limit == 0:
+                energy = 100
             else:
-                from module.umamusume.scenario.mant.inventory import handle_energy_recovery
-                if handle_energy_recovery(ctx):
-                    energy = getattr(ctx.cultivate_detail.turn_info, 'cached_energy', energy)
-        if energy <= limit:
-            if getattr(ctx.cultivate_detail.turn_info, 'energy_recovery_deferred', False):
+                from bot.conn.fetch import read_energy
+                energy = read_energy()
+                if energy == 0:
+                    time.sleep(0.15)
+                    energy = read_energy()
+            if is_mant(ctx) and energy <= limit:
+                ctx.cultivate_detail.turn_info.cached_energy = energy
+                if has_extra_race:
+                    from module.umamusume.scenario.mant.inventory import has_energy_recovery
+                    if has_energy_recovery(ctx):
+                        ctx.cultivate_detail.turn_info.energy_recovery_deferred = True
+                else:
+                    from module.umamusume.scenario.mant.inventory import handle_energy_recovery
+                    if handle_energy_recovery(ctx):
+                        energy = getattr(ctx.cultivate_detail.turn_info, 'cached_energy', energy)
+            if energy <= limit:
+                if getattr(ctx.cultivate_detail.turn_info, 'energy_recovery_deferred', False):
+                    base_energy, _, _ = scan_energy(ctx.ctrl)
+                    ctx.cultivate_detail.turn_info.base_energy = base_energy
+                    ctx.ctrl.click_by_point(TO_TRAINING_SELECT)
+                    return
+                if should_use_team_sirius_recreation(ctx):
+                    if execute_team_sirius_recreation(ctx, trip_click_point=get_trip(ctx)):
+                        return
+                from module.umamusume.script.cultivate_task.helpers import should_use_pal_outing
+                if should_use_pal_outing(ctx):
+                    ctx.ctrl.click_by_point(get_trip(ctx))
+                    return
+                ctx.ctrl.click_by_point(CULTIVATE_REST)
+                return
+            else:
                 base_energy, _, _ = scan_energy(ctx.ctrl)
                 ctx.cultivate_detail.turn_info.base_energy = base_energy
                 ctx.ctrl.click_by_point(TO_TRAINING_SELECT)
                 return
-            if should_use_team_sirius_recreation(ctx):
-                if execute_team_sirius_recreation(ctx, trip_click_point=get_trip(ctx)):
-                    return
-            from module.umamusume.script.cultivate_task.helpers import should_use_pal_outing
-            if should_use_pal_outing(ctx):
-                ctx.ctrl.click_by_point(get_trip(ctx))
-                return
-            ctx.ctrl.click_by_point(CULTIVATE_REST)
-            return
-        else:
-            base_energy, _, _ = scan_energy(ctx.ctrl)
-            ctx.cultivate_detail.turn_info.base_energy = base_energy
-            ctx.ctrl.click_by_point(TO_TRAINING_SELECT)
-            return
 
     if turn_operation is not None:
         if turn_operation.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_TRAINING:

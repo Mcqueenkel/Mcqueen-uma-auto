@@ -3620,7 +3620,12 @@ export default {
     },
     applyPresetRace: function () {
       this.selectedScenario = this.presetsUse.scenario || 1
-      this.extraRace = this.presetsUse.race_list
+      const presetRaceList = Array.isArray(this.presetsUse.race_list)
+        ? this.presetsUse.race_list
+        : (Array.isArray(this.presetsUse.extra_race_list) ? this.presetsUse.extra_race_list : [])
+      this.extraRace = presetRaceList
+        .map(raceId => Number(raceId))
+        .filter(raceId => Number.isFinite(raceId))
       this.expectSpeedValue = this.presetsUse.expect_attribute[0]
       this.expectStaminaValue = this.presetsUse.expect_attribute[1]
       this.expectPowerValue = this.presetsUse.expect_attribute[2]
@@ -4236,7 +4241,8 @@ export default {
         use_last_parents: this.useLastParents,
         override_insufficient_fans_forced_races: this.overrideInsufficientFansForcedRaces,
         scenario: this.selectedScenario,
-        race_list: this.extraRace,
+        race_list: this.extraRace.map(raceId => Number(raceId)).filter(raceId => Number.isFinite(raceId)),
+        extra_race_list: this.extraRace.map(raceId => Number(raceId)).filter(raceId => Number.isFinite(raceId)),
         skill_priority_list: skill_priority_list,
         skill_blacklist: skill_blacklist,
         event_weights: {
@@ -4452,7 +4458,8 @@ export default {
         use_last_parents: this.useLastParents,
         override_insufficient_fans_forced_races: this.overrideInsufficientFansForcedRaces,
         scenario: this.selectedScenario,
-        race_list: this.extraRace,
+        race_list: this.extraRace.map(raceId => Number(raceId)).filter(raceId => Number.isFinite(raceId)),
+        extra_race_list: this.extraRace.map(raceId => Number(raceId)).filter(raceId => Number.isFinite(raceId)),
         skill_priority_list: skill_priority_list,
         skill_blacklist: skill_blacklist,
         event_weights: {
