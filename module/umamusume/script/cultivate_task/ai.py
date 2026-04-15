@@ -155,11 +155,14 @@ def get_operation(ctx: UmamusumeContext) -> TurnOperation | None:
                         skip_race = should_skip_race(ctx)
                 except Exception:
                     pass
-                if not skip_race:
-                    pass
-                else:
+                if skip_race:
                     log.info(f"rest threshold: energy={energy}, threshold={limit} - prioritizing rest")
                     turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST
+                    return turn_operation
+                else:
+                    log.info(f"Extra race available: {extra_race_this_turn[0]} - prioritizing race")
+                    turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
+                    turn_operation.race_id = extra_race_this_turn[0]
                     return turn_operation
             else:
                 log.info(f"rest threshold: energy={energy}, threshold={limit} - prioritizing rest")

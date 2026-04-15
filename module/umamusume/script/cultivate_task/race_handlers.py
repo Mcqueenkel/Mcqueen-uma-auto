@@ -193,6 +193,7 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
                 ctx.ctrl.swipe(x1=20, y1=850, x2=20, y2=1000, duration=200, name="")
                 swiped = True
             img = ctx.ctrl.get_screen()
+            ctx.current_screen = img
             ti = ctx.cultivate_detail.turn_info
             current_race_id = ctx.cultivate_detail.turn_info.turn_operation.race_id
             if not hasattr(ti, 'race_search_started_at') or getattr(ti, 'race_search_id', None) != current_race_id:
@@ -236,9 +237,11 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
                         time.sleep(0.17)
                     time.sleep(0.3)
                     img = ctx.ctrl.get_screen()
+                    ctx.current_screen = img
                 ctx.ctrl.swipe(x1=20, y1=1000, x2=20, y2=850, duration=1000, name="")
                 time.sleep(0.58)
                 img = ctx.ctrl.get_screen()
+                ctx.current_screen = img
         else:
             ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
 
