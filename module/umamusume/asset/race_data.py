@@ -12,7 +12,7 @@ UMAMUSUME_RACE_TEMPLATE_PATH = "/umamusume/race"
 
 PERIOD_TO_RACES = {}
 RACE_GRADE = {}
-
+RACE_ID_TO_TURN: dict[int, int] = {}
 
 def _load_all_race_data():
     with open('resource/umamusume/data/race.csv', 'r', encoding="utf-8") as file:
@@ -40,6 +40,9 @@ def _load_all_race_data():
 
                 if grade:
                     RACE_GRADE[race_id] = grade
+                    
+                RACE_ID_TO_TURN[race_id] = time_period 
+                   
 
     RACE_LIST[0] = (0, "suitable", REF_SUITABLE_RACE)
 
@@ -61,3 +64,25 @@ def is_g2_race(race_id):
 
 def is_g3_race(race_id):
     return RACE_GRADE.get(race_id, '') == 'G3'
+
+def compute_race_chains(extra_race_list: list[int]) -> dict[int, tuple[int, int]]:
+    
+    #Maps races to their position in the chain 
+    race_turns = sorted({
+        RACE_ID_TO_TURN[race_id]
+        for race_id in extra_race_list
+        if race_id in RACE_ID_TO_TURN
+    })
+
+    chain_map: dict[int, tuple[int, int]] = {}
+    i = 0
+    while i < len(race_turns):
+        j = i
+        while j + 1 < len(race_turns) and race_turns[j + 1] == race_turns[j] + 1:
+            j += 1
+        chain_length = j - i + 1
+        for pos, turn in enumerate(race_turns[i:j + 1], start=1):
+            chain_map[turn] = (pos, chain_length)
+        i = j + 1
+
+    return chain_map
