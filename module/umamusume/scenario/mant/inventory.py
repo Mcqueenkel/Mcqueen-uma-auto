@@ -1214,7 +1214,6 @@ def whistle_loop(ctx, start_date):
 
 def handle_cupcake_use(ctx):
     from module.umamusume.scenario.mant.constants import get_incoming_mood
-
     cached_mood = getattr(ctx.cultivate_detail.turn_info, 'cached_mood', None)
     if cached_mood is not None:
         mood = cached_mood
@@ -1223,12 +1222,13 @@ def handle_cupcake_use(ctx):
         mood = read_mood(ctx.current_screen)
     if mood is None or mood >= 5:
         return False
-
+    _, total = get_chain_position(ctx)
+    if total > 1:
+        log.info(f"Race chain of {total} - skipping cupcake (mood item)")
+        return False
     date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
     incoming = get_incoming_mood(date, 3)
     owned = {n: q for n, q in getattr(ctx.cultivate_detail, 'mant_owned_items', [])}
-
-
     for name, boost in [('Berry Sweet Cupcake', 2), ('Plain Cupcake', 1)]:
         if owned.get(name, 0) <= 0:
             continue
@@ -1238,7 +1238,6 @@ def handle_cupcake_use(ctx):
             ctx.cultivate_detail.turn_info.parse_main_menu_finish = False
             return True
     return False
-
 
 def has_instant_use_items(ctx):
     from module.umamusume.persistence import is_buff_used
@@ -1372,6 +1371,16 @@ def count_races_in_window(ctx, duration):
             count += 1
     return count
 
+def get_chain_position(ctx) -> tuple[int, int]:
+    chain_map = getattr(ctx.cultivate_detail, 'race_chain_map', {})
+    date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
+    return chain_map.get(date, (1, 1))
+
+
+def has_scheduled_race_this_turn(ctx) -> bool:
+    chain_map = getattr(ctx.cultivate_detail, 'race_chain_map', {})
+    date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
+    return date in chain_map
 
 MANT_CLIMAX_START = 73
 MANT_CLIMAX_TRAINING_TURNS = [73, 75, 77]
@@ -1625,8 +1634,11 @@ def handle_energy_drink_max_before_race(ctx):
         return False
     if int(current_energy) > 1:
         return False
+    position, _ = get_chain_position(ctx)
+    if position > 3:
+        log.info(f"Race {position} in chain - deferring Energy Drink MAX (only used on races 1-3)")
+        return False
     return use_item_and_update_inventory(ctx, 'Energy Drink MAX')
-
 
 def handle_glow_sticks_before_race(ctx):
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
