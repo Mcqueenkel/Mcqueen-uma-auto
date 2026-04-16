@@ -167,7 +167,7 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
                     return
         if ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_RACE:
             race_id_up = ctx.cultivate_detail.turn_info.turn_operation.race_id
-            scroll_up_deadline = time.time() + 1.0
+            scroll_up_deadline = time.time() + 3.0
             while time.time() < scroll_up_deadline:
                 img_up = ctx.ctrl.get_screen()
                 selected_up = find_race(ctx, img_up, race_id_up)
@@ -214,7 +214,15 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
                     return
                 race_id = ctx.cultivate_detail.turn_info.turn_operation.race_id
                 log.info(f"Looking for race ID: {race_id}")
-                selected = find_race(ctx, img, race_id)
+                selected = False
+                for retry in range(3):
+                    selected = find_race(ctx, img, race_id)
+                    if selected:
+                        break
+                    if retry < 2:
+                        time.sleep(0.5)
+                        img = ctx.ctrl.get_screen()
+                        ctx.current_screen = img
                 if selected:
                     log.info(f"Found race ID: {race_id}")
                     if hasattr(ti, 'race_search_started_at'):
@@ -239,7 +247,7 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
                     img = ctx.ctrl.get_screen()
                     ctx.current_screen = img
                 ctx.ctrl.swipe(x1=20, y1=1000, x2=20, y2=850, duration=1000, name="")
-                time.sleep(0.58)
+                time.sleep(1.0)
                 img = ctx.ctrl.get_screen()
                 ctx.current_screen = img
         else:
