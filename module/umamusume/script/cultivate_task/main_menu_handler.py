@@ -273,9 +273,20 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
             if is_mant(ctx) and energy <= limit:
                 ctx.cultivate_detail.turn_info.cached_energy = energy
                 if has_extra_race:
-                    from module.umamusume.scenario.mant.inventory import has_energy_recovery
-                    if has_energy_recovery(ctx):
-                        ctx.cultivate_detail.turn_info.energy_recovery_deferred = True
+                    # Don't defer to training-select: it bounces back here every time
+                    # because parse_train_info_finish is never set to True before returning.
+                    # Commit the race operation now (same as non-MANT path) so the
+                    # turn_operation dispatch block below executes it directly.
+                    if ctx.cultivate_detail.turn_info.turn_operation is None:
+                        matching_races = [race_id for race_id in ctx.cultivate_detail.extra_race_list
+                                          if race_id in ctx.cultivate_detail.turn_info.cached_available_races]
+                        if matching_races:
+                            ctx.cultivate_detail.turn_info.turn_operation = TurnOperation()
+                            ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
+                            ctx.cultivate_detail.turn_info.turn_operation.race_id = matching_races[0]
+                            log.info(f'MANT low energy: committing extra race {matching_races[0]}, skipping training-select')
+                    ctx.cultivate_detail.turn_info.parse_train_info_finish = True
+                    return  # re-enter: turn_operation is now set, dispatched on next call
                 else:
                     from module.umamusume.scenario.mant.inventory import handle_energy_recovery
                     if handle_energy_recovery(ctx):
@@ -407,6 +418,8 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
                             ctx.cultivate_detail.extra_race_list = list(ctx.cultivate_detail.extra_race_list)
                         if race_id and race_id in ctx.cultivate_detail.extra_race_list:
                             ctx.cultivate_detail.extra_race_list.remove(race_id)
+                            from module.umamusume.asset.race_data import compute_race_chains
+                            ctx.cultivate_detail.race_chain_map = compute_race_chains(ctx.cultivate_detail.extra_race_list)
                     except Exception as e:
                         log.debug(f"fail: {e}")
                     ctx.cultivate_detail.turn_info.turn_operation = None
