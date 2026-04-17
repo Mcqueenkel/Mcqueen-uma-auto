@@ -200,6 +200,10 @@ def run_health_checks(device_id):
 def validate_device_setup(device_id) -> bool:
     res = _run_adb(["-s", device_id, "shell", "wm", "size"], timeout=10)
     size_str = res.stdout.strip().split(":")[-1].strip()
+    
+    if not size_str:
+        return False
+        
     w, h = map(int, size_str.split("x"))
 
     dpi_res = _run_adb(["-s", device_id, "shell", "wm", "density"], timeout=10)
