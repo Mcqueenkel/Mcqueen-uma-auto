@@ -4,7 +4,8 @@ from module.umamusume.asset.template import (
     REF_AOHARU_RACE, REF_SELECT_OPP2, REF_ALL_RES, REF_RACE_END, REF_RACE_END2,
     REF_TEAM_SHOWDOWN, REF_NEXT, REF_ROUND_1, REF_ROUND_2, REF_ROUND_3, REF_ROUND_4,
     REF_AOHARUHAI_TEAM_NAME_0, REF_AOHARUHAI_TEAM_NAME_1,
-    REF_AOHARUHAI_TEAM_NAME_2, REF_AOHARUHAI_TEAM_NAME_3
+    REF_AOHARUHAI_TEAM_NAME_2, REF_AOHARUHAI_TEAM_NAME_3,
+    REF_MANT_RESET_CLOCK
 )
 import bot.base.log as logger
 
@@ -90,10 +91,42 @@ def aoharuhai_after_hook(ctx, img):
         return True
     
     if image_match(img[1204:1228, 319:399], REF_RACE_END2).find_match:
+        try:
+            from module.umamusume.define import ScenarioType
+            if (hasattr(ctx, 'cultivate_detail') and hasattr(ctx.cultivate_detail, 'scenario')
+                    and ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT
+                    and ctx.cultivate_detail.clock_used <= ctx.cultivate_detail.clock_use_limit):
+                clock_roi = img[1138:1212, 70:135]
+                reset_match = image_match(clock_roi, REF_MANT_RESET_CLOCK)
+                if reset_match.find_match:
+                    cx, cy = reset_match.center_point
+                    ctx.ctrl.click(cx + 70, cy + 1138, 'mant reset clock')
+                    ctx.cultivate_detail.clock_used += 1
+                    log.info("Clocks used: %s", ctx.cultivate_detail.clock_used)
+                    time.sleep(0.2)
+                    return True
+        except Exception:
+            pass
         ctx.ctrl.click(350, 1199, 'race end2')
         return True
     
     if image_match(img[1200:1222, 467:553], REF_RACE_END2).find_match:
+        try:
+            from module.umamusume.define import ScenarioType
+            if (hasattr(ctx, 'cultivate_detail') and hasattr(ctx.cultivate_detail, 'scenario')
+                    and ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT
+                    and ctx.cultivate_detail.clock_used <= ctx.cultivate_detail.clock_use_limit):
+                clock_roi = img[1138:1212, 70:135]
+                reset_match = image_match(clock_roi, REF_MANT_RESET_CLOCK)
+                if reset_match.find_match:
+                    cx, cy = reset_match.center_point
+                    ctx.ctrl.click(cx + 70, cy + 1138, 'mant reset clock')
+                    ctx.cultivate_detail.clock_used += 1
+                    log.info("Clocks used: %s", ctx.cultivate_detail.clock_used)
+                    time.sleep(0.2)
+                    return True
+        except Exception:
+            pass
         ctx.ctrl.click(508, 1196, 'race end2 b')
         return True
     
