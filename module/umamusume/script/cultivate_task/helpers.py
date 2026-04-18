@@ -74,166 +74,6 @@ def is_menu(ctx: UmamusumeContext):
     return result.find_match
 
 
-def detect_team_sirius_dates(ctx: UmamusumeContext):
-    from module.umamusume.asset.point import CULTIVATE_TRIP_MANT, ESCAPE
-    ctx.ctrl.click_by_point(CULTIVATE_TRIP_MANT)
-    if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=3.2):
-        ctx.ctrl.click_by_point(ESCAPE)
-        if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=2.0):
-            ctx.cultivate_detail.team_sirius_available_dates = []
-            return []
-    ctx.ctrl.click(*TS_CLICK)
-    if not ts_wait_cancel(ctx, *TS_MENU_CANCEL, timeout=3.2):
-        ctx.ctrl.click_by_point(ESCAPE)
-        ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=2.0)
-        ctx.ctrl.click_by_point(ESCAPE)
-        ts_wait_cancel_gone(ctx, *TS_RECREATION_CANCEL, timeout=2.0)
-        ctx.cultivate_detail.team_sirius_available_dates = []
-        return []
-    screen = ctx.ctrl.get_screen()
-    available = []
-    if screen is not None:
-        h, w, _ = screen.shape
-        for i, y in enumerate(TS_DATE_Y):
-            if y < h and TS_DATE_X < w:
-                r, g, b = screen[y, TS_DATE_X][:3]
-                if abs(int(r) - 255) <= 5 and abs(int(g) - 255) <= 5 and abs(int(b) - 255) <= 5:
-                    available.append(i + 1)
-    ctx.cultivate_detail.team_sirius_available_dates = available
-    import random
-    for _ in range(10):
-        if is_menu(ctx):
-            break
-        x = random.randint(500, 600)
-        y = random.randint(15, 22)
-        ctx.ctrl.click(x, y)
-        time.sleep(0.3)
-
-    return available
-
-
-def should_use_team_sirius_recreation(ctx: UmamusumeContext) -> bool:
-    if not getattr(ctx.cultivate_detail, 'team_sirius_enabled', False):
-        return False
-    available = getattr(ctx.cultivate_detail, 'team_sirius_available_dates', [])
-    if not available:
-        return False
-    last_used = getattr(ctx.cultivate_detail, 'team_sirius_last_date', -1)
-    current_date = ctx.cultivate_detail.turn_info.date
-    if current_date - last_used <= 1:
-        return False
-    all_ts_dates = REST_REPLACEMENT_DATES | TRAINING_REPLACEMENT_DATES | RECREATION_REPLACEMENT_DATES
-    return any(d in all_ts_dates for d in available)
-
-
-def get_team_sirius_recreation_date(ctx: UmamusumeContext) -> int:
-    available = getattr(ctx.cultivate_detail, 'team_sirius_available_dates', [])
-    if not available:
-        return 0
-    all_ts_priority = list(TRAINING_REPLACEMENT_DATES_ORDER) + [d for d in REST_REPLACEMENT_DATES if d not in TRAINING_REPLACEMENT_DATES_ORDER] + [d for d in RECREATION_REPLACEMENT_DATES if d not in TRAINING_REPLACEMENT_DATES_ORDER]
-    for date in all_ts_priority:
-        if date in available:
-            return date
-    return 0
-
-
-def execute_team_sirius_recreation(ctx: UmamusumeContext, trip_click_point=None) -> bool:
-    date_slot = get_team_sirius_recreation_date(ctx)
-    if date_slot == 0:
-        return False
-
-    from module.umamusume.asset.point import CULTIVATE_OPERATION_COMMON_CONFIRM, ESCAPE
-
-    if trip_click_point:
-        ctx.ctrl.click_by_point(trip_click_point)
-    else:
-        from module.umamusume.asset.point import CULTIVATE_TRIP_MANT
-        ctx.ctrl.click_by_point(CULTIVATE_TRIP_MANT)
-    time.sleep(0.3)
-
-    if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=2.0):
-        ctx.ctrl.click_by_point(ESCAPE)
-        if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=1.5):
-            return False
-
-    ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
-    time.sleep(0.3)
-
-    ctx.ctrl.click(*TS_CLICK)
-    time.sleep(0.3)
-
-    if not ts_wait_cancel(ctx, *TS_MENU_CANCEL, timeout=2.0):
-        ctx.ctrl.click_by_point(ESCAPE)
-        ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=1.5)
-        ctx.ctrl.click_by_point(ESCAPE)
-        ts_wait_cancel_gone(ctx, *TS_RECREATION_CANCEL, timeout=1.5)
-        return False
-
-    click_y = TS_DATE_CLICK_Y[date_slot - 1]
-    ctx.ctrl.click(TS_DATE_CLICK_X, click_y)
-    time.sleep(0.3)
-
-    import random
-    for _ in range(10):
-        if is_menu(ctx):
-            break
-        x = random.randint(500, 600)
-        y = random.randint(15, 22)
-        ctx.ctrl.click(x, y)
-        time.sleep(0.2)
-
-    ctx.cultivate_detail.team_sirius_last_date = date_slot
-    ctx.cultivate_detail.team_sirius_available_dates = []
-
-    return True
-
-
-def execute_regular_recreation(ctx: UmamusumeContext, trip_click_point=None) -> bool:
-    ts_dates = getattr(ctx.cultivate_detail, 'team_sirius_available_dates', [])
-    if not ts_dates:
-        return False
-
-    from module.umamusume.asset.point import CULTIVATE_OPERATION_COMMON_CONFIRM, ESCAPE
-
-    if trip_click_point:
-        ctx.ctrl.click_by_point(trip_click_point)
-    else:
-        from module.umamusume.asset.point import CULTIVATE_TRIP_MANT
-        ctx.ctrl.click_by_point(CULTIVATE_TRIP_MANT)
-    time.sleep(0.5)
-    if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=3.2):
-        ctx.ctrl.click_by_point(ESCAPE)
-        if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=2.0):
-            return False
-    ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
-    time.sleep(0.5)
-
-    date_slot = get_team_sirius_recreation_date(ctx)
-    if date_slot == 0:
-        ctx.ctrl.click_by_point(ESCAPE)
-        return False
-
-    ctx.ctrl.click(*TS_CLICK)
-    time.sleep(0.3)
-    if ts_wait_cancel(ctx, *TS_MENU_CANCEL, timeout=3.2):
-        click_y = TS_DATE_CLICK_Y[date_slot - 1]
-        ctx.ctrl.click(TS_DATE_CLICK_X, click_y)
-        time.sleep(0.3)
-    else:
-        ctx.ctrl.click_by_point(ESCAPE)
-        return False
-
-    import random
-    for _ in range(10):
-        if is_menu(ctx):
-            break
-        x = random.randint(500, 600)
-        y = random.randint(15, 22)
-        ctx.ctrl.click(x, y)
-        time.sleep(0.2)
-    return True
-
-
 def should_use_pal_outing_simple(ctx: UmamusumeContext):
     if not getattr(ctx.cultivate_detail, 'prioritize_recreation', False):
         return False
@@ -302,9 +142,11 @@ def should_use_pal_outing_simple(ctx: UmamusumeContext):
 
 
 def should_use_pal_outing(ctx: UmamusumeContext, score_below: bool = False):
-    if not getattr(ctx.cultivate_detail, 'prioritize_recreation', False):
+    prioritize = getattr(ctx.cultivate_detail, 'prioritize_recreation', False)
+    stage = ctx.cultivate_detail.pal_event_stage
+    if not prioritize:
         return False
-    if ctx.cultivate_detail.pal_event_stage <= 0:
+    if stage <= 0:
         return False
 
     ti = ctx.cultivate_detail.turn_info
@@ -352,8 +194,9 @@ def should_use_pal_outing(ctx: UmamusumeContext, score_below: bool = False):
 
     mood_below = current_mood <= mood_threshold
     energy_below = current_energy <= energy_threshold
+    score_below_val = score_threshold > 0 and score_below
 
-    conditions_met = sum([mood_below, energy_below, score_below])
+    conditions_met = sum([mood_below, energy_below, score_below_val])
     should_outing = conditions_met >= 2
 
     ti.pal_outing_cached = should_outing
@@ -366,7 +209,6 @@ def detect_pal_stage(ctx: UmamusumeContext, img):
     pal_thresholds = ctx.cultivate_detail.pal_thresholds
 
     if not pal_name or not pal_thresholds:
-        log.error("PAL configuration missing")
         return 0
 
     pal_data = pal_thresholds
@@ -390,3 +232,123 @@ def detect_pal_stage(ctx: UmamusumeContext, img):
 
     calculated_stage = len(coords_to_check) - matching_pixels + 1
     return calculated_stage
+
+
+def detect_group_card_dates(ctx: UmamusumeContext):
+    from module.umamusume.asset.point import CULTIVATE_TRIP_MANT, ESCAPE
+    ctx.ctrl.click_by_point(CULTIVATE_TRIP_MANT)
+    if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=3.2):
+        ctx.ctrl.click_by_point(ESCAPE)
+        if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=2.0):
+            ctx.cultivate_detail.group_card_available_dates = []
+            return []
+    ctx.ctrl.click(*TS_CLICK)
+    if not ts_wait_cancel(ctx, *TS_MENU_CANCEL, timeout=3.2):
+        ctx.ctrl.click_by_point(ESCAPE)
+        ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=2.0)
+        ctx.ctrl.click_by_point(ESCAPE)
+        ts_wait_cancel_gone(ctx, *TS_RECREATION_CANCEL, timeout=2.0)
+        ctx.cultivate_detail.group_card_available_dates = []
+        return []
+    screen = ctx.ctrl.get_screen()
+    available = []
+    if screen is not None:
+        h, w, _ = screen.shape
+        for i, y in enumerate(TS_DATE_Y):
+            if y < h and TS_DATE_X < w:
+                r, g, b = screen[y, TS_DATE_X][:3]
+                is_white = abs(int(r) - 255) <= 5 and abs(int(g) - 255) <= 5 and abs(int(b) - 255) <= 5
+                if is_white:
+                    available.append(i + 1)
+    ctx.cultivate_detail.group_card_available_dates = available
+    import random
+    for attempt in range(10):
+        if is_menu(ctx):
+            break
+        x = random.randint(500, 600)
+        y = random.randint(15, 22)
+        ctx.ctrl.click(x, y)
+        time.sleep(0.3)
+    return available
+
+
+def should_use_group_card_recreation(ctx: UmamusumeContext) -> bool:
+    enabled = getattr(ctx.cultivate_detail, 'group_card_enabled', False)
+    available = getattr(ctx.cultivate_detail, 'group_card_available_dates', [])
+    last_used = getattr(ctx.cultivate_detail, 'group_card_last_date', -1)
+    current_date = ctx.cultivate_detail.turn_info.date
+    if not enabled:
+        return False
+    if not available:
+        return False
+    if current_date - last_used <= 1:
+        return False
+    all_dates = REST_REPLACEMENT_DATES | TRAINING_REPLACEMENT_DATES | RECREATION_REPLACEMENT_DATES
+    return any(d in all_dates for d in available)
+
+
+def get_group_card_recreation_date(ctx: UmamusumeContext) -> int:
+    """Return the best date slot to use for group card recreation.
+    Priority: training replacement > rest replacement > recreation replacement."""
+    available = getattr(ctx.cultivate_detail, 'group_card_available_dates', [])
+    if not available:
+        return 0
+    all_priority = list(TRAINING_REPLACEMENT_DATES_ORDER) + \
+                  [d for d in REST_REPLACEMENT_DATES if d not in TRAINING_REPLACEMENT_DATES_ORDER] + \
+                  [d for d in RECREATION_REPLACEMENT_DATES if d not in TRAINING_REPLACEMENT_DATES_ORDER]
+    for date in all_priority:
+        if date in available:
+            return date
+    return 0
+
+
+def execute_group_card_recreation(ctx: UmamusumeContext, trip_click_point=None) -> bool:
+    """Execute a group card recreation action.
+    This navigates the team recreation UI, which is DIFFERENT from friend outing UI."""
+    date_slot = get_group_card_recreation_date(ctx)
+    if date_slot == 0:
+        return False
+
+    from module.umamusume.asset.point import CULTIVATE_OPERATION_COMMON_CONFIRM, ESCAPE
+
+    if trip_click_point:
+        ctx.ctrl.click_by_point(trip_click_point)
+    else:
+        from module.umamusume.asset.point import CULTIVATE_TRIP_MANT
+        ctx.ctrl.click_by_point(CULTIVATE_TRIP_MANT)
+    time.sleep(0.3)
+
+    if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=2.0):
+        ctx.ctrl.click_by_point(ESCAPE)
+        if not ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=1.5):
+            return False
+
+    ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
+    time.sleep(0.3)
+
+    ctx.ctrl.click(*TS_CLICK)
+    time.sleep(0.3)
+
+    if not ts_wait_cancel(ctx, *TS_MENU_CANCEL, timeout=2.0):
+        ctx.ctrl.click_by_point(ESCAPE)
+        ts_wait_cancel(ctx, *TS_RECREATION_CANCEL, timeout=1.5)
+        ctx.ctrl.click_by_point(ESCAPE)
+        ts_wait_cancel_gone(ctx, *TS_RECREATION_CANCEL, timeout=1.5)
+        return False
+
+    click_y = TS_DATE_CLICK_Y[date_slot - 1]
+    ctx.ctrl.click(TS_DATE_CLICK_X, click_y)
+    time.sleep(0.3)
+
+    import random
+    for _ in range(10):
+        if is_menu(ctx):
+            break
+        x = random.randint(500, 600)
+        y = random.randint(15, 22)
+        ctx.ctrl.click(x, y)
+        time.sleep(0.2)
+
+    ctx.cultivate_detail.group_card_last_date = ctx.cultivate_detail.turn_info.date
+    ctx.cultivate_detail.group_card_available_dates = []
+    return True

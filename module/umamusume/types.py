@@ -15,7 +15,6 @@ class SupportCardInfo:
     card_type: SupportCardType
     favor: SupportCardFavorLevel
     has_event: bool
-    # Youth Cup section
     can_incr_special_training: bool
     spirit_explosion: bool
 
@@ -177,6 +176,11 @@ class CultivateContextDetail:
     pal_friendship_score: list[float]
     pal_card_multiplier: float
     wit_special_multiplier: list
+    group_card_enabled: bool
+    group_card_name: str
+    group_card_percentile: int
+    group_card_available_dates: list
+    group_card_last_date: int
 
     def __init__(self):
         self.expect_attribute = None
@@ -204,6 +208,11 @@ class CultivateContextDetail:
         self.pal_thresholds = []
         self.pal_friendship_score = [0.08, 0.057, 0.018]
         self.pal_card_multiplier = 0.1
+        self.group_card_enabled = False
+        self.group_card_name = ""
+        self.group_card_percentile = 26
+        self.group_card_available_dates = []
+        self.group_card_last_date = -1
 
     def reset_skill_learn(self):
         self.learn_skill_done = False

@@ -199,8 +199,7 @@ def script_info(ctx: UmamusumeContext):
                 if image_match(screen, REF_TP_RECOVER_DRINK).find_match: # tp, 
                     ctx.ctrl.click_by_point(USE_TP_DRINK)
                 else:
-                    # TODO: 
-                    if ctx.cultivate_detail.allow_recover_tp == 2: # TP
+                    if ctx.cultivate_detail.allow_recover_tp == 2:
                         ctx.ctrl.click_by_point(USE_CARROT_RECOVER_TP)
                     else: 
                         reset_task(ctx.task.task_id)
@@ -283,34 +282,28 @@ def script_info(ctx: UmamusumeContext):
             time.sleep(0.5)
             ctx.ctrl.click_by_point(SCENARIO_SHORTEN_CONFIRM)
         if title_text == TITLE[8]:
-            if getattr(ctx.cultivate_detail, 'team_sirius_enabled', False):
-                ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
+            img = ctx.current_screen
+            img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            from module.umamusume.asset.template import UI_FRIEND_RECREATION, UI_FRIEND_RECREATION_COMPLETE
+
+            result_complete = image_match(img_gray, UI_FRIEND_RECREATION_COMPLETE)
+            log.info(f"Recreation complete match: {result_complete.find_match}")
+
+            if result_complete.find_match:
+                log.info("Recreation complete")
+                ctx.ctrl.click_by_point(CULTIVATE_TRIP_WITH_FRIEND_COMPLETE)
             else:
-                img = ctx.current_screen
-                img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                from module.umamusume.asset.template import UI_FRIEND_RECREATION, UI_FRIEND_RECREATION_COMPLETE
+                result = image_match(img_gray, UI_FRIEND_RECREATION)
+                log.info(f"Friend recreation match: {result.find_match}")
 
-                result_complete = image_match(img_gray, UI_FRIEND_RECREATION_COMPLETE)
-                log.info(f"Recreation complete match: {result_complete.find_match}")
-
-                if result_complete.find_match:
-                    log.info("Recreation complete")
-                    ctx.ctrl.click_by_point(CULTIVATE_TRIP_WITH_FRIEND_COMPLETE)
+                if result.find_match:
+                    log.info("Friend recreation - clicking CULTIVATE_TRIP_WITH_FRIEND")
+                    ctx.ctrl.click_by_point(CULTIVATE_TRIP_WITH_FRIEND)
                 else:
-                    result = image_match(img_gray, UI_FRIEND_RECREATION)
-                    log.info(f"Friend recreation match: {result.find_match}")
-
-                    if result.find_match:
-                        log.info("Friend recreation")
-                        ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
-                    else:
-                        log.info("Regular recreation")
-                        ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
+                    log.info("Regular recreation")
+                    ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
         if title_text == TITLE[55]:
-            if getattr(ctx.cultivate_detail, 'team_sirius_enabled', False):
-                ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
-            else:
-                ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
+            ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
         if title_text == TITLE[9]: #Confirmation
             ctx.ctrl.click_by_point(CULTIVATE_LEARN_SKILL_CONFIRM_AGAIN)
         if title_text == TITLE[10]: #Skills Learned

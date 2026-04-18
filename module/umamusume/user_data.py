@@ -102,9 +102,9 @@ def delete_preset_by_name(name: str):
     return False
 
 PAL_DEFAULTS: dict = {
-    "5 event chain (Defaults optimized for riko)": [[4, 75, 0.27], [4, 80, 0.27], [5, 80, 0.27], [5, 80, 0.27], [5, 75, 0.27]],
-    "4 event chain": [[2, 43, 0.9], [3, 17, 0.5], [1, 3, 0.8], [5, 88, 0.0]],
-    "3 event chain": [[2, 43, 0.9], [3, 17, 0.5], [1, 3, 0.8]],
+    "5 event chain (Defaults optimized for riko)": {"type": "friend", "thresholds": [[4, 75, 0.27], [4, 80, 0.27], [5, 80, 0.27], [5, 80, 0.27], [5, 75, 0.27]]},
+    "4 event chain": {"type": "friend", "thresholds": [[2, 43, 0.9], [3, 17, 0.5], [1, 3, 0.8], [5, 88, 0.0]]},
+    "3 event chain": {"type": "friend", "thresholds": [[2, 43, 0.9], [3, 17, 0.5], [1, 3, 0.8]]},
 }
 
 def read_pal_defaults() -> dict:
