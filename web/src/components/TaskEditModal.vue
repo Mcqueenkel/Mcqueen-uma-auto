@@ -2312,7 +2312,279 @@ export default {
       availableDistances: ['', 'Sprint', 'Mile', 'Medium', 'Long'],
       availableTiers: ['', 'SS', 'S', 'A', 'B', 'C', 'D'],
       availableRarities: ['', 'Unique', 'Rare', 'Normal'],
+
+      showSkillList: false,
+      showPresetMenu: false,
+      sharePresetText: '',
+
+      showSlotPopup: false,
+      slotPopupRaces: [],
+      slotPopupTitle: '',
+
+      draggingSkillName: null,
+      dragOrigin: null,
+      dropHoverTarget: null,
+      didValidDrop: false,
+
+      showEventList: false,
+      eventQuery: '',
+      eventList: [],
+      eventChoicesSelected: {},
+
+      scoreValueJunior: [0.11, 0.10, 0.006, 0.09],
+      scoreValueClassic: [0.11, 0.10, 0.006, 0.09],
+      scoreValueSenior: [0.11, 0.10, 0.006, 0.09],
+      scoreValueSeniorAfterSummer: [0.03, 0.05, 0.006, 0.09],
+      scoreValueFinale: [0, 0, 0.006, 0],
+      specialJunior: 0.095,
+      specialClassic: 0.095,
+      specialSenior: 0.095,
+      specialSeniorAfterSummer: 0.095,
+      specialFinale: 0,
+      witSpecialJunior: 1.57,
+      witSpecialClassic: 1.37,
+      statValueMultiplier: [0.01, 0.01, 0.01, 0.01, 0.01, 0.005],
+      raceTacticConditions: [
+        { op: 'range', val: 0, val2: 25, tactic: 3 },
+        { op: 'range', val: 24, val2: 49, tactic: 3 },
+        { op: '>', val: 48, val2: 0, tactic: 3 }
+      ],
+      showTurnInfo: false,
     };
+  },
+  mounted() {
+    this.loadCharacterData();
+    this.loadEventList();
+    this.loadRaceData();
+    this.loadSkillData();
+    this.loadTrainingCharacters();
+    this.initSelect();
+    this.getPresets();
+    this.loadPalCardStore();
+    this.successToast = $('#liveToast').toast({});
+    this.$nextTick(() => {
+      this.initScrollSpy();
+      this.normalizeScoreArrays(this.selectedScenario === 2 ? 5 : 4);
+    });
+    window.addEventListener('dragend', this.onGlobalDragEnd, false);
+    window.addEventListener('drop', this.onGlobalDrop, false);
+  },
+  beforeUnmount() {
+    window.removeEventListener('dragend', this.onGlobalDragEnd, false);
+    window.removeEventListener('drop', this.onGlobalDrop, false);
+  },
+  computed: {
+    mantCanRemoveTier() {
+      return this.mantTierCount > 1;
+    },
+    filteredHintCharacters() {
+      if (!this.hintBoostSearch) return this.allTrainingCharacters;
+      const q = this.hintBoostSearch.toLowerCase();
+      return this.allTrainingCharacters.filter(n => n.toLowerCase().includes(q));
+    },
+    filteredRaces_1() {
+      return this.umamusumeRaceList_1.filter(race => {
+        const matchesSearch = !this.raceSearch ||
+          race.name.toLowerCase().includes(this.raceSearch.toLowerCase()) ||
+          race.date.toLowerCase().includes(this.raceSearch.toLowerCase());
+        const matchesType =
+          (race.type === 'G1' && this.showGI) ||
+          (race.type === 'G2' && this.showGII) ||
+          (race.type === 'G3' && this.showGIII) ||
+          (race.type === 'OP' && this.showOP) ||
+          (race.type === 'PRE-OP' && this.showPREOP);
+        const matchesTerrain =
+          (race.terrain === 'Turf' && this.showTurf) ||
+          (race.terrain === 'Dirt' && this.showDirt);
+        const matchesDistance =
+          (race.distance === 'Sprint' && this.showSprint) ||
+          (race.distance === 'Mile' && this.showMile) ||
+          (race.distance === 'Medium' && this.showMedium) ||
+          (race.distance === 'Long' && this.showLong);
+        let matchesCharacter = true;
+        if (this.selectedCharacter) {
+          const character = this.characterList.find(c => c.name === this.selectedCharacter);
+          if (character) {
+            const matchesCharacterTerrain = race.terrain === character.terrain;
+            const characterDistances = character.distance.split(', ').map(d => d.trim());
+            const matchesCharacterDistance = characterDistances.includes(race.distance);
+            const matchesAptitude = matchesCharacterTerrain && matchesCharacterDistance;
+            const characterPeriods = this.characterTrainingPeriods[this.selectedCharacter];
+            const matchesTrainingPeriod = characterPeriods && (
+              (characterPeriods['Junior Year'] && characterPeriods['Junior Year'].includes(race.date)) ||
+              (characterPeriods['Classic Year'] && characterPeriods['Classic Year'].includes(race.date)) ||
+              (characterPeriods['Senior Year'] && characterPeriods['Senior Year'].includes(race.date))
+            );
+            matchesCharacter = matchesAptitude && matchesTrainingPeriod;
+          }
+        }
+        return matchesSearch && matchesType && matchesTerrain && matchesDistance && matchesCharacter;
+      });
+    },
+    filteredRaces_2() {
+      return this.umamusumeRaceList_2.filter(race => {
+        const matchesSearch = !this.raceSearch ||
+          race.name.toLowerCase().includes(this.raceSearch.toLowerCase()) ||
+          race.date.toLowerCase().includes(this.raceSearch.toLowerCase());
+        const matchesType =
+          (race.type === 'G1' && this.showGI) ||
+          (race.type === 'G2' && this.showGII) ||
+          (race.type === 'G3' && this.showGIII) ||
+          (race.type === 'OP' && this.showOP) ||
+          (race.type === 'PRE-OP' && this.showPREOP);
+        const matchesTerrain =
+          (race.terrain === 'Turf' && this.showTurf) ||
+          (race.terrain === 'Dirt' && this.showDirt);
+        const matchesDistance =
+          (race.distance === 'Sprint' && this.showSprint) ||
+          (race.distance === 'Mile' && this.showMile) ||
+          (race.distance === 'Medium' && this.showMedium) ||
+          (race.distance === 'Long' && this.showLong);
+        let matchesCharacter = true;
+        if (this.selectedCharacter) {
+          const character = this.characterList.find(c => c.name === this.selectedCharacter);
+          if (character) {
+            const matchesCharacterTerrain = race.terrain === character.terrain;
+            const characterDistances = character.distance.split(', ').map(d => d.trim());
+            const matchesCharacterDistance = characterDistances.includes(race.distance);
+            const matchesAptitude = matchesCharacterTerrain && matchesCharacterDistance;
+            const characterPeriods = this.characterTrainingPeriods[this.selectedCharacter];
+            const matchesTrainingPeriod = characterPeriods && (
+              (characterPeriods['Junior Year'] && characterPeriods['Junior Year'].includes(race.date)) ||
+              (characterPeriods['Classic Year'] && characterPeriods['Classic Year'].includes(race.date)) ||
+              (characterPeriods['Senior Year'] && characterPeriods['Senior Year'].includes(race.date))
+            );
+            matchesCharacter = matchesAptitude && matchesTrainingPeriod;
+          }
+        }
+        return matchesSearch && matchesType && matchesTerrain && matchesDistance && matchesCharacter;
+      });
+    },
+    filteredRaces_3() {
+      return this.umamusumeRaceList_3.filter(race => {
+        const matchesSearch = !this.raceSearch ||
+          race.name.toLowerCase().includes(this.raceSearch.toLowerCase()) ||
+          race.date.toLowerCase().includes(this.raceSearch.toLowerCase());
+        const matchesType =
+          (race.type === 'G1' && this.showGI) ||
+          (race.type === 'G2' && this.showGII) ||
+          (race.type === 'G3' && this.showGIII) ||
+          (race.type === 'OP' && this.showOP) ||
+          (race.type === 'PRE-OP' && this.showPREOP);
+        const matchesTerrain =
+          (race.terrain === 'Turf' && this.showTurf) ||
+          (race.terrain === 'Dirt' && this.showDirt);
+        const matchesDistance =
+          (race.distance === 'Sprint' && this.showSprint) ||
+          (race.distance === 'Mile' && this.showMile) ||
+          (race.distance === 'Medium' && this.showMedium) ||
+          (race.distance === 'Long' && this.showLong);
+        let matchesCharacter = true;
+        if (this.selectedCharacter) {
+          const character = this.characterList.find(c => c.name === this.selectedCharacter);
+          if (character) {
+            const matchesCharacterTerrain = race.terrain === character.terrain;
+            const characterDistances = character.distance.split(', ').map(d => d.trim());
+            const matchesCharacterDistance = characterDistances.includes(race.distance);
+            const matchesAptitude = matchesCharacterTerrain && matchesCharacterDistance;
+            const characterPeriods = this.characterTrainingPeriods[this.selectedCharacter];
+            const matchesTrainingPeriod = characterPeriods && (
+              (characterPeriods['Junior Year'] && characterPeriods['Junior Year'].includes(race.date)) ||
+              (characterPeriods['Classic Year'] && characterPeriods['Classic Year'].includes(race.date)) ||
+              (characterPeriods['Senior Year'] && characterPeriods['Senior Year'].includes(race.date))
+            );
+            matchesCharacter = matchesAptitude && matchesTrainingPeriod;
+          }
+        }
+        return matchesSearch && matchesType && matchesTerrain && matchesDistance && matchesCharacter;
+      });
+    },
+    skillsByTypePriority0() {
+      const grouped = {};
+      this.skillPriority0.forEach(skill => {
+        if (!grouped[skill.skill_type]) grouped[skill.skill_type] = [];
+        grouped[skill.skill_type].push(skill);
+      });
+      return grouped;
+    },
+    skillsByTypePriority1() {
+      const grouped = {};
+      this.skillPriority1.forEach(skill => {
+        if (!grouped[skill.skill_type]) grouped[skill.skill_type] = [];
+        grouped[skill.skill_type].push(skill);
+      });
+      return grouped;
+    },
+    skillsByTypePriority2() {
+      const grouped = {};
+      this.skillPriority2.forEach(skill => {
+        if (!grouped[skill.skill_type]) grouped[skill.skill_type] = [];
+        grouped[skill.skill_type].push(skill);
+      });
+      return grouped;
+    },
+    allSkillsByType() {
+      const allSkills = skillsData;
+      const grouped = {};
+      allSkills.forEach(skill => {
+        if (!grouped[skill.skill_type]) grouped[skill.skill_type] = [];
+        grouped[skill.skill_type].push(skill);
+      });
+      return grouped;
+    },
+    filteredSkillsByType() {
+      const { strategy, distance, tier, rarity, query } = this.skillFilter;
+      const allSkills = skillsData;
+      const filteredSkills = allSkills.filter(skill => {
+        const matchesStrategy = !strategy || (skill.strategy && skill.strategy === strategy);
+        const matchesDistance = !distance || (skill.distance && skill.distance === distance);
+        const matchesTier = !tier || (skill.tier && skill.tier === tier);
+        const matchesRarity = !rarity || (skill.rarity && skill.rarity === rarity);
+        const q = (query || '').toLowerCase();
+        const matchesQuery = !q ||
+          (skill.name && skill.name.toLowerCase().includes(q)) ||
+          (skill.description && skill.description.toLowerCase().includes(q));
+        return matchesStrategy && matchesDistance && matchesTier && matchesRarity && matchesQuery;
+      });
+      const grouped = {};
+      filteredSkills.forEach(skill => {
+        if (!grouped[skill.skill_type]) grouped[skill.skill_type] = [];
+        grouped[skill.skill_type].push(skill);
+      });
+      return grouped;
+    },
+    turnReferenceColumns() {
+      const columns = [[], [], [], [], [], []];
+      const years = ["Junior", "Classic", "Senior"];
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const halves = ["Early", "Late"];
+      for (let turn = 12; turn <= 77; turn++) {
+        let desc = "";
+        if (turn === 12) {
+          desc = "Debut";
+        } else if (turn <= 72) {
+          const absIndex = turn - 1;
+          const yearIdx = Math.floor(absIndex / 24);
+          const monthIdx = Math.floor((absIndex % 24) / 2);
+          const halfIdx = absIndex % 2;
+          if (yearIdx < years.length) {
+            desc = `${years[yearIdx]} ${halves[halfIdx]} ${months[monthIdx]}`;
+          } else {
+            desc = "Unknown";
+          }
+        } else {
+          if (turn === 73) desc = "URA Qualifiers";
+          else if (turn === 74) desc = "Training";
+          else if (turn === 75) desc = "URA Semis";
+          else if (turn === 76) desc = "Training";
+          else if (turn === 77) desc = "URA Finals";
+          else desc = "Post-Game";
+        }
+        const colIdx = Math.floor((turn - 12) / 11);
+        if (colIdx < 6) columns[colIdx].push({ turn, desc });
+      }
+      return columns;
+    }
   },
   methods: {
     // ---------------------------------------------------------------
@@ -4449,11 +4721,39 @@ export default {
   unmounted() {
     this.destroyScrollSpy();
   },
-   watch: {
-     presetsUse() {
-       this.applyPresetRace();
-     }
-   }
+  watch: {
+    presetsUse() {
+      this.applyPresetRace();
+    },
+    selectedScenario(newVal) {
+      this.normalizeScoreArrays(newVal === 2 ? 5 : 4);
+    },
+    scoreValueJunior(val) {
+      if (this.selectedScenario === 2 && Array.isArray(val) && val.length < 5) {
+        this.scoreValueJunior = [...val, ...Array(5 - val.length).fill(0.15)];
+      }
+    },
+    scoreValueClassic(val) {
+      if (this.selectedScenario === 2 && Array.isArray(val) && val.length < 5) {
+        this.scoreValueClassic = [...val, ...Array(5 - val.length).fill(0.12)];
+      }
+    },
+    scoreValueSenior(val) {
+      if (this.selectedScenario === 2 && Array.isArray(val) && val.length < 5) {
+        this.scoreValueSenior = [...val, ...Array(5 - val.length).fill(0.09)];
+      }
+    },
+    scoreValueSeniorAfterSummer(val) {
+      if (this.selectedScenario === 2 && Array.isArray(val) && val.length < 5) {
+        this.scoreValueSeniorAfterSummer = [...val, ...Array(5 - val.length).fill(0.07)];
+      }
+    },
+    scoreValueFinale(val) {
+      if (this.selectedScenario === 2 && Array.isArray(val) && val.length < 5) {
+        this.scoreValueFinale = [...val, ...Array(5 - val.length).fill(0)];
+      }
+    }
+  }
 }
 </script>
 
