@@ -362,9 +362,7 @@ if __name__ == '__main__':
     uninstall_uiautomator(selected_device)
 
     if not validate_device_setup(selected_device):
-        log.info("Fix the issues above and restart.")
-        while True:
-            time.sleep(3600)
+        log.info("Device validation failed")
 
     if not run_health_checks(selected_device):
         print("Health checks failed")
