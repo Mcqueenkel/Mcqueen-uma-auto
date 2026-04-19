@@ -273,6 +273,28 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
                 ctx.cultivate_detail.turn_info.base_energy = base_energy
                 ctx.ctrl.click_by_point(TO_TRAINING_SELECT)
                 return
+            # Prioritize extra races over resting even when energy is low
+            _extra_now = [r for r in ctx.cultivate_detail.extra_race_list
+                          if r in ctx.cultivate_detail.turn_info.cached_available_races]
+            if _extra_now:
+                skip_race = False
+                try:
+                    if is_mant(ctx):
+                        from module.umamusume.scenario.mant.inventory import should_skip_race
+                        skip_race = should_skip_race(ctx)
+                except Exception:
+                    pass
+                if not skip_race:
+                    target_race_id = _extra_now[0]
+                    log.info(f"Low energy but extra race available ({target_race_id}) - prioritizing race over rest")
+                    op = TurnOperation()
+                    op.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
+                    op.race_id = target_race_id
+                    ctx.cultivate_detail.turn_info.turn_operation = op
+                    ctx.cultivate_detail.turn_info.parse_train_info_finish = True
+                    is_summer = is_summer_camp_period(ctx.cultivate_detail.turn_info.date)
+                    ctx.ctrl.click_by_point(get_race(ctx, summer=is_summer))
+                    return
             if should_use_group_card_recreation(ctx):
                 if execute_group_card_recreation(ctx, trip_click_point=get_trip(ctx)):
                     return

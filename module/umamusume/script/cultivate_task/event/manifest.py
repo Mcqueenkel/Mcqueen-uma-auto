@@ -420,6 +420,18 @@ def get_event_choice(ctx: UmamusumeContext, event_name: str):
                 pass
     except Exception:
         pass
+    try:
+        POST_RACE_EVENTS = ('victory!', 'solid showing', 'defeat')
+        if event_name.strip().lower() in POST_RACE_EVENTS:
+            energy = getattr(ctx.cultivate_detail.turn_info, 'cached_energy', 100)
+            if energy > 20:
+                log.info(f"Post-race event '{event_name}' with energy={energy} - forcing choice 1")
+                return 1, "hardcoded", 0
+            else:
+                log.info(f"Post-race event '{event_name}' with low energy={energy} - using normal logic")
+    except Exception:
+        pass
+    event_name_normalized = find_similar_text(event_name, event_name_list, 0.8)
     event_name_normalized = find_similar_text(event_name, event_name_list, 0.8)
     if event_name_normalized != "":
         if event_name_normalized in event_map:
