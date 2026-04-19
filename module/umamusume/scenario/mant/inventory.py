@@ -852,7 +852,7 @@ def pick_best_energy_item(ctx):
         return None
     current_energy = int(current_energy)
     max_energy = getattr(ctx.cultivate_detail, 'mant_max_energy', 100)
-    energy_use_max = max_energy * 0.5
+    energy_use_max = max_energy * 0.45
     energy_result_min = max_energy * 0.4
     energy_score_threshold = max_energy * 0.2
     if current_energy >= energy_use_max:
