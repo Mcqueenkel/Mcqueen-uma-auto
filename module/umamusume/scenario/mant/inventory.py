@@ -1640,27 +1640,48 @@ def tick_megaphone(ctx):
 
 def item_loop(ctx):
     start_date = getattr(ctx.cultivate_detail.turn_info, 'date', None)
-    sync_max_energy_to_scanner(ctx)
+    current_energy = getattr(ctx.cultivate_detail.turn_info, 'cached_energy', 0)
+    if current_energy is None:
+        current_energy = 0
+    current_energy = int(current_energy)
 
+    got_recovery = has_energy_recovery(ctx)
     got_charm = has_charm(ctx)
     got_whistle = has_whistle(ctx)
-    got_energy = has_energy_recovery(ctx)
 
-    whistle_used = False
-    if got_charm and got_whistle:
-        whistle_used = whistle_loop(ctx, start_date)
-        if not whistle_used:
-            handle_charm(ctx)
-    elif got_charm:
-        handle_charm(ctx)
-    elif got_whistle and got_energy:
-        whistle_used = whistle_loop(ctx, start_date)
+    limit = getattr(ctx.cultivate_detail, 'rest_threshold',
+                    getattr(ctx.cultivate_detail, 'rest_treshold', 48))
+    energy_low = current_energy <= limit
 
-    if whistle_used:
+    if not got_recovery and not got_charm and energy_low:
+        log.info(f"Skipping items: low energy ({current_energy}), no recovery, no charm")
         return
 
-    handle_megaphone(ctx)
-    handle_anklet(ctx)
+    if got_recovery and got_charm:
+        charm_used = handle_charm(ctx)
+        if charm_used:
+            handle_energy_item(ctx)
+            return
+        handle_energy_item(ctx)
+        whistle_loop(ctx, start_date)
+        handle_charm(ctx)
+        return
+
+    if got_recovery:
+        handle_energy_item(ctx)
+        whistle_loop(ctx, start_date)
+        return
+
+    if got_charm and got_whistle:
+        whistle_loop(ctx, start_date)
+        handle_charm(ctx)
+        return
+
+    if got_charm:
+        handle_charm(ctx)
+        return
+
+    whistle_loop(ctx, start_date)
     
 
 def should_skip_fast_path(ctx):

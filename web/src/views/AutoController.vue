@@ -152,8 +152,10 @@ export default {
      this.currentDateTimer = setInterval(this.fetchCurrentDate, 1000);
       this.taskListTimer = setInterval(this.getTaskList, 3000);
       this.runtimeStateTimer = setInterval(this.pollRuntimeState, 2000);
-      // this.shopItemsTimer = setInterval(this.pollDetectedShopItems, 5000);
+      this.shopItemsTimer = setInterval(this.pollDetectedShopItems, 5000);
       this.taskLogTimer = setInterval(this.getTaskLog, 1000);
+      this.detectedItemsTimer = setInterval(this.pollDetectedItems, 3000);
+      this.pollDetectedItems();
    },
    methods:{
      fetchCareerDataCount() {
