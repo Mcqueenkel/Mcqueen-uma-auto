@@ -1507,12 +1507,12 @@ def handle_megaphone_endgame(ctx):
 
 
 def handle_megaphone(ctx):
+    if handle_megaphone_endgame(ctx):
+        return True
+
     date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
     if date >= MANT_CLIMAX_START and date not in MANT_CLIMAX_TRAINING_TURNS:
         return False
-
-    if handle_megaphone_endgame(ctx):
-        return True
 
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
     owned_map = {n: q for n, q in owned}
