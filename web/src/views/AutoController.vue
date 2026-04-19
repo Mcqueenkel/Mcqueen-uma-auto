@@ -131,9 +131,10 @@ export default {
        currentDateTimer: null,
        taskListTimer: null,
        runtimeStateTimer: null,
-       shopItemsTimer: null
-    }
-  },
+       shopItemsTimer: null,
+       detectedItemsTimer: null
+     }
+   },
   computed: {
     formattedDate(){
       if (this.currentDate === null) return '—';
@@ -267,6 +268,7 @@ export default {
      if (this.runtimeStateTimer) clearInterval(this.runtimeStateTimer);
      if (this.shopItemsTimer) clearInterval(this.shopItemsTimer);
      if (this.taskLogTimer) clearInterval(this.taskLogTimer);
+     if (this.detectedItemsTimer) clearInterval(this.detectedItemsTimer);
    }
  }
 </script>

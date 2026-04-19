@@ -1489,7 +1489,7 @@ def handle_megaphone_endgame(ctx):
     if urgency < 1.0:
         return False
 
-    for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: -x[1][0]):
+    for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: x[1][0]):
         if owned_map.get(name, 0) <= 0:
             continue
         if active_turns > 0 and active_tier > 0 and tier <= active_tier:
@@ -1521,8 +1521,6 @@ def handle_megaphone(ctx):
 
     if not any(owned_map.get(n, 0) > 0 for n in MEGAPHONE_TIERS):
         return False
-    if active_turns > 0 and active_tier > 0:
-        return False
 
     percentile = get_date_weighted_percentile(ctx)
     if percentile is None:
@@ -1534,6 +1532,8 @@ def handle_megaphone(ctx):
     best_tier = 0
     for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: -x[1][0]):
         if owned_map.get(name, 0) <= 0:
+            continue
+        if active_turns > 0 and tier <= active_tier:
             continue
 
         if urgency >= 0.8:
@@ -1682,7 +1682,10 @@ def item_loop(ctx):
         return
 
     whistle_loop(ctx, start_date)
-    
+
+    handle_megaphone(ctx)
+    handle_anklet(ctx)
+
 
 def should_skip_fast_path(ctx):
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
