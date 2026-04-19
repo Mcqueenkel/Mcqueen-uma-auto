@@ -432,7 +432,6 @@ def get_event_choice(ctx: UmamusumeContext, event_name: str):
     except Exception:
         pass
     event_name_normalized = find_similar_text(event_name, event_name_list, 0.8)
-    event_name_normalized = find_similar_text(event_name, event_name_list, 0.8)
     if event_name_normalized != "":
         if event_name_normalized in event_map:
             opt = event_map[event_name_normalized]
