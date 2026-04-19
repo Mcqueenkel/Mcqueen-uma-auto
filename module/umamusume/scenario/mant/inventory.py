@@ -1162,7 +1162,10 @@ def handle_charm(ctx):
     if fr < charm_failure_rate:
         return False
 
-    return use_item_and_update_inventory(ctx, 'Good-Luck Charm')
+    result = use_item_and_update_inventory(ctx, 'Good-Luck Charm')
+    if result:
+        ctx.cultivate_detail.turn_info.charm_used_this_turn = True
+    return result
 
 
 def rescan_training(ctx):
@@ -1616,7 +1619,7 @@ def should_skip_fast_path(ctx):
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
     owned_map = {n: q for n, q in owned}
     has_charm_item = owned_map.get(CHARM_ITEM, 0) > 0
-    energy_count = sum(owned_map.get(item, 0) for item in ENERGY_RECOVERY_ITEMS)
+    energy_count = sum(owned_map.get(item, 0) for item in ENERGY_ITEMS)
     if has_charm_item:
         return True
     if energy_count >= ENERGY_ITEM_SKIP_FAST_PATH_THRESHOLD:

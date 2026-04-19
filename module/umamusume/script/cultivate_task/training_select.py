@@ -943,8 +943,13 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                     item_loop(ctx)
 
                     from module.umamusume.scenario.mant.inventory import handle_energy_recovery
-                    handle_energy_recovery(ctx)
+                    charm_used = getattr(ctx.cultivate_detail.turn_info, 'charm_used_this_turn', False)
+                    if not charm_used:
+                        handle_energy_recovery(ctx)
+                    else:
+                        log.info("Charm used this turn skipping energy recovery")
                     ctx.cultivate_detail.turn_info.energy_recovery_deferred = False
+                    ctx.cultivate_detail.turn_info.charm_used_this_turn = False
                 else:
                     ctx.cultivate_detail.turn_info._pre_item_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
                     ctx.cultivate_detail.turn_info._pre_item_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
