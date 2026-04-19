@@ -824,9 +824,6 @@ ENERGY_ITEMS = {
 }
 
 KALE_MOOD_PENALTY = 20
-ENERGY_USE_MAX = 50
-ENERGY_RESULT_MIN = 40
-ENERGY_SCORE_THRESHOLD = 20
 
 OVERFLOW_PENALTY = {0: 1.0, 1: 0.9, 2: 0.8, 3: 0.8, 4: 0.8}
 
@@ -1009,8 +1006,19 @@ def handle_energy_recovery(ctx):
                     getattr(ctx.cultivate_detail, 'rest_treshold', 48))
     limit = max_energy * (rest_threshold / 100.0)
 
+    date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
+    training_remaining = remaining_training_turns_real(ctx, date)
+
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
     owned_map = {n: q for n, q in owned}
+
+    total_energy_value = 0
+    for item_name, raw_energy in ENERGY_ITEMS.items():
+        total_energy_value += owned_map.get(item_name, 0) * raw_energy
+
+    estimated_need = training_remaining * 25
+    if total_energy_value > estimated_need * 1.5 and estimated_need > 0:
+        limit = min(max_energy * 0.85, limit + max_energy * 0.25)
 
     available = []
     for item_name, raw_energy in sorted(ENERGY_ITEMS.items(), key=lambda x: x[1], reverse=True):
@@ -1261,12 +1269,6 @@ MEGAPHONE_TIERS = {
     'Empowering Megaphone': (3, 2),
 }
 
-MEGAPHONE_CONFIG_KEYS = {
-    1: 'mega_small_threshold',
-    2: 'mega_medium_threshold',
-    3: 'mega_large_threshold',
-}
-
 TRAINING_TYPE_ANKLET = {
     1: 'Speed Ankle Weights',
     2: 'Stamina Ankle Weights',
@@ -1301,6 +1303,36 @@ def get_stat_only_percentile(ctx):
     prev = stat_only_history[:-1]
     below_count = sum(1 for s in prev if s < best_score)
     return below_count / len(prev) * 100
+
+
+def get_date_weighted_percentile(ctx):
+    raw_stat_history = getattr(ctx.cultivate_detail, 'raw_stat_history', [])
+    date_history = getattr(ctx.cultivate_detail, 'date_history', [])
+    if len(raw_stat_history) < 8 or len(date_history) != len(raw_stat_history):
+        return get_stat_only_percentile(ctx)
+
+    current_date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
+    current_raw = 0.0
+    for idx2 in range(5):
+        til2 = ctx.cultivate_detail.turn_info.training_info_list[idx2]
+        sr = getattr(til2, 'stat_results', {})
+        raw_sum = sum(v for v in sr.values() if v > 0)
+        if raw_sum > current_raw:
+            current_raw = raw_sum
+
+    weighted_below = 0.0
+    weighted_total = 0.0
+    for i in range(len(raw_stat_history) - 1):
+        d = date_history[i]
+        distance = abs(d - current_date)
+        weight = max(0.05, 1.0 - distance / 30.0)
+        weighted_total += weight
+        if raw_stat_history[i] < current_raw:
+            weighted_below += weight
+
+    if weighted_total <= 0:
+        return 50.0
+    return weighted_below / weighted_total * 100
 
 
 MEGA_STAT_MULT = {1: 1.20, 2: 1.40, 3: 1.60}
@@ -1362,16 +1394,20 @@ def megaphone_reevaluate(ctx, current_op):
 
 def count_races_in_window(ctx, duration):
     current_date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
-    extra_races = getattr(ctx.cultivate_detail, 'extra_race_list', [])
-    if not extra_races:
-        return 0
-    from module.umamusume.asset.race_data import get_races_for_period
     count = 0
-    for offset in range(1, duration):
-        future_date = current_date + offset
-        available = get_races_for_period(future_date)
-        if any(r in available for r in extra_races):
-            count += 1
+    if current_date >= MANT_CLIMAX_START - duration:
+        for offset in range(duration):
+            future_date = current_date + offset
+            if future_date >= MANT_CLIMAX_START and future_date % 2 == 0:
+                count += 1
+    extra_races = getattr(ctx.cultivate_detail, 'extra_race_list', [])
+    if extra_races:
+        from module.umamusume.asset.race_data import get_races_for_period
+        for offset in range(1, duration):
+            future_date = current_date + offset
+            available = get_races_for_period(future_date)
+            if any(r in available for r in extra_races):
+                count += 1
     return count
 
 def get_chain_position(ctx) -> tuple[int, int]:
@@ -1427,6 +1463,18 @@ def total_megaphone_turns(owned_map):
     return total
 
 
+def compute_mega_urgency(ctx):
+    owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
+    owned_map = {n: q for n, q in owned}
+    active_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
+    date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
+    mega_turns = total_megaphone_turns(owned_map) + active_turns
+    training_remaining = remaining_training_turns_real(ctx, date)
+    if training_remaining <= 0:
+        return 99.0
+    return mega_turns / training_remaining
+
+
 def handle_megaphone_endgame(ctx):
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
     owned_map = {n: q for n, q in owned}
@@ -1437,12 +1485,11 @@ def handle_megaphone_endgame(ctx):
     if date >= MANT_CLIMAX_START and date not in MANT_CLIMAX_TRAINING_TURNS:
         return False
 
-    training_remaining = remaining_training_turns_real(ctx, date)
-    mega_turns = total_megaphone_turns(owned_map)
-    if mega_turns <= training_remaining:
+    urgency = compute_mega_urgency(ctx)
+    if urgency < 1.0:
         return False
 
-    for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: x[1][0]):
+    for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: -x[1][0]):
         if owned_map.get(name, 0) <= 0:
             continue
         if active_turns > 0 and active_tier > 0 and tier <= active_tier:
@@ -1460,10 +1507,6 @@ def handle_megaphone_endgame(ctx):
 
 
 def handle_megaphone(ctx):
-    mant_cfg = getattr(ctx.task.detail.scenario_config, 'mant_config', None)
-    if mant_cfg is None:
-        return False
-
     date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
     if date >= MANT_CLIMAX_START and date not in MANT_CLIMAX_TRAINING_TURNS:
         return False
@@ -1471,61 +1514,56 @@ def handle_megaphone(ctx):
     if handle_megaphone_endgame(ctx):
         return True
 
-    percentile = get_stat_only_percentile(ctx)
-    if percentile is None:
-        return False
-
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
     owned_map = {n: q for n, q in owned}
-
     active_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
     active_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
 
-    from module.umamusume.constants.game_constants import is_summer_camp_period
-    is_summer = is_summer_camp_period(date)
-    summer_bonus = getattr(mant_cfg, 'mega_summer_bonus', 10)
-    race_penalty = getattr(mant_cfg, 'mega_race_penalty', 5)
+    if not any(owned_map.get(n, 0) > 0 for n in MEGAPHONE_TIERS):
+        return False
+    if active_turns > 0 and active_tier > 0:
+        return False
 
-    def _mega_year_rate(d):
-        from module.umamusume.constants.game_constants import JUNIOR_YEAR_END, CLASSIC_YEAR_END
-        if d <= JUNIOR_YEAR_END:
-            return 2
-        elif d <= CLASSIC_YEAR_END:
-            return 3.5
-        return 5
+    percentile = get_date_weighted_percentile(ctx)
+    if percentile is None:
+        percentile = 50.0
+
+    urgency = compute_mega_urgency(ctx)
 
     best_mega = None
     best_tier = 0
     for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: -x[1][0]):
         if owned_map.get(name, 0) <= 0:
             continue
-        cfg_key = MEGAPHONE_CONFIG_KEYS[tier]
-        base_threshold = getattr(mant_cfg, cfg_key, 50)
 
-        threshold = base_threshold
+        if urgency >= 0.8:
+            threshold = 20
+        elif urgency >= 0.5:
+            threshold = 40
+        else:
+            threshold = {1: 70, 2: 55, 3: 40}[tier]
 
-        if active_turns > 0 and active_tier > 0:
-            tier_diff = tier - active_tier
-            if tier_diff <= 0:
-                continue
-            upgrade_bonus = 7 if tier_diff == 1 else 15
-            threshold += upgrade_bonus
-
-        year_rate = _mega_year_rate(date)
-        own_qty = owned_map.get(name, 0)
-        threshold -= own_qty * year_rate
-        for other_name, (other_tier, _) in MEGAPHONE_TIERS.items():
-            if other_name == name:
-                continue
-            other_qty = owned_map.get(other_name, 0)
-            if other_qty > 0:
-                threshold -= other_qty * year_rate * 0.5
+        from module.umamusume.constants.game_constants import is_summer_camp_period
+        if is_summer_camp_period(date):
+            threshold -= 15
 
         races_in_window = count_races_in_window(ctx, duration)
-        threshold += races_in_window * race_penalty
+        if duration == 2:
+            if races_in_window >= 1:
+                threshold += 25
+        elif duration == 3:
+            if races_in_window >= 2:
+                threshold += 20
+            elif races_in_window >= 1:
+                threshold += 8
+        elif duration == 4:
+            if races_in_window >= 2:
+                threshold += 25
+            elif races_in_window >= 1:
+                threshold += 10
 
-        if is_summer:
-            threshold -= summer_bonus
+        if threshold < 0:
+            threshold = 0
 
         if percentile >= threshold:
             best_mega = name
@@ -1540,23 +1578,33 @@ def handle_megaphone(ctx):
     if ok:
         ctx.cultivate_detail.mant_megaphone_tier = best_tier
         ctx.cultivate_detail.mant_megaphone_turns = duration
-        log.info(f"megaphone active: tier {best_tier} for {duration} turns")
+        log.info(f"megaphone active: tier {best_tier} for {duration} turns (urgency={urgency:.2f} pct={percentile:.0f})")
         from module.umamusume.persistence import save_megaphone_state
         save_megaphone_state(best_tier, duration)
     return ok
 
 
 def handle_anklet(ctx):
-    mant_cfg = getattr(ctx.task.detail.scenario_config, 'mant_config', None)
-    if mant_cfg is None:
-        return False
+    date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
 
-    percentile = get_stat_only_percentile(ctx)
+    percentile = get_date_weighted_percentile(ctx)
     if percentile is None:
-        return False
+        percentile = 50.0
 
-    threshold = getattr(mant_cfg, 'training_weights_threshold', 40)
-    if percentile < threshold:
+    urgency = compute_mega_urgency(ctx)
+    base_threshold = 40
+    if urgency >= 1.0:
+        base_threshold = 0
+    elif urgency >= 0.5:
+        base_threshold = max(0, base_threshold - 20)
+    elif urgency >= 0.3:
+        base_threshold = max(0, base_threshold - 10)
+
+    from module.umamusume.constants.game_constants import is_summer_camp_period
+    if is_summer_camp_period(date):
+        base_threshold = max(0, base_threshold - 10)
+
+    if percentile < base_threshold:
         return False
 
     op = getattr(ctx.cultivate_detail.turn_info, 'turn_operation', None)

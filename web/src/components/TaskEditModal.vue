@@ -71,13 +71,16 @@
                 </div>
                 </div>
                 </div>
-              <div class="form-group mt-2">
-                <label>Training Data</label>
-                <div class="d-flex align-items-center gap-2">
-                  <span style="font-size:0.85em;color:var(--muted-2)">Press after changing config, deck, or uma to reset training score history</span>
-                  <button type="button" class="btn btn-sm btn-outline-danger" @click="clearCareerData">Clear Training Data</button>
-                </div>
-              </div>
+               <div class="form-group mt-2">
+                 <label>Training Data</label>
+                 <div class="d-flex align-items-center gap-2">
+                   <span style="font-size:0.85em;color:var(--muted-2)">Press after changing config, deck, or uma to reset training score history</span>
+                   <button type="button" class="btn btn-sm btn-outline-danger" @click="clearCareerData">Clear Training Data</button>
+                 </div>
+                  <div class="mt-1" style="font-size:0.85em;color:var(--muted-2)">
+                    Training history: {{ careerDataCount }}/2000
+                  </div>
+               </div>
               <div class="row" v-if="selectedScenario === 2">
                 <div class="col-4">
                   <div class="form-group">
@@ -140,67 +143,8 @@
                               <label class="mant-threshold-label mb-0">Senior +</label>
                               <input type="number" class="form-control form-control-sm" style="width:60px" v-model.number="mantFocusSummerSenior" min="0" max="100" />
                             </div>
-                          </div>
-                          <div class="mant-threshold-row">
-                            <img :src="getMantItemImg('coaching_megaphone')" class="mant-threshold-img" />
-                            <div class="mant-threshold-controls">
-                              <span class="mant-threshold-label">Coaching Megaphone</span>
-                              <div class="mant-threshold-slider-row">
-                                <input type="range" class="hint-slider" v-model.number="mantMegaSmallThreshold" min="0" max="100" />
-                                <span class="mant-threshold-val">{{ mantMegaSmallThreshold }}</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="mant-threshold-row">
-                            <img :src="getMantItemImg('motivating_megaphone')" class="mant-threshold-img" />
-                            <div class="mant-threshold-controls">
-                              <span class="mant-threshold-label">Motivating Megaphone</span>
-                              <div class="mant-threshold-slider-row">
-                                <input type="range" class="hint-slider" v-model.number="mantMegaMediumThreshold" min="0" max="100" />
-                                <span class="mant-threshold-val">{{ mantMegaMediumThreshold }}</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="mant-threshold-row">
-                            <img :src="getMantItemImg('empowering_megaphone')" class="mant-threshold-img" />
-                            <div class="mant-threshold-controls">
-                              <span class="mant-threshold-label">Empowering Megaphone</span>
-                              <div class="mant-threshold-slider-row">
-                                <input type="range" class="hint-slider" v-model.number="mantMegaLargeThreshold" min="0" max="100" />
-                                <span class="mant-threshold-val">{{ mantMegaLargeThreshold }}</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="mant-threshold-row">
-                            <div class="mant-threshold-img-grid">
-                              <img :src="getMantItemImg('speed_ankle_weights')" />
-                              <img :src="getMantItemImg('stamina_ankle_weights')" />
-                              <img :src="getMantItemImg('power_ankle_weights')" />
-                              <img :src="getMantItemImg('guts_ankle_weights')" />
-                            </div>
-                            <div class="mant-threshold-controls">
-                              <span class="mant-threshold-label">Ankle Weights</span>
-                              <div class="mant-threshold-slider-row">
-                                <input type="range" class="hint-slider" v-model.number="mantTrainingWeightsThreshold" min="0" max="100" />
-                                <span class="mant-threshold-val">{{ mantTrainingWeightsThreshold }}</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="mant-threshold-row">
-                            <div class="mant-threshold-controls" style="width:100%">
-                              <span class="mant-threshold-label">Megaphone race penalty (per race in window)</span>
-                              <div class="mant-threshold-slider-row">
-                                <input type="range" class="hint-slider" v-model.number="mantMegaRacePenalty" min="0" max="30" />
-                                <span class="mant-threshold-val">{{ mantMegaRacePenalty }}</span>
-                              </div>
-                              <span class="mant-threshold-label">Megaphone summer bonus (threshold reduction)</span>
-                              <div class="mant-threshold-slider-row">
-                                <input type="range" class="hint-slider" v-model.number="mantMegaSummerBonus" min="0" max="30" />
-                                <span class="mant-threshold-val">{{ mantMegaSummerBonus }}</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="mant-threshold-row">
+                           </div>
+                           <div class="mant-threshold-row">
                             <img :src="getMantItemImg('good-luck_charm')" class="mant-threshold-img" />
                             <div class="mant-threshold-controls">
                               <span class="mant-threshold-label">Active charm when best training (without failure rate penalty) percentile ></span>
@@ -2088,6 +2032,7 @@ export default {
       showTurf: true,
       showDirt: true,
       showSprint: true,
+      careerDataCount: 0,
       showMile: true,
       showMedium: true,
       showLong: true,
@@ -2122,12 +2067,6 @@ export default {
       mantWhistleFocusSummer: true,
       mantFocusSummerClassic: 20,
       mantFocusSummerSenior: 10,
-      mantMegaSmallThreshold: 37,
-      mantMegaMediumThreshold: 42,
-      mantMegaLargeThreshold: 47,
-      mantMegaRacePenalty: 5,
-      mantMegaSummerBonus: 10,
-      mantTrainingWeightsThreshold: 40,
       mantBbqUnmaxxedCards: 3,
       mantCharmThreshold: 40,
       mantCharmFailureRate: 21,
@@ -2352,23 +2291,24 @@ export default {
       showTurnInfo: false,
     };
   },
-  mounted() {
-    this.loadCharacterData();
-    this.loadEventList();
-    this.loadRaceData();
-    this.loadSkillData();
-    this.loadTrainingCharacters();
-    this.initSelect();
-    this.getPresets();
-    this.loadPalCardStore();
-    this.successToast = $('#liveToast').toast({});
-    this.$nextTick(() => {
-      this.initScrollSpy();
-      this.normalizeScoreArrays(this.selectedScenario === 2 ? 5 : 4);
-    });
-    window.addEventListener('dragend', this.onGlobalDragEnd, false);
-    window.addEventListener('drop', this.onGlobalDrop, false);
-  },
+    mounted() {
+      this.loadCharacterData();
+      this.loadEventList();
+      this.loadRaceData();
+      this.loadSkillData();
+      this.loadTrainingCharacters();
+      this.initSelect();
+      this.getPresets();
+      this.loadPalCardStore();
+      this.fetchCareerDataCount();
+      this.successToast = $('#liveToast').toast({});
+      this.$nextTick(() => {
+        this.initScrollSpy();
+        this.normalizeScoreArrays(this.selectedScenario === 2 ? 5 : 4);
+      });
+      window.addEventListener('dragend', this.onGlobalDragEnd, false);
+      window.addEventListener('drop', this.onGlobalDrop, false);
+    },
   beforeUnmount() {
     window.removeEventListener('dragend', this.onGlobalDragEnd, false);
     window.removeEventListener('drop', this.onGlobalDrop, false);
@@ -2767,25 +2707,19 @@ export default {
     buildTaggedPalCardStore() {
       const out = {};
       const friendSelected = this.palSelected && this.isFriendCard(this.palCardStore[this.palSelected]);
-      console.log('[PAL-FRONTEND] buildTaggedPalCardStore: palSelected=', this.palSelected, 'friendSelected=', friendSelected, 'palCardStore keys=', Object.keys(this.palCardStore));
       for (const [key, val] of Object.entries(this.palCardStore)) {
         if (!val) continue;
         if (this.isGroupCard(val)) {
           if (val.enabled && !friendSelected) {
             out[key] = { ...val, type: 'group' };
-            console.log('[PAL-FRONTEND] INCLUDED group card:', key, val);
-          } else {
-            console.log('[PAL-FRONTEND] EXCLUDED group card:', key, 'enabled=', val.enabled, 'friendSelected=', friendSelected);
           }
         } else if (this.isFriendCard(val)) {
           const thresholds = this.getPalThresholds(val);
           if (thresholds && thresholds.length > 0) {
             out[key] = { type: 'friend', thresholds: thresholds };
-            console.log('[PAL-FRONTEND] INCLUDED friend card:', key);
           }
         }
       }
-      console.log('[PAL-FRONTEND] Final pal_card_store payload:', out);
       return out;
     },
 
@@ -3346,8 +3280,16 @@ export default {
     clearCareerData() {
       this.axios.post('/api/clear-career-data').then(() => {
         alert('past datapoints cleared');
+        this.careerDataCount = 0;
       }).catch(() => {
         alert('failure');
+      });
+    },
+    fetchCareerDataCount() {
+      this.axios.get('/api/career-data-count').then(res => {
+        this.careerDataCount = res.data.count;
+      }).catch(() => {
+        this.careerDataCount = 0;
       });
     },
 
@@ -3554,12 +3496,12 @@ export default {
             "whistle_focus_summer": this.mantWhistleFocusSummer,
             "focus_summer_classic": this.mantFocusSummerClassic,
             "focus_summer_senior": this.mantFocusSummerSenior,
-            "mega_small_threshold": this.mantMegaSmallThreshold,
-            "mega_medium_threshold": this.mantMegaMediumThreshold,
-            "mega_large_threshold": this.mantMegaLargeThreshold,
-            "mega_race_penalty": this.mantMegaRacePenalty,
-            "mega_summer_bonus": this.mantMegaSummerBonus,
-            "training_weights_threshold": this.mantTrainingWeightsThreshold,
+            "mega_small_threshold": 37,
+            "mega_medium_threshold": 42,
+            "mega_large_threshold": 47,
+            "mega_race_penalty": 5,
+            "mega_summer_bonus": 10,
+            "training_weights_threshold": 40,
             "bbq_unmaxxed_cards": this.mantBbqUnmaxxedCards,
             "charm_threshold": this.mantCharmThreshold,
             "charm_failure_rate": this.mantCharmFailureRate,
@@ -3633,25 +3575,19 @@ export default {
       // Build pal_card_store with explicit type tags so backend can distinguish
       const palCardStoreOut = {};
       const friendSelected = this.palSelected && this.isFriendCard(this.palCardStore[this.palSelected]);
-      console.log('[PAL-FRONTEND] (addTask) palSelected=', this.palSelected, 'friendSelected=', friendSelected);
       for (const [key, val] of Object.entries(this.palCardStore)) {
         if (!val) continue;
         if (this.isGroupCard(val)) {
           if (val.enabled && !friendSelected) {
             palCardStoreOut[key] = { ...val, type: 'group' };
-            console.log('[PAL-FRONTEND] (addTask) INCLUDED group card:', key, val);
-          } else {
-            console.log('[PAL-FRONTEND] (addTask) EXCLUDED group card:', key, 'enabled=', val.enabled, 'friendSelected=', friendSelected);
           }
         } else if (this.isFriendCard(val)) {
           const thresholds = this.getPalThresholds(val);
           if (thresholds && thresholds.length > 0) {
             palCardStoreOut[key] = { type: 'friend', thresholds: thresholds };
-            console.log('[PAL-FRONTEND] (addTask) INCLUDED friend card:', key);
           }
         }
       }
-      console.log('[PAL-FRONTEND] (addTask) Final pal_card_store:', palCardStoreOut);
       payload.attachment_data.pal_card_store = palCardStoreOut;
       payload.attachment_data.npc_score_value = [
         [...this.npcScoreJunior],
@@ -4027,12 +3963,6 @@ export default {
         this.mantWhistleFocusSummer = this.presetsUse.mant_config.whistle_focus_summer ?? true;
         this.mantFocusSummerClassic = this.presetsUse.mant_config.focus_summer_classic ?? 20;
         this.mantFocusSummerSenior = this.presetsUse.mant_config.focus_summer_senior ?? 10;
-        this.mantMegaSmallThreshold = this.presetsUse.mant_config.mega_small_threshold ?? 37;
-        this.mantMegaMediumThreshold = this.presetsUse.mant_config.mega_medium_threshold ?? 42;
-        this.mantMegaLargeThreshold = this.presetsUse.mant_config.mega_large_threshold ?? 47;
-        this.mantMegaRacePenalty = this.presetsUse.mant_config.mega_race_penalty ?? 5;
-        this.mantMegaSummerBonus = this.presetsUse.mant_config.mega_summer_bonus ?? 10;
-        this.mantTrainingWeightsThreshold = this.presetsUse.mant_config.training_weights_threshold ?? 40;
         this.mantBbqUnmaxxedCards = this.presetsUse.mant_config.bbq_unmaxxed_cards ?? 3;
         this.mantCharmThreshold = this.presetsUse.mant_config.charm_threshold ?? 40;
         this.mantCharmFailureRate = this.presetsUse.mant_config.charm_failure_rate ?? 21;
@@ -4046,12 +3976,6 @@ export default {
         this.mantWhistleFocusSummer = true;
         this.mantFocusSummerClassic = 20;
         this.mantFocusSummerSenior = 10;
-        this.mantMegaSmallThreshold = 37;
-        this.mantMegaMediumThreshold = 42;
-        this.mantMegaLargeThreshold = 47;
-        this.mantMegaRacePenalty = 5;
-        this.mantMegaSummerBonus = 10;
-        this.mantTrainingWeightsThreshold = 40;
         this.mantBbqUnmaxxedCards = 3;
         this.mantCharmThreshold = 40;
         this.mantCharmFailureRate = 21;
@@ -4247,12 +4171,6 @@ export default {
         this.mantWhistleFocusSummer = data.mant_config.whistle_focus_summer ?? true;
         this.mantFocusSummerClassic = data.mant_config.focus_summer_classic ?? 20;
         this.mantFocusSummerSenior = data.mant_config.focus_summer_senior ?? 10;
-        this.mantMegaSmallThreshold = data.mant_config.mega_small_threshold ?? 37;
-        this.mantMegaMediumThreshold = data.mant_config.mega_medium_threshold ?? 42;
-        this.mantMegaLargeThreshold = data.mant_config.mega_large_threshold ?? 47;
-        this.mantMegaRacePenalty = data.mant_config.mega_race_penalty ?? 5;
-        this.mantMegaSummerBonus = data.mant_config.mega_summer_bonus ?? 10;
-        this.mantTrainingWeightsThreshold = data.mant_config.training_weights_threshold ?? 40;
         this.mantBbqUnmaxxedCards = data.mant_config.bbq_unmaxxed_cards ?? 3;
         this.mantCharmThreshold = data.mant_config.charm_threshold ?? 40;
         this.mantCharmFailureRate = data.mant_config.charm_failure_rate ?? 21;
@@ -4266,12 +4184,6 @@ export default {
         this.mantWhistleFocusSummer = true;
         this.mantFocusSummerClassic = 20;
         this.mantFocusSummerSenior = 10;
-        this.mantMegaSmallThreshold = 37;
-        this.mantMegaMediumThreshold = 42;
-        this.mantMegaLargeThreshold = 47;
-        this.mantMegaRacePenalty = 5;
-        this.mantMegaSummerBonus = 10;
-        this.mantTrainingWeightsThreshold = 40;
         this.mantBbqUnmaxxedCards = 3;
         this.mantCharmThreshold = 40;
         this.mantCharmFailureRate = 21;
@@ -4437,12 +4349,6 @@ export default {
           whistle_focus_summer: this.mantWhistleFocusSummer,
           focus_summer_classic: this.mantFocusSummerClassic,
           focus_summer_senior: this.mantFocusSummerSenior,
-          mega_small_threshold: this.mantMegaSmallThreshold,
-          mega_medium_threshold: this.mantMegaMediumThreshold,
-          mega_large_threshold: this.mantMegaLargeThreshold,
-          mega_race_penalty: this.mantMegaRacePenalty,
-          mega_summer_bonus: this.mantMegaSummerBonus,
-          training_weights_threshold: this.mantTrainingWeightsThreshold,
           bbq_unmaxxed_cards: this.mantBbqUnmaxxedCards,
           charm_threshold: this.mantCharmThreshold,
           charm_failure_rate: this.mantCharmFailureRate,

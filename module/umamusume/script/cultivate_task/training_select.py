@@ -730,6 +730,30 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
             ctx.cultivate_detail.stat_only_history = ctx.cultivate_detail.stat_only_history[-MAX_DATAPOINTS:]
         ctx.cultivate_detail.turn_info.cached_stat_only_score = best_stat_score
 
+        if not hasattr(ctx.cultivate_detail, 'energy_history'):
+            ctx.cultivate_detail.energy_history = []
+        if not hasattr(ctx.cultivate_detail, 'raw_stat_history'):
+            ctx.cultivate_detail.raw_stat_history = []
+        if not hasattr(ctx.cultivate_detail, 'date_history'):
+            ctx.cultivate_detail.date_history = []
+        energy_val = getattr(ctx.cultivate_detail.turn_info, 'cached_energy', 0) or 0
+        ctx.cultivate_detail.energy_history.append(float(energy_val))
+        if len(ctx.cultivate_detail.energy_history) > MAX_DATAPOINTS:
+            ctx.cultivate_detail.energy_history = ctx.cultivate_detail.energy_history[-MAX_DATAPOINTS:]
+        raw_best = 0.0
+        for idx2 in range(5):
+            til2 = ctx.cultivate_detail.turn_info.training_info_list[idx2]
+            sr = getattr(til2, 'stat_results', {})
+            raw_sum = sum(v for v in sr.values() if v > 0)
+            if raw_sum > raw_best:
+                raw_best = raw_sum
+        ctx.cultivate_detail.raw_stat_history.append(raw_best)
+        if len(ctx.cultivate_detail.raw_stat_history) > MAX_DATAPOINTS:
+            ctx.cultivate_detail.raw_stat_history = ctx.cultivate_detail.raw_stat_history[-MAX_DATAPOINTS:]
+        ctx.cultivate_detail.date_history.append(int(date))
+        if len(ctx.cultivate_detail.date_history) > MAX_DATAPOINTS:
+            ctx.cultivate_detail.date_history = ctx.cultivate_detail.date_history[-MAX_DATAPOINTS:]
+
         history = ctx.cultivate_detail.score_history
         best_score = max(original_scores)
         history.append(best_score)

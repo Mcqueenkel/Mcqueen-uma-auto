@@ -133,6 +133,25 @@ def get_task():
     return bot_ctrl.get_task_list()
 
 
+@server.get("/api/current-date")
+def get_current_date():
+    import json
+    import os
+    from module.umamusume.persistence import PERSISTENCE_FILE
+    try:
+        if not os.path.exists(PERSISTENCE_FILE):
+            return {"date": None}
+        with open(PERSISTENCE_FILE, 'r') as f:
+            data = json.load(f)
+        date_history = data.get('date_history', [])
+        if not date_history:
+            return {"date": None}
+        # Return most recent date
+        return {"date": date_history[-1]}
+    except Exception:
+        return {"date": None}
+
+
 class RuntimeThresholds(BaseModel):
     repetitive_threshold: Optional[int] = None
     watchdog_threshold: Optional[int] = None
@@ -283,6 +302,22 @@ def clear_career_data_endpoint():
     from module.umamusume.persistence import clear_career_data
     cleared = clear_career_data()
     return {"cleared": cleared}
+
+
+@server.get("/api/career-data-count")
+def get_career_data_count():
+    import json
+    import os
+    from module.umamusume.persistence import PERSISTENCE_FILE
+    try:
+        if not os.path.exists(PERSISTENCE_FILE):
+            return {"count": 0}
+        with open(PERSISTENCE_FILE, 'r') as f:
+            data = json.load(f)
+        score_history = data.get('score_history', [])
+        return {"count": len(score_history)}
+    except Exception:
+        return {"count": 0}
 
 
 @server.get("/api/pal-defaults")

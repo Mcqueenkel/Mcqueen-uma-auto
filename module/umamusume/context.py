@@ -149,6 +149,10 @@ class CultivateContextDetail:
     friendship_score_groups: list
     score_history: list[float]
     percentile_history: list[float]
+    energy_history: list[float]
+    action_history: list[str]
+    raw_stat_history: list[float]
+    date_history: list[int]
     last_title: str
     same_title_count: int
 
@@ -304,6 +308,10 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
         detail.friendship_score_groups = list(getattr(task.detail, 'friendship_score_groups', []))
         detail.score_history = []
         detail.percentile_history = []
+        detail.energy_history = []
+        detail.action_history = []
+        detail.raw_stat_history = []
+        detail.date_history = []
         try:
             eo = getattr(task.detail, 'event_overrides', {})
             detail.event_overrides = eo if isinstance(eo, dict) else {}
