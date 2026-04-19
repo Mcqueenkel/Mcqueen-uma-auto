@@ -936,15 +936,21 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
         try:
             if ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT:
                 if getattr(ctx.cultivate_detail.turn_info, 'energy_recovery_deferred', False):
+                    ctx.cultivate_detail.turn_info._pre_item_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
+                    ctx.cultivate_detail.turn_info._pre_item_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
+
+                    from module.umamusume.scenario.mant.inventory import item_loop
+                    item_loop(ctx)
+
                     from module.umamusume.scenario.mant.inventory import handle_energy_recovery
                     handle_energy_recovery(ctx)
                     ctx.cultivate_detail.turn_info.energy_recovery_deferred = False
+                else:
+                    ctx.cultivate_detail.turn_info._pre_item_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
+                    ctx.cultivate_detail.turn_info._pre_item_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
 
-                ctx.cultivate_detail.turn_info._pre_item_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
-                ctx.cultivate_detail.turn_info._pre_item_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
-
-                from module.umamusume.scenario.mant.inventory import item_loop
-                item_loop(ctx)
+                    from module.umamusume.scenario.mant.inventory import item_loop
+                    item_loop(ctx)
 
                 try:
                     from module.umamusume.scenario.mant.inventory import megaphone_reevaluate

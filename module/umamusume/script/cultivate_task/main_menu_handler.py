@@ -259,9 +259,14 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
                 if has_energy_recovery(ctx):
                     ctx.cultivate_detail.turn_info.energy_recovery_deferred = True
             else:
-                from module.umamusume.scenario.mant.inventory import handle_energy_recovery
-                if handle_energy_recovery(ctx):
-                    energy = getattr(ctx.cultivate_detail.turn_info, 'cached_energy', energy)
+                date = ctx.cultivate_detail.turn_info.date
+                from module.umamusume.scenario.mant.inventory import has_charm
+                if date >= 13 and has_charm(ctx):
+                    pass
+                else:
+                    from module.umamusume.scenario.mant.inventory import handle_energy_recovery
+                    if handle_energy_recovery(ctx):
+                        energy = getattr(ctx.cultivate_detail.turn_info, 'cached_energy', energy)
         if energy <= limit:
             if getattr(ctx.cultivate_detail.turn_info, 'energy_recovery_deferred', False):
                 base_energy, _, _ = scan_energy(ctx.ctrl)
