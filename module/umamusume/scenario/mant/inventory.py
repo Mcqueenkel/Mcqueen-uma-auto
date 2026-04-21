@@ -1010,6 +1010,8 @@ def handle_energy_recovery(ctx):
     training_remaining = remaining_training_turns_real(ctx, date)
 
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
+    owned_map = {n: q for n, q in owned}
+    available = []
     for item_name, raw_energy in sorted(ENERGY_ITEMS.items(), key=lambda x: x[1], reverse=True):
         qty = owned_map.get(item_name, 0)
         if qty > 0:
@@ -1617,8 +1619,6 @@ def handle_megaphone(ctx):
         if is_summer:
             threshold -= summer_bonus
 
-        log_info_str += f" | {name}: Threshold={threshold:.1f}"
-
         if percentile >= threshold:
             best_mega = name
             best_tier = tier
@@ -1651,13 +1651,12 @@ def handle_anklet(ctx):
     if percentile < threshold:
         return False
 
-    op = getattr(ctx.cultivate_detail, 'turn_info', 'turn_operation', None)
+    turn_info = getattr(ctx.cultivate_detail, 'turn_info', None)
+    op = getattr(turn_info, 'turn_operation', None) if turn_info else None
     if op is None:
-        log_custom_info(log_info_str)
         return False
     training_type = getattr(op, 'training_type', None)
     if training_type is None:
-        log_custom_info(log_info_str)
         return False
     training_val = training_type.value if hasattr(training_type, 'value') else int(training_type)
 
