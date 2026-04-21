@@ -1010,17 +1010,6 @@ def handle_energy_recovery(ctx):
     training_remaining = remaining_training_turns_real(ctx, date)
 
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
-    owned_map = {n: q for n, q in owned}
-
-    total_energy_value = 0
-    for item_name, raw_energy in ENERGY_ITEMS.items():
-        total_energy_value += owned_map.get(item_name, 0) * raw_energy
-
-    estimated_need = training_remaining * 25
-    if total_energy_value > estimated_need * 1.5 and estimated_need > 0:
-        limit = min(max_energy * 0.85, limit + max_energy * 0.25)
-
-    available = []
     for item_name, raw_energy in sorted(ENERGY_ITEMS.items(), key=lambda x: x[1], reverse=True):
         qty = owned_map.get(item_name, 0)
         if qty > 0:
@@ -1532,6 +1521,9 @@ def handle_megaphone_endgame(ctx):
     if date >= MANT_CLIMAX_START and date not in MANT_CLIMAX_TRAINING_TURNS:
         return False
 
+    if active_turns > 0:
+        return False
+
     training_remaining = remaining_training_turns_real(ctx, date)
     total_available_turns = total_megaphone_turns(owned_map) + active_turns
     if total_available_turns < training_remaining:
@@ -1540,9 +1532,6 @@ def handle_megaphone_endgame(ctx):
     for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: x[1][0]):
         if owned_map.get(name, 0) <= 0:
             continue
-        if active_turns > 0 and active_tier > 0 and tier <= active_tier:
-            if total_available_turns <= training_remaining:
-                continue
         ok = use_item_and_update_inventory(ctx, name)
         if ok:
             ctx.cultivate_detail.mant_megaphone_tier = tier
@@ -1628,6 +1617,8 @@ def handle_megaphone(ctx):
         if is_summer:
             threshold -= summer_bonus
 
+        log_info_str += f" | {name}: Threshold={threshold:.1f}"
+
         if percentile >= threshold:
             best_mega = name
             best_tier = tier
@@ -1656,14 +1647,17 @@ def handle_anklet(ctx):
         return False
 
     threshold = getattr(mant_cfg, 'training_weights_threshold', 40)
+    
     if percentile < threshold:
         return False
 
-    op = getattr(ctx.cultivate_detail.turn_info, 'turn_operation', None)
+    op = getattr(ctx.cultivate_detail, 'turn_info', 'turn_operation', None)
     if op is None:
+        log_custom_info(log_info_str)
         return False
     training_type = getattr(op, 'training_type', None)
     if training_type is None:
+        log_custom_info(log_info_str)
         return False
     training_val = training_type.value if hasattr(training_type, 'value') else int(training_type)
 
@@ -1701,39 +1695,28 @@ def item_loop(ctx):
     got_charm = has_charm(ctx)
     got_whistle = has_whistle(ctx)
 
-    limit = getattr(ctx.cultivate_detail, 'rest_threshold',
-                    getattr(ctx.cultivate_detail, 'rest_treshold', 48))
-    energy_low = current_energy <= limit
-
-    if not got_recovery and not got_charm and energy_low:
-        log.info(f"Skipping items: low energy ({current_energy}), no recovery, no charm")
-        return
-
     if got_recovery and got_charm:
         charm_used = handle_charm(ctx)
         if charm_used:
             handle_energy_item(ctx)
+        else:
+            handle_energy_item(ctx)
+            if whistle_loop(ctx, start_date):
+                return
+            handle_charm(ctx)
+    elif got_recovery:
+        handle_energy_item(ctx)
+        if whistle_loop(ctx, start_date):
             return
-        handle_energy_item(ctx)
-        whistle_loop(ctx, start_date)
+    elif got_charm and got_whistle:
+        if whistle_loop(ctx, start_date):
+            return
         handle_charm(ctx)
-        return
-
-    if got_recovery:
-        handle_energy_item(ctx)
-        whistle_loop(ctx, start_date)
-        return
-
-    if got_charm and got_whistle:
-        whistle_loop(ctx, start_date)
+    elif got_charm:
         handle_charm(ctx)
-        return
-
-    if got_charm:
-        handle_charm(ctx)
-        return
-
-    whistle_loop(ctx, start_date)
+    else:
+        if whistle_loop(ctx, start_date):
+            return
 
     handle_megaphone(ctx)
     handle_anklet(ctx)
