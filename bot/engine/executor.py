@@ -280,6 +280,10 @@ class Executor:
                                         controller.client.run_cmd(["shell", "am", "force-stop", "com.cygames.umamusume"])
                                         recovery_success = True
                                         break
+                                    except ADBTimeoutError:
+                                        if attempt == 1:
+                                            controller.reinit_connection()
+                                        time.sleep(1.0)
                                     except Exception:
                                         time.sleep(1.0)
                                 
