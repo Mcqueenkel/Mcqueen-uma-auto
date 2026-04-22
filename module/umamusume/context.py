@@ -24,7 +24,6 @@ detected_shop_items_log = {}
 def log_detected_portrait(name, favor_level, is_npc=False):
     if not name or not favor_level:
         return
-    existing = detected_portraits_log.get(name)
     if existing:
         existing["favor"] = favor_level
     else:
@@ -35,12 +34,11 @@ def log_detected_portrait(name, favor_level, is_npc=False):
         }
 
 def clear_detected_portraits():
-    detected_portraits_log.clear()
+    pass
 
 def log_detected_skill(name, source, hint_level=0, cost=0, gold=False):
     if not name:
         return
-    existing = detected_skills_log.get(name)
     if existing:
         if hint_level > existing.get("hint_level", 0):
             existing["hint_level"] = hint_level
@@ -58,11 +56,10 @@ def log_detected_skill(name, source, hint_level=0, cost=0, gold=False):
         }
 
 def clear_detected_skills():
-    detected_skills_log.clear()
+    pass
 
 def log_detected_items(items):
     from module.umamusume.scenario.mant.shop import WEBUI_EXCLUDED_PREFIXES
-    detected_items_log.clear()
     for name, qty in items:
         if name in WEBUI_EXCLUDED_PREFIXES:
             continue
@@ -72,12 +69,10 @@ def log_detected_items(items):
         }
 
 def clear_detected_items():
-    detected_items_log.clear()
+    pass
 
 def log_detected_shop_items(items):
-    preserved_rewards = {name: entry for name, entry in detected_shop_items_log.items()
                          if entry.get('race_reward')}
-    detected_shop_items_log.clear()
     for name, turns, buyable in items:
         if not buyable:
             continue
@@ -92,7 +87,6 @@ def log_detected_shop_items(items):
 
 def add_detected_shop_items(names, turns):
     for name in names:
-        existing = detected_shop_items_log.get(name)
         detected_shop_items_log[name] = {
             "name": name,
             "turns": turns,
@@ -101,7 +95,7 @@ def add_detected_shop_items(names, turns):
         }
 
 def clear_detected_shop_items():
-    detected_shop_items_log.clear()
+    pass
 
 class CultivateContextDetail:
     race_chain_map: dict[int, tuple[int, int]]
@@ -235,13 +229,10 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
         clear_detected_portraits()
         clear_detected_items()
         clear_detected_shop_items()
-        from module.umamusume.persistence import clear_ignore_cat_food, clear_ignore_grilled_carrots
-        clear_ignore_cat_food()
-        clear_ignore_grilled_carrots()
         detail = CultivateContextDetail()
         detail.scenario = create_scenario(task.detail.scenario)
         if detail.scenario is None:
-            log.error("Unknown scenario")
+            pass
         detail.expect_attribute = task.detail.expect_attribute
         detail.follow_support_card_name = task.detail.follow_support_card_name
         detail.follow_support_card_level = task.detail.follow_support_card_level
@@ -265,14 +256,14 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
             detail.extra_weight = list(task.detail.extra_weight or [])
         except Exception:
             detail.extra_weight = []
-        
+
         try:
             se = getattr(task.detail, 'spirit_explosion', DEFAULT_SPIRIT_EXPLOSION)
             detail.spirit_explosion = list(se) if se else list(DEFAULT_SPIRIT_EXPLOSION)
         except Exception:
             detail.spirit_explosion = list(DEFAULT_SPIRIT_EXPLOSION)
-        
-     
+
+
         detail.rest_threshold = getattr(task.detail, 'rest_threshold', getattr(task.detail, 'rest_treshold', getattr(task.detail, 'fast_path_energy_limit', 48)))
         detail.motivation_threshold_year1 = int(getattr(task.detail, 'motivation_threshold_year1', 3))
         detail.motivation_threshold_year2 = int(getattr(task.detail, 'motivation_threshold_year2', 4))
@@ -317,7 +308,7 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
             detail.event_overrides = eo if isinstance(eo, dict) else {}
         except Exception:
             detail.event_overrides = {}
-        
+
         ctx.cultivate_detail = detail
 
         pcs = getattr(task.detail, 'pal_card_store', None)
@@ -343,12 +334,22 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
             detail.group_card_name = ""
 
         try:
-            from module.umamusume.persistence import load_megaphone_state
+            from module.umamusume.persistence import load_megaphone_state, load_afflictions, load_inventory, load_last_known_date
             mega_tier, mega_turns = load_megaphone_state()
             detail.mant_megaphone_tier = mega_tier
             detail.mant_megaphone_turns = mega_turns
             if mega_tier > 0 and mega_turns > 0:
-                log.info("Restored megaphone state")
+                pass
+
+            detail.mant_afflictions = load_afflictions()
+            if detail.mant_afflictions:
+                pass
+
+            detail.mant_owned_items = load_inventory()
+            if detail.mant_owned_items:
+                pass
+
+            detail._last_known_date_id = load_last_known_date()
         except Exception:
             detail.mant_megaphone_tier = 0
             detail.mant_megaphone_turns = 0
