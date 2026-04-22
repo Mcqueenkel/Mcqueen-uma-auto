@@ -1391,8 +1391,8 @@ def save_megaphone_scan_state_and_tick(ctx):
 
 
 def megaphone_reevaluate(ctx, current_op):
-    pre_item_tier = getattr(ctx.cultivate_detail.turn_info, '_pre_item_tier', None)
-    pre_item_turns = getattr(ctx.cultivate_detail.turn_info, '_pre_item_turns', None)
+    pre_item_tier = getattr(ctx.cultivate_detail.turn_info, 'pre_item_tier', None)
+    pre_item_turns = getattr(ctx.cultivate_detail.turn_info, 'pre_item_turns', None)
     if pre_item_tier is None or pre_item_turns is None:
         return False
 

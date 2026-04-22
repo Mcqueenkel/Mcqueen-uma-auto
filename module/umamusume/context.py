@@ -62,6 +62,7 @@ def clear_detected_skills():
 
 def log_detected_items(items):
     from module.umamusume.scenario.mant.shop import WEBUI_EXCLUDED_PREFIXES
+    current_items = set()
     for name, qty in items:
         if name in WEBUI_EXCLUDED_PREFIXES:
             continue
@@ -69,6 +70,10 @@ def log_detected_items(items):
             "name": name,
             "qty": qty,
         }
+        current_items.add(name)
+    for name in list(detected_items_log.keys()):
+        if name not in current_items:
+            del detected_items_log[name]
 
 def clear_detected_items():
     pass
@@ -85,10 +90,11 @@ def log_detected_shop_items(items):
 
 def add_detected_shop_items(names, turns):
     for name in names:
+        existing = detected_shop_items_log.get(name)
         detected_shop_items_log[name] = {
             "name": name,
             "turns": turns,
-            "purchased": False,
+            "purchased": existing.get("purchased", False) if existing else False,
             "race_reward": True,
         }
 
