@@ -403,7 +403,6 @@ def parse_umamusume_basic_ability_value(ctx: UmamusumeContext, img):
 
 def trans_attribute_value(text: str, ctx: UmamusumeContext,
                           train_type: TrainingType = TrainingType.TRAINING_TYPE_UNKNOWN) -> int:
-                              pass
     text = DIGITS_ONLY.sub("", text)
     if text == "":
         prev_turn_idx = len(ctx.cultivate_detail.turn_info_history)
@@ -448,7 +447,6 @@ def parse_train_main_menu_operations_availability(ctx: UmamusumeContext, img):
     skill_available = btn_skill_check_point[0] > 200
     if btn_medic_room_check_point[0] > 200 and btn_medic_room_check_point[1] > 200 and btn_medic_room_check_point[
         2] > 200:
-            pass
         medic_room_available = True
     else:
         medic_room_available = False
@@ -712,7 +710,6 @@ def find_race(ctx: UmamusumeContext, img, race_id: int = 0) -> bool:
                 if (template_img is not None and
                     race_name_img.shape[0] >= template_img.shape[0] and
                     race_name_img.shape[1] >= template_img.shape[1]):
-                        pass
                     template_match_result = image_match(race_name_img, target_race_template)
                     if template_match_result.find_match:
                         ctx.ctrl.click(pos_center[0], pos_center[1],
@@ -779,7 +776,6 @@ def find_skill(ctx: UmamusumeContext, img, skill: list[str], learn_any_skill: bo
                     for target in skill:
                         if (normalize_text_for_match(name_for_match) == normalize_text_for_match(target)
                             or normalize_text_for_match(detected_text) == normalize_text_for_match(target)):
-                                pass
                             target_match = target
                             break
 

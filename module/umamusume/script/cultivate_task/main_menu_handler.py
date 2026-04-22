@@ -192,7 +192,6 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
     if (not ctx.cultivate_detail.cultivate_finish and
         not ctx.cultivate_detail.turn_info.turn_learn_skill_done and
         ctx.cultivate_detail.learn_skill_done):
-            pass
         ctx.cultivate_detail.reset_skill_learn()
 
     skip_auto_skill_learning = (ctx.task.detail.manual_purchase_at_end and ctx.cultivate_detail.cultivate_finish)
@@ -201,7 +200,6 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
     if (ctx.cultivate_detail.turn_info.uma_attribute.skill_point > ctx.cultivate_detail.learn_skill_threshold
             and not ctx.cultivate_detail.turn_info.turn_learn_skill_done
             and not skip_auto_skill_learning):
-                pass
         ctx.ctrl.click_by_point(CULTIVATE_SKILL_LEARN)
         ctx.cultivate_detail.turn_info.parse_main_menu_finish = False
         return

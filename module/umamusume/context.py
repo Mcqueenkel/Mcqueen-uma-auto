@@ -24,6 +24,7 @@ detected_shop_items_log = {}
 def log_detected_portrait(name, favor_level, is_npc=False):
     if not name or not favor_level:
         return
+    existing = detected_portraits_log.get(name)
     if existing:
         existing["favor"] = favor_level
     else:
@@ -39,6 +40,7 @@ def clear_detected_portraits():
 def log_detected_skill(name, source, hint_level=0, cost=0, gold=False):
     if not name:
         return
+    existing = detected_skills_log.get(name)
     if existing:
         if hint_level > existing.get("hint_level", 0):
             existing["hint_level"] = hint_level
@@ -72,7 +74,6 @@ def clear_detected_items():
     pass
 
 def log_detected_shop_items(items):
-                         if entry.get('race_reward')}
     for name, turns, buyable in items:
         if not buyable:
             continue
@@ -81,9 +82,6 @@ def log_detected_shop_items(items):
             "turns": turns,
             "purchased": False,
         }
-    for name, entry in preserved_rewards.items():
-        if name not in detected_shop_items_log:
-            detected_shop_items_log[name] = entry
 
 def add_detected_shop_items(names, turns):
     for name in names:
