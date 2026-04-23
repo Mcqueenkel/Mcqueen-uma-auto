@@ -296,7 +296,13 @@ def handle_mant_shop_scan(ctx, current_date):
                         break
                     tier_targets.append(bbq_display)
                     budget -= cost
-
+        
+        shop_turns = {}
+        for name, _, _, turns, buyable in items_list:
+            if buyable:
+                if name not in shop_turns or turns < shop_turns[name]:
+                    shop_turns[name] = turns  # keep the lowest turns if multiple copies
+        
         for tier in range(1, mant_cfg.tier_count + 1):
             tier_items = []
             for slug, t in mant_cfg.item_tiers.items():
