@@ -1011,6 +1011,7 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                         log.info("At least one condition failed - continuing with training")
     
     op = ctx.cultivate_detail.turn_info.turn_operation
+<<<<<<< HEAD
     if op is not None and op.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_TRAINING:
         try:
             if ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT:
@@ -1021,6 +1022,18 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                     ctx.cultivate_detail.turn_info.energy_recovery_deferred = False
                     ctx.cultivate_detail.turn_info.charm_used_this_turn = False
 
+=======
+    try:
+        if ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT:
+            if getattr(ctx.cultivate_detail.turn_info, 'energy_recovery_deferred', False):
+                from module.umamusume.scenario.mant.inventory import handle_energy_recovery
+                if not getattr(ctx.cultivate_detail.turn_info, 'charm_used_this_turn', False):
+                    handle_energy_recovery(ctx)
+                ctx.cultivate_detail.turn_info.energy_recovery_deferred = False
+                ctx.cultivate_detail.turn_info.charm_used_this_turn = False
+
+            if op.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_TRAINING:
+>>>>>>> 141c6ca (vita)
                 ctx.cultivate_detail.turn_info.pre_item_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
                 ctx.cultivate_detail.turn_info.pre_item_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
 
@@ -1032,26 +1045,27 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                     megaphone_reevaluate(ctx, op)
                 except Exception:
                     pass
-        except Exception:
-            pass
+    except Exception:
+        pass
 
-        if op.training_type == TrainingType.TRAINING_TYPE_UNKNOWN:
-            op.training_type = local_training_type
+    if op.training_type == TrainingType.TRAINING_TYPE_UNKNOWN:
+        op.training_type = local_training_type
 
-        idx = op.training_type.value - 1
-        if 0 <= idx < 5:
-            if not getattr(ctx.cultivate_detail.turn_info, 'facility_click_logged', False):
-                facility_keys = ["speed", "stamina", "power", "guts", "wits"]
-                key = facility_keys[idx]
-                if not hasattr(ctx.cultivate_detail, "facility_clicks"):
-                    ctx.cultivate_detail.facility_clicks = {"speed": 0, "stamina": 0, "power": 0, "guts": 0, "wits": 0}
-                ctx.cultivate_detail.facility_clicks[key] += 1
-                ctx.cultivate_detail.turn_info.facility_click_logged = True
-                try:
-                    from module.umamusume.persistence import save_career_data
-                    save_career_data(ctx)
-                except Exception:
-                    pass
+    idx = op.training_type.value - 1
+    if 0 <= idx < 5:
+        if not getattr(ctx.cultivate_detail.turn_info, 'facility_click_logged', False):
+            facility_keys = ["speed", "stamina", "power", "guts", "wits"]
+            key = facility_keys[idx]
+            if not hasattr(ctx.cultivate_detail, "facility_clicks"):
+                ctx.cultivate_detail.facility_clicks = {"speed": 0, "stamina": 0, "power": 0, "guts": 0, "wits": 0}
+            ctx.cultivate_detail.facility_clicks[key] += 1
+            ctx.cultivate_detail.turn_info.facility_click_logged = True
+            try:
+                from module.umamusume.persistence import save_career_data
+                save_career_data(ctx)
+            except Exception:
+                pass
+
 
         ctx.ctrl.click_by_point(TRAINING_POINT_LIST[op.training_type.value - 1])
         time.sleep(0.15)
@@ -1072,6 +1086,7 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                 return
             except Exception:
                 pass
+
 
     ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
     return
