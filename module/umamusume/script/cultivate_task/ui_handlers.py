@@ -178,11 +178,8 @@ def script_support_card_select(ctx: UmamusumeContext):
         time.sleep(1.0)
         state["input_blocked"] = False
         return
-<<<<<<< HEAD
     click_next_button(ctx, prefer_right=False)
-=======
-    ctx.ctrl.click_by_point(TO_CULTIVATE_PREPARE_NEXT)
->>>>>>> d73de97 (guard)
+
 
 
 def script_cultivate_final_check(ctx: UmamusumeContext):
