@@ -1309,42 +1309,6 @@ def get_stat_only_percentile(ctx):
     return below_count / len(prev) * 100
 
 
-def get_date_weighted_percentile(ctx):
-    raw_stat_history = getattr(ctx.cultivate_detail, 'raw_stat_history', [])
-    date_history = getattr(ctx.cultivate_detail, 'date_history', [])
-    if len(raw_stat_history) < 8 or len(date_history) != len(raw_stat_history):
-        return get_stat_only_percentile(ctx)
-
-    current_date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
-    current_raw = 0.0
-    for idx2 in range(5):
-        til2 = ctx.cultivate_detail.turn_info.training_info_list[idx2]
-        sr = getattr(til2, 'stat_results', {})
-        raw_sum = sum(v for v in sr.values() if v > 0)
-        if raw_sum > current_raw:
-            current_raw = raw_sum
-
-    mega_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
-    mega_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
-    if mega_turns > 0:
-        mult = MEGA_STAT_MULT.get(mega_tier, 1.0)
-        current_raw /= mult
-
-    weighted_below = 0.0
-    weighted_total = 0.0
-    for i in range(len(raw_stat_history) - 1):
-        d = date_history[i]
-        distance = abs(d - current_date)
-        weight = 1.0 / (1.0 + distance)
-        if distance > 12:
-            continue
-        weighted_total += weight
-        if raw_stat_history[i] < current_raw:
-            weighted_below += weight
-
-    if weighted_total <= 0:
-        return 50.0
-    return weighted_below / weighted_total * 100
 
 
 def get_date_weighted_score_percentile(ctx):
@@ -1580,24 +1544,7 @@ def handle_megaphone(ctx):
     if handle_megaphone_endgame(ctx):
         return True
 
-    training_remaining = remaining_training_turns_real(ctx, date)
-    owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
-    owned_map = {n: q for n, q in owned}
-    active_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
-    total_coverage = total_megaphone_turns(owned_map) + active_turns
-    absolute_turns_remaining = (78 - date + 1) if date <= 78 else 0
-    total_megaphone_items = sum(qty for name, qty in owned_map.items() if name in MEGAPHONE_TIERS)
-
-    is_surplus = False
-    if absolute_turns_remaining > 0 and total_coverage >= absolute_turns_remaining:
-        is_surplus = True
-    elif training_remaining > 0 and total_megaphone_items >= training_remaining:
-        is_surplus = True
-
-    if is_surplus:
-        percentile = get_stat_only_percentile(ctx)
-    else:
-        percentile = get_date_weighted_percentile(ctx)
+    percentile = get_stat_only_percentile(ctx)
 
     if percentile is None:
         return False
@@ -1673,7 +1620,7 @@ def handle_anklet(ctx):
     if mant_cfg is None:
         return False
 
-    percentile = get_date_weighted_percentile(ctx)
+    percentile = get_stat_only_percentile(ctx)
     if percentile is None:
         return False
 
