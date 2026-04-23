@@ -112,14 +112,6 @@ def script_scenario_select(ctx: UmamusumeContext):
 
     target_scenario = ctx.cultivate_detail.scenario.scenario_type()
     time.sleep(2)
-    
-    img = ctx.ctrl.get_screen()
-    title_area = img[35:90, 250:470]
-    from bot.recog.ocr import ocr_line
-    title_text = ocr_line(cv2.cvtColor(title_area, cv2.COLOR_BGR2GRAY)).lower()
-    
-    if "parent" in title_text or "selection" in title_text or "umamusume" in title_text:
-        return
 
     for i in range(1, 15):
         img_gray = ctx.ctrl.get_screen(to_gray=True)
@@ -146,6 +138,7 @@ def script_umamusume_select(ctx: UmamusumeContext):
         return
     time.sleep(2)
     click_next_button(ctx, prefer_right=True)
+
 
 
 def script_extend_umamusume_select(ctx: UmamusumeContext):
@@ -185,7 +178,11 @@ def script_support_card_select(ctx: UmamusumeContext):
         time.sleep(1.0)
         state["input_blocked"] = False
         return
+<<<<<<< HEAD
     click_next_button(ctx, prefer_right=False)
+=======
+    ctx.ctrl.click_by_point(TO_CULTIVATE_PREPARE_NEXT)
+>>>>>>> d73de97 (guard)
 
 
 def script_cultivate_final_check(ctx: UmamusumeContext):
