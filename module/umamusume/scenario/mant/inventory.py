@@ -1652,13 +1652,10 @@ def handle_anklet(ctx):
     if mant_cfg is None:
         return False
 
-    percentile = get_stat_only_percentile(ctx)
+    percentile = get_date_weighted_percentile(ctx)
     if percentile is None:
         return False
 
-    threshold = getattr(mant_cfg, 'training_weights_threshold', 40)
-    if percentile < threshold:
-        return False
 
     threshold = getattr(mant_cfg, 'training_weights_threshold', 40)
     
