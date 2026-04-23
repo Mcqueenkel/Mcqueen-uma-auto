@@ -1022,16 +1022,6 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                     ctx.cultivate_detail.turn_info.energy_recovery_deferred = False
                     ctx.cultivate_detail.turn_info.charm_used_this_turn = False
 
-    try:
-        if ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT:
-            if getattr(ctx.cultivate_detail.turn_info, 'energy_recovery_deferred', False):
-                from module.umamusume.scenario.mant.inventory import handle_energy_recovery
-                if not getattr(ctx.cultivate_detail.turn_info, 'charm_used_this_turn', False):
-                    handle_energy_recovery(ctx)
-                ctx.cultivate_detail.turn_info.energy_recovery_deferred = False
-                ctx.cultivate_detail.turn_info.charm_used_this_turn = False
-
-            if op.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_TRAINING:
                 ctx.cultivate_detail.turn_info.pre_item_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
                 ctx.cultivate_detail.turn_info.pre_item_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
 
@@ -1064,11 +1054,6 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                 except Exception:
                     pass
 
-        ctx.ctrl.click_by_point(TRAINING_POINT_LIST[op.training_type.value - 1])
-        time.sleep(0.15)
-        ctx.ctrl.click_by_point(TRAINING_POINT_LIST[op.training_type.value - 1])
-        time.sleep(0.5)
-        return
         ctx.ctrl.click_by_point(TRAINING_POINT_LIST[op.training_type.value - 1])
         time.sleep(0.15)
         ctx.ctrl.click_by_point(TRAINING_POINT_LIST[op.training_type.value - 1])
