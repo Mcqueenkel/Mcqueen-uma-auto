@@ -855,10 +855,6 @@ def buy_shop_items(ctx, target_names, items_list, ratio, drag_ratio, first_item_
             continue
 
         results, _ = classify_items_in_frame(frame)
-<<<<<<< HEAD
-
-=======
->>>>>>> 747309a (removed debug logs)
         name_candidates = defaultdict(list)
         for item_name, conf, abs_y, turns, buyable in results:
             if buyable and not is_unbuyable(frame, abs_y) and remaining.get(item_name, 0) > 0:

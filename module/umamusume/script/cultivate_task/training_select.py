@@ -1011,10 +1011,7 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                         log.info("At least one condition failed - continuing with training")
     
     op = ctx.cultivate_detail.turn_info.turn_operation
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d73de97 (guard)
+
     if op is not None and op.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_TRAINING:
         try:
             if ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT:
@@ -1024,9 +1021,7 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                         handle_energy_recovery(ctx)
                     ctx.cultivate_detail.turn_info.energy_recovery_deferred = False
                     ctx.cultivate_detail.turn_info.charm_used_this_turn = False
-<<<<<<< HEAD
 
-=======
     try:
         if ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT:
             if getattr(ctx.cultivate_detail.turn_info, 'energy_recovery_deferred', False):
@@ -1037,10 +1032,6 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                 ctx.cultivate_detail.turn_info.charm_used_this_turn = False
 
             if op.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_TRAINING:
->>>>>>> 141c6ca (vita)
-=======
-
->>>>>>> d73de97 (guard)
                 ctx.cultivate_detail.turn_info.pre_item_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
                 ctx.cultivate_detail.turn_info.pre_item_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
 
