@@ -112,6 +112,14 @@ def script_scenario_select(ctx: UmamusumeContext):
 
     target_scenario = ctx.cultivate_detail.scenario.scenario_type()
     time.sleep(2)
+    
+    img = ctx.ctrl.get_screen()
+    title_area = img[35:90, 250:470]
+    from bot.recog.ocr import ocr_line
+    title_text = ocr_line(cv2.cvtColor(title_area, cv2.COLOR_BGR2GRAY)).lower()
+    
+    if "parent" in title_text or "selection" in title_text or "umamusume" in title_text:
+        return
 
     for i in range(1, 15):
         img_gray = ctx.ctrl.get_screen(to_gray=True)
