@@ -1532,17 +1532,31 @@ def handle_megaphone_endgame(ctx):
     if date >= MANT_CLIMAX_START and date not in MANT_CLIMAX_TRAINING_TURNS:
         return False
 
-    if active_turns > 0:
-        return False
-
     training_remaining = remaining_training_turns_real(ctx, date)
     total_available_turns = total_megaphone_turns(owned_map) + active_turns
-    if total_available_turns < training_remaining:
+    
+    absolute_turns_remaining = (78 - date + 1) if date <= 78 else 0
+    total_megaphone_items = sum(qty for name, qty in owned_map.items() if name in MEGAPHONE_TIERS)
+    
+    is_surplus = False
+    if absolute_turns_remaining > 0 and total_available_turns >= absolute_turns_remaining:
+        is_surplus = True
+    if training_remaining > 0 and total_megaphone_items >= training_remaining:
+        is_surplus = True
+        
+    if not is_surplus:
         return False
 
-    for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: x[1][0]):
+    for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: -x[1][0]):
         if owned_map.get(name, 0) <= 0:
             continue
+            
+        if active_turns > 0 and tier <= active_tier:
+            if tier < active_tier:
+                continue
+            if tier == active_tier and total_megaphone_items < training_remaining:
+                continue
+            
         ok = use_item_and_update_inventory(ctx, name)
         if ok:
             ctx.cultivate_detail.mant_megaphone_tier = tier
@@ -1571,11 +1585,19 @@ def handle_megaphone(ctx):
     owned_map = {n: q for n, q in owned}
     active_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
     total_coverage = total_megaphone_turns(owned_map) + active_turns
+    absolute_turns_remaining = (78 - date + 1) if date <= 78 else 0
+    total_megaphone_items = sum(qty for name, qty in owned_map.items() if name in MEGAPHONE_TIERS)
 
-    if training_remaining > 0 and total_coverage / training_remaining >= 1.0:
-        percentile = get_date_weighted_percentile(ctx)
-    else:
+    is_surplus = False
+    if absolute_turns_remaining > 0 and total_coverage >= absolute_turns_remaining:
+        is_surplus = True
+    elif training_remaining > 0 and total_megaphone_items >= training_remaining:
+        is_surplus = True
+
+    if is_surplus:
         percentile = get_stat_only_percentile(ctx)
+    else:
+        percentile = get_date_weighted_percentile(ctx)
 
     if percentile is None:
         return False
