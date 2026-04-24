@@ -190,7 +190,7 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
                     if swiped is True:
                         time.sleep(1.5)
                     break
-                ctx.ctrl.swipe(x1=20, y1=850, x2=20, y2=1000, duration=200, name="")
+                ctx.ctrl.swipe(x1=40, y1=850, x2=40, y2=1000, duration=200, name="")
                 swiped = True
             img = ctx.ctrl.get_screen()
             ctx.current_screen = img
@@ -241,12 +241,12 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
                     log.info(f"Bottom reached")
                     spam_deadline = time.time() + 3.7
                     while time.time() < spam_deadline:
-                        ctx.ctrl.swipe(x1=20, y1=850, x2=20, y2=1000, duration=1000, name="")
+                        ctx.ctrl.swipe(x1=40, y1=850, x2=40, y2=1000, duration=1000, name="")
                         time.sleep(0.17)
                     time.sleep(0.3)
                     img = ctx.ctrl.get_screen()
                     ctx.current_screen = img
-                ctx.ctrl.swipe(x1=20, y1=1000, x2=20, y2=850, duration=1000, name="")
+                ctx.ctrl.swipe(x1=40, y1=1000, x2=40, y2=850, duration=1000, name="")
                 time.sleep(1.0)
                 img = ctx.ctrl.get_screen()
                 ctx.current_screen = img
