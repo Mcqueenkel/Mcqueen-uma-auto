@@ -111,6 +111,7 @@ TITLE = [
     "Career Profile", # 58
     "Perks", # 59
     "Support Effect Details", # 60
+    "Sparks", # 61
 ]
 
 
@@ -310,7 +311,7 @@ def script_info(ctx: UmamusumeContext):
         if title_text == TITLE[55]:
             ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
         
-        if title_text in [TITLE[56], TITLE[57], TITLE[58], TITLE[59], TITLE[60]]:
+        if title_text in [TITLE[56], TITLE[57], TITLE[58], TITLE[59], TITLE[60], TITLE[61]]:
             ctx.ctrl.back()
             time.sleep(0.5)
             return
