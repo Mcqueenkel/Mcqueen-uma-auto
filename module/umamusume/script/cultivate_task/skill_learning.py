@@ -428,7 +428,6 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
                     ctx.cultivate_detail.cultivate_finish and
                     hasattr(ctx.cultivate_detail, 'manual_purchase_completed') and
                     ctx.cultivate_detail.manual_purchase_completed):
-                    # No terminate available for swipe_async thread
                     pass
                     early_exit = True
                     break
@@ -445,7 +444,6 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
                 if not proc.is_alive():
                     break
 
-            # No terminate available for swipe_async thread
             pass
 
             if not early_exit:

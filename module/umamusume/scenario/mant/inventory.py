@@ -479,9 +479,6 @@ def scan_inventory(ctx, stop_when_found=None):
             item_qtys[name] = qty
             last_new_item_time = time.time()
     if stop_when_found and any(n == stop_when_found for n, _, _, _ in results):
-        try:
-        # No terminate available for swipe_async thread
-        pass
         owned = [(name, qty) for name, qty in item_qtys.items()]
         owned.sort(key=lambda x: x[0])
         scroll_to_top(ctx)
@@ -515,9 +512,7 @@ def scan_inventory(ctx, stop_when_found=None):
         if not proc.is_alive():
             break
 
-    try:
-        # No terminate available for swipe_async thread
-        pass
+    pass
 
     prev_frame = ctx.ctrl.get_screen()
     for _ in range(15):
