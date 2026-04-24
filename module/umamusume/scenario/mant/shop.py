@@ -183,6 +183,7 @@ def sb_drag(ctx, from_y, to_y):
     sx = random.randint(SB_X_MIN, SB_X_MAX)
     ex = random.randint(SB_X_MIN, SB_X_MAX)
     dur = random.randint(166, 211)
+    from_y, to_y = max(110, from_y), max(110, to_y)
     ctx.ctrl.execute_adb_shell(
         f"shell input swipe {sx} {from_y} {ex} {to_y} {dur}", True)
     time.sleep(0.15)
@@ -519,11 +520,7 @@ def scan_mant_shop(ctx):
         all_detections.append((key, conf, 0, abs_y, turns, buyable))
 
     scan_x_end = _gauss_scan_x()
-    swipe_cmd = (
-        "shell input swipe "
-        + str(SB_X) + " " + str(start_y) + " " + str(scan_x_end) + " " + str(TRACK_BOT) + " " + str(swipe_dur)
-    )
-    proc = ctx.ctrl.execute_adb_shell(swipe_cmd, False)
+    proc = ctx.ctrl.swipe_async(SB_X, start_y, scan_x_end, TRACK_BOT, swipe_dur)
 
     time.sleep(0.3)
     prev_frame = img
@@ -545,28 +542,25 @@ def scan_mant_shop(ctx):
                 futures.append((frame_idx, f))
                 prev_frame = curr
                 frame_idx += 1
-            if proc.poll() is not None:
+            if not proc.is_alive():
                 break
 
-        try:
-            proc.terminate()
-        except Exception:
-            pass
+    pass
 
-        time.sleep(0.15)
-        final = ctx.ctrl.get_screen()
-        if final is not None and not content_same(prev_frame, final):
-            captured_frames[frame_idx] = final.copy()
-            if len(captured_frames) > max_kept_frames:
-                oldest = min(captured_frames)
-                del captured_frames[oldest]
-            f = pool.submit(classify_items_in_frame, final)
-            futures.append((frame_idx, f))
+    time.sleep(0.15)
+    final = ctx.ctrl.get_screen()
+    if final is not None and not content_same(prev_frame, final):
+        captured_frames[frame_idx] = final.copy()
+        if len(captured_frames) > max_kept_frames:
+            oldest = min(captured_frames)
+            del captured_frames[oldest]
+        f = pool.submit(classify_items_in_frame, final)
+        futures.append((frame_idx, f))
 
-        for fi, f in futures:
-            hits, _ = f.result()
-            for key, conf, abs_y, turns, buyable in hits:
-                all_detections.append((key, conf, fi, abs_y, turns, buyable))
+    for fi, f in futures:
+        hits, _ = f.result()
+        for key, conf, abs_y, turns, buyable in hits:
+            all_detections.append((key, conf, fi, abs_y, turns, buyable))
 
     time.sleep(0.2)
     for _extra_pass in range(20):

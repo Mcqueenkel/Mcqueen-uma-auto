@@ -159,6 +159,7 @@ def sb_drag(ctx, from_y, to_y):
     sx = random.randint(SB_X_MIN, SB_X_MAX)
     ex = random.randint(SB_X_MIN, SB_X_MAX)
     dur = random.randint(166, 211)
+    from_y, to_y = max(110, from_y), max(110, to_y)
     ctx.ctrl.execute_adb_shell(
         "shell input swipe " + str(sx) + " " + str(from_y) + " " + str(ex) + " " + str(to_y) + " " + str(dur), True)
     time.sleep(0.15)
@@ -464,8 +465,7 @@ def scan_inventory(ctx, stop_when_found=None):
     swipe_dur = max(5000, min(25000, int(est_frames * 600)))
 
     scan_x_end = _gauss_scan_x()
-    swipe_cmd = f"shell input swipe {SB_X} {start_y} {scan_x_end} {INV_TRACK_BOT} {swipe_dur}"
-    proc = ctx.ctrl.execute_adb_shell(swipe_cmd, False)
+    proc = ctx.ctrl.swipe_async(SB_X, start_y, scan_x_end, INV_TRACK_BOT, swipe_dur)
 
     item_qtys = {}
     scan_deadline = time.time() + 40
@@ -479,10 +479,6 @@ def scan_inventory(ctx, stop_when_found=None):
             item_qtys[name] = qty
             last_new_item_time = time.time()
     if stop_when_found and any(n == stop_when_found for n, _, _, _ in results):
-        try:
-            proc.terminate()
-        except Exception:
-            pass
         owned = [(name, qty) for name, qty in item_qtys.items()]
         owned.sort(key=lambda x: x[0])
         scroll_to_top(ctx)
@@ -492,7 +488,7 @@ def scan_inventory(ctx, stop_when_found=None):
         time.sleep(0.068)
         frame = ctx.ctrl.get_screen()
         if frame is None:
-            if proc.poll() is not None:
+            if not proc.is_alive():
                 break
             continue
 
@@ -513,13 +509,10 @@ def scan_inventory(ctx, stop_when_found=None):
             idle_terminated = True
             break
 
-        if proc.poll() is not None:
+        if not proc.is_alive():
             break
 
-    try:
-        proc.terminate()
-    except Exception:
-        pass
+    pass
 
     prev_frame = ctx.ctrl.get_screen()
     for _ in range(15):

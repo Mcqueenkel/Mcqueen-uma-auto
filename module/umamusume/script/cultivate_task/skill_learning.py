@@ -116,6 +116,7 @@ def sb_drag(ctx, from_y, to_y):
     sx = random.randint(SB_X_MIN, SB_X_MAX)
     ex = random.randint(SB_X_MIN, SB_X_MAX)
     dur = random.randint(166, 211)
+    from_y, to_y = max(110, from_y), max(110, to_y)
     ctx.ctrl.execute_adb_shell(
         "shell input swipe " + str(sx) + " " + str(from_y) + " " + str(ex) + " " + str(to_y) + " " + str(dur), True)
     time.sleep(0.15)
@@ -411,8 +412,7 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
         swipe_dur = max(5000, min(25000, int(est_frames * 600)))
 
         scan_x_end = _gauss_scan_x()
-        swipe_cmd = "shell input swipe " + str(SB_X) + " " + str(start_y) + " " + str(scan_x_end) + " " + str(TRACK_BOT) + " " + str(swipe_dur)
-        proc = ctx.ctrl.execute_adb_shell(swipe_cmd, sync=False)
+        proc = ctx.ctrl.swipe_async(SB_X, start_y, scan_x_end, TRACK_BOT, swipe_dur)
 
         time.sleep(0.3)
         prev_frame = img
@@ -428,10 +428,7 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
                     ctx.cultivate_detail.cultivate_finish and
                     hasattr(ctx.cultivate_detail, 'manual_purchase_completed') and
                     ctx.cultivate_detail.manual_purchase_completed):
-                    try:
-                        proc.terminate()
-                    except Exception:
-                        pass
+                    pass
                     early_exit = True
                     break
 
@@ -444,13 +441,10 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
                     frame_sb_positions.append(sb_y)
                     futures.append(executor.submit(get_skill_list, curr, learn_skill_list, learn_skill_blacklist))
                     prev_frame = curr
-                if proc.poll() is not None:
+                if not proc.is_alive():
                     break
 
-            try:
-                proc.terminate()
-            except Exception:
-                pass
+            pass
 
             if not early_exit:
                 time.sleep(0.15)
