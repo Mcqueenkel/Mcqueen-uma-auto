@@ -81,6 +81,7 @@ class AdbController(AndroidController):
             else:
                 duration = int(max(50, min(180, random.gauss(90, 30)))) + hold_duration
                 dx, dy = x + random.randint(-3, 3), y + random.randint(-3, 3)
+                if y < 110: dy = y
                 self.execute_adb_shell(f"input swipe {x} {y} {dx} {dy} {duration}", True)
             self.last_click = time.time()
             time.sleep(CONFIG.bot.auto.adb.delay)
