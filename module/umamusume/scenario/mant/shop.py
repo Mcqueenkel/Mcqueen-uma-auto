@@ -527,11 +527,7 @@ def scan_mant_shop(ctx):
         all_detections.append((key, conf, 0, abs_y, turns, buyable))
 
     scan_x_end = _gauss_scan_x()
-    swipe_cmd = (
-        "shell input swipe "
-        + str(SB_X) + " " + str(start_y) + " " + str(scan_x_end) + " " + str(TRACK_BOT) + " " + str(swipe_dur)
-    )
-    proc = ctx.ctrl.execute_adb_shell(swipe_cmd, False)
+    proc = ctx.ctrl.swipe_async(SB_X, start_y, scan_x_end, TRACK_BOT, swipe_dur)
 
     time.sleep(0.3)
     prev_frame = img
@@ -553,13 +549,12 @@ def scan_mant_shop(ctx):
                 futures.append((frame_idx, f))
                 prev_frame = curr
                 frame_idx += 1
-            if proc.poll() is not None:
+            if not proc.is_alive():
                 break
 
         try:
-            proc.terminate()
-        except Exception:
-            pass
+        # No terminate available for swipe_async thread
+        pass
 
         time.sleep(0.15)
         final = ctx.ctrl.get_screen()
