@@ -172,6 +172,11 @@ class AdbController(AndroidController):
         time.sleep(1.2)
         self.trigger_decision_reset = True
 
+    def back(self):
+        with self.input_lock:
+            self.execute_adb_shell("input keyevent 4", True)
+            time.sleep(CONFIG.bot.auto.adb.delay)
+
     def click(self, x, y, name="", random_offset=True, hold_duration=0):
         with self.input_lock:
             from bot.base.runtime_state import get_state

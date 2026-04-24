@@ -231,7 +231,7 @@ def script_info(ctx: UmamusumeContext):
             ctx.ctrl.click_by_point(CULTIVATE_GOAL_RACE_INTER_3)
             time.sleep(0.5)
         if title_text == TITLE[54]:
-            ctx.ctrl.click_by_point(ESCAPE)
+            ctx.ctrl.back()
             time.sleep(0.5)
         if title_text == TITLE[1]:  # "Rest & Outing Confirmation"
             log.info("Handling Rest & Outing Confirmation")
@@ -311,7 +311,7 @@ def script_info(ctx: UmamusumeContext):
             ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
         
         if title_text in [TITLE[56], TITLE[57], TITLE[58], TITLE[59], TITLE[60]]:
-            ctx.ctrl.click_by_point(ESCAPE)
+            ctx.ctrl.back()
             time.sleep(0.5)
             return
             
