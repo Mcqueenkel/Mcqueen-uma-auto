@@ -263,39 +263,38 @@ class Executor:
                             last_img = cur
 
                         if unchanged >= watchdog_threshold:
-                            print(f"{watchdog_threshold}/{watchdog_threshold} restarting app", flush=True)
+                            print(f"{watchdog_threshold}/{watchdog_threshold} restarting app", flush=True)      
                             try:
-                                log.info(f"watchdog {watchdog_threshold}/{watchdog_threshold} restarting app")
+                                log.info(f"watchdog {watchdog_threshold}/{watchdog_threshold} restarting app")  
                             except Exception:
                                 pass
-                            
+
                             recovery_success = False
                             try:
                                 from bot.base.runtime_state import get_state
                                 state = get_state()
                                 state["input_blocked"] = True
-                                
+
                                 for attempt in range(3):
                                     try:
-                                        controller.client.run_cmd(["shell", "am", "force-stop", "com.cygames.umamusume"])
+                                        controller.execute_adb_shell("am force-stop com.cygames.umamusume", True)
                                         recovery_success = True
                                         break
                                     except Exception:
                                         time.sleep(1.0)
-                                
+
                                 time.sleep(1.0)
                                 try:
-                                    controller.execute_adb_shell("shell input keyevent 4", True)
-                                    time.sleep(0.5)
-                                    controller.execute_adb_shell("shell input keyevent 3", True)
-                                    time.sleep(0.5)
-                                    controller.start_app(manifest.app_package_name, manifest.app_activity_name)
+                                    controller.recover_home_and_reopen()
                                     recovery_success = True
                                 except Exception:
+                                    controller.start_app(manifest.app_package_name, manifest.app_activity_name) 
 
-                                    controller.start_app(manifest.app_package_name, manifest.app_activity_name)
-                                
                                 time.sleep(2.0)
+                                try:
+                                    controller.trigger_decision_reset = True
+                                except Exception:
+                                    pass
                             except Exception:
                                 pass
                             finally:
