@@ -37,23 +37,34 @@ class AdbController(AndroidController):
         self.recovery_grace_until = 0.0
 
     def init_env(self) -> None:
-        try:
-            res = self.client.run_cmd(["shell", "echo", "ok"])
-            if res.returncode != 0: raise Exception(f"ADB failed: {res.stderr}")
-        except Exception: raise
+        for attempt in range(3):
+            try:
+                res = self.client.run_cmd(["shell", "echo", "ok"])
+                if res.returncode != 0: raise Exception(f"ADB failed: {res.stderr}")
+                return
+            except Exception:
+                if attempt < 2:
+                    time.sleep(0.1)
+                else:
+                    raise
 
     def get_screen(self, to_gray=False, force=False):
-        with self.lock:
-            now = time.time()
-            if not force and self.last_img is not None and (now - self.last_ts) < self.max_age:
-                img = self.last_img
-            else:
-                img = self.capture()
-                if img is not None:
-                    self.last_img = img
-                    self.last_ts = time.time()
-        if img is None: return None
-        return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) if to_gray else img
+        for attempt in range(3):
+            img = None
+            with self.lock:
+                now = time.time()
+                if not force and self.last_img is not None and (now - self.last_ts) < self.max_age:
+                    img = self.last_img
+                else:
+                    img = self.capture()
+                    if img is not None:
+                        self.last_img = img
+                        self.last_ts = time.time()
+            if img is not None:
+                return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) if to_gray else img
+            if attempt < 2:
+                time.sleep(0.1)
+        return None
 
     def capture(self) -> Optional[np.ndarray]:
         for _ in range(3):

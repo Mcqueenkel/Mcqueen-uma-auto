@@ -223,6 +223,7 @@ class UmamusumeContext(BotContext):
 
     def __init__(self, task, ctrl):
         super().__init__(task, ctrl)
+        self.adb = ctrl
 
     def is_task_finish(self) -> bool:
         return False

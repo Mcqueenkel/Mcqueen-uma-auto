@@ -82,14 +82,21 @@ def preload_templates(resource_dir):
                 path = os.path.join(root, f)
                 img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
                 if img is not None and img.size > 0:
-                    TEMPLATE_IMAGE_CACHE[path] = img
+                    small = None
+                    quarter = None
                     if img.shape[0] >= SMALL_TEMPLATE_MIN_SIZE and img.shape[1] >= SMALL_TEMPLATE_MIN_SIZE:
                         small = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
-                        if small.shape[0] >= 4 and small.shape[1] >= 4:
-                            TEMPLATE_SMALL_CACHE[path] = small
+                        if small.shape[0] < 4 or small.shape[1] < 4:
+                            small = None
                     if img.shape[0] >= QUARTER_TEMPLATE_MIN_SIZE and img.shape[1] >= QUARTER_TEMPLATE_MIN_SIZE:
                         quarter = cv2.resize(img, None, fx=0.25, fy=0.25, interpolation=cv2.INTER_AREA)
-                        if quarter.shape[0] >= 4 and quarter.shape[1] >= 4:
+                        if quarter.shape[0] < 4 or quarter.shape[1] < 4:
+                            quarter = None
+                    with cache_lock:
+                        TEMPLATE_IMAGE_CACHE[path] = img
+                        if small is not None:
+                            TEMPLATE_SMALL_CACHE[path] = small
+                        if quarter is not None:
                             TEMPLATE_QUARTER_CACHE[path] = quarter
                     count += 1
     return count
