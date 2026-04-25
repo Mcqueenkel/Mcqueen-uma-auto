@@ -91,8 +91,6 @@ export default {
 }
 </script>
 
-
-
 <style scoped>
 .list-panel{display:flex;flex-direction:column;height:100%}
 .list-panel .card{margin-bottom:0}

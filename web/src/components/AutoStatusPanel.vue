@@ -41,3 +41,7 @@ export default {
   beforeUnmount(){ if (this.pollTimer) clearInterval(this.pollTimer) }
    }
 </script>
+
+<style scoped>
+.btn+.btn{margin-left:6px}
+</style>

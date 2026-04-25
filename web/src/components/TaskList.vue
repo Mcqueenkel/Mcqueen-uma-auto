@@ -30,3 +30,7 @@ export default {
 }
 </script>
 
+<style scoped>
+.list-group-item{padding:12px 14px}
+</style>
+

@@ -25,3 +25,15 @@ export default {
 }
 </script>
 
+<style scoped>
+.card-title{
+  margin-bottom: 0;
+}
+.start-time{
+  color: var(--muted);
+}
+.card-body{
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+</style>
+
