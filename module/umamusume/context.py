@@ -154,6 +154,8 @@ class CultivateContextDetail:
     facility_clicks: dict[str, int]
     last_title: str
     same_title_count: int
+    facility_ratios: list[float]
+    facility_period_configs: list[dict]
 
     def __init__(self):
         self.race_chain_map = {}
@@ -207,6 +209,8 @@ class CultivateContextDetail:
         self.last_title = ""
         self.same_title_count = 0
         self.facility_clicks = {"speed": 0, "stamina": 0, "power": 0, "guts": 0, "wits": 0}
+        self.facility_ratios = [1.0] * 5
+        self.facility_period_configs = [{'enabled': False, 'base': 0.0, 'scale': 0.0} for _ in range(6)]
 
 
     def reset_skill_learn(self):
@@ -304,6 +308,8 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
         detail.hint_boost_characters = list(getattr(task.detail, 'hint_boost_characters', []))
         detail.hint_boost_multiplier = int(getattr(task.detail, 'hint_boost_multiplier', 100))
         detail.friendship_score_groups = list(getattr(task.detail, 'friendship_score_groups', []))
+        detail.facility_ratios = list(getattr(task.detail, 'facility_ratios', [1.0] * 5))
+        detail.facility_period_configs = [dict(d) for d in getattr(task.detail, 'facility_period_configs', [{'enabled': False, 'base': 0.0, 'scale': 0.0} for _ in range(6)])]
         detail.score_history = []
         detail.percentile_history = []
         detail.energy_history = []

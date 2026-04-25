@@ -1128,6 +1128,45 @@
 
                 <hr style="border-color: var(--accent); opacity: 0.5; margin: 12px 0;">
                 <div class="form-group" style="margin-top: 16px;">
+                  <div style="color: var(--accent); display: flex; align-items: center; justify-content: space-between;">
+                    <span>Investment Scoring</span>
+                    <small style="color: #888;">Bonus = Base + (Scale × Clicks × Ratio)</small>
+                  </div>
+                </div>
+
+                <div class="table-responsive">
+                  <table class="table table-sm table-bordered facility-period-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 40px;">On</th>
+                        <th>Period</th>
+                        <th>Base</th>
+                        <th>Scale</th>
+                        <th>Spd</th>
+                        <th>Sta</th>
+                        <th>Pow</th>
+                        <th>Gut</th>
+                        <th>Wit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(period, idx) in facilityPeriodConfigs" :key="idx">
+                        <td class="text-center">
+                          <input type="checkbox" v-model="period.enabled">
+                        </td>
+                        <td><small>{{ period.name }}</small></td>
+                        <td><input type="number" step="1" v-model.number="period.base" class="form-control form-control-sm"></td>
+                        <td><input type="number" step="0.1" v-model.number="period.scale" class="form-control form-control-sm"></td>
+                        <td v-for="(name, i) in ['Spd', 'Sta', 'Pow', 'Gut', 'Wit']" :key="i">
+                          <input type="number" step="0.1" v-model.number="period.ratios[i]" class="form-control form-control-sm" style="min-width: 50px;">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <hr style="border-color: var(--accent); opacity: 0.5; margin: 12px 0;">
+                <div class="form-group" style="margin-top: 16px;">
                   <div style="color: var(--accent);">Training Thresholds</div>
                 </div>
                 <div class="row">
@@ -2257,6 +2296,16 @@ export default {
       spiritExplosionSenior: [0.16, 0.16, 0.16, 0.06, 0.11],
       spiritExplosionSeniorAfterSummer: [0.16, 0.16, 0.16, 0.06, 0.11],
       spiritExplosionFinale: [0.16, 0.16, 0.16, 0.06, 0.11],
+
+      facilityRatios: [1.0, 1.0, 1.0, 1.0, 1.0],
+      facilityPeriodConfigs: [
+        { name: 'Turns 1-12', enabled: false, base: 0.0, scale: 0.0, ratios: [1.0, 1.0, 1.0, 1.0, 1.0] },
+        { name: 'Turns 13-24', enabled: false, base: 0.0, scale: 0.0, ratios: [1.0, 1.0, 1.0, 1.0, 1.0] },
+        { name: 'Turns 25-36', enabled: false, base: 0.0, scale: 0.0, ratios: [1.0, 1.0, 1.0, 1.0, 1.0] },
+        { name: 'Turns 37-48', enabled: false, base: 0.0, scale: 0.0, ratios: [1.0, 1.0, 1.0, 1.0, 1.0] },
+        { name: 'Turns 49-60', enabled: false, base: 0.0, scale: 0.0, ratios: [1.0, 1.0, 1.0, 1.0, 1.0] },
+        { name: 'Turns 61-72', enabled: false, base: 0.0, scale: 0.0, ratios: [1.0, 1.0, 1.0, 1.0, 1.0] }
+      ],
 
       eventWeightsJunior: {
         Friendship: 35, Speed: 10, Stamina: 10, Power: 10, Guts: 20, Wits: 1,
@@ -3559,6 +3608,13 @@ export default {
             "preliminaryRoundSelections": [...this.preliminaryRoundSelections],
             "aoharuTeamNameSelection": this.aoharuTeamNameSelection
           } : null,
+          "facility_ratios": [...this.facilityRatios],
+          "facility_period_configs": this.facilityPeriodConfigs.map(p => ({
+            enabled: p.enabled,
+            base: p.base,
+            scale: p.scale,
+            ratios: [...p.ratios]
+          })),
            "mant_config": this.selectedScenario === 3 ? {
              "item_tiers": { ...this.mantItemTiers },
              "tier_count": this.mantTierCount,
@@ -4304,6 +4360,30 @@ export default {
         this.mantSkipRacePercentile = 0;
       }
 
+      if (data.facility_period_configs) {
+        this.facilityPeriodConfigs.forEach((p, i) => {
+          if (data.facility_period_configs[i]) {
+            p.enabled = data.facility_period_configs[i].enabled || false;
+            p.base = data.facility_period_configs[i].base || 0.0;
+            p.scale = data.facility_period_configs[i].scale || 0.0;
+            if (data.facility_period_configs[i].ratios) {
+              p.ratios = [...data.facility_period_configs[i].ratios];
+            }
+          }
+        });
+      } else if (data.attachment_data && data.attachment_data.facility_period_configs) {
+         this.facilityPeriodConfigs.forEach((p, i) => {
+          if (data.attachment_data.facility_period_configs[i]) {
+            p.enabled = data.attachment_data.facility_period_configs[i].enabled || false;
+            p.base = data.attachment_data.facility_period_configs[i].base || 0.0;
+            p.scale = data.attachment_data.facility_period_configs[i].scale || 0.0;
+            if (data.attachment_data.facility_period_configs[i].ratios) {
+              p.ratios = [...data.attachment_data.facility_period_configs[i].ratios];
+            }
+          }
+        });
+      }
+
       if ('character_score_configs' in this.presetsUse && typeof this.presetsUse.character_score_configs === 'object') {
         this.characterScoreConfigs = {};
         this.selectedFriendshipCharacters = [];
@@ -4495,6 +4575,12 @@ export default {
            tier_thresholds: { ...this.mantTierThresholds }
          };
       }
+      preset.facility_period_configs = this.facilityPeriodConfigs.map(p => ({
+        enabled: p.enabled,
+        base: p.base,
+        scale: p.scale,
+        ratios: [...p.ratios]
+      }));
       let payload = {
         "preset": JSON.stringify(preset)
       }
@@ -6477,6 +6563,16 @@ export default {
 
 .event-weights-table td strong {
   color: var(--accent);
+}
+
+.facility-ratios-section .form-control,
+.facility-period-table .form-control {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.facility-period-table thead th:after {
+  display: none !important;
 }
 
 .event-weights-table input.form-control {

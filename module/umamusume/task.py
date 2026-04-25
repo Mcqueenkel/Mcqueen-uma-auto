@@ -53,6 +53,8 @@ class TaskDetail:
     group_card_enabled: bool
     group_card_name: str
     group_card_percentile: int
+    facility_ratios: list[float]
+    facility_period_configs: list[dict]
 
 
 class EndTaskReason(Enum):
@@ -108,6 +110,7 @@ def build_task(task_execute_mode: TaskExecuteMode, task_type: int,
 
     td.summer_score_threshold = attachment_data.get('summer_score_threshold', 0.34)
     td.wit_race_search_threshold = attachment_data.get('wit_race_search_threshold', 0.15)
+    td.facility_period_configs = attachment_data.get('facility_period_configs', [{'enabled': False, 'base': 0.0, 'scale': 0.0, 'ratios': [1.0] * 5} for _ in range(6)])
     
     td.motivation_threshold_year1 = attachment_data.get('motivation_threshold_year1', 3)
     td.motivation_threshold_year2 = attachment_data.get('motivation_threshold_year2', 4)

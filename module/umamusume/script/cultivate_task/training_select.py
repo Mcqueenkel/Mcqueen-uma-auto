@@ -46,6 +46,15 @@ FACILITY_NAME_MAP = {
 }
 
 TRAINING_NAMES = ["Speed", "Stamina", "Power", "Guts", "Wit"]
+
+def get_facility_period_index(date):
+    if date <= 12: return 0  # Junior Early
+    if date <= 24: return 1  # Junior Late
+    if date <= 36: return 2  # Classic Early
+    if date <= 48: return 3  # Classic Late
+    if date <= 60: return 4  # Senior Early
+    if date <= 72: return 5  # Senior Late
+    return 6  # Endgame (Disable)
 STAT_KEY_LIST = ["speed", "stamina", "power", "guts", "wits", "sp"]
 
 TYPE_MAP = [
@@ -629,6 +638,26 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
             except Exception:
                 pass
             score += scenario_additive
+
+            # Investment Scoring
+            facility_bonus = 0.0
+            try:
+                date_val = int(date)
+                f_period_idx = get_facility_period_index(date_val)
+                if f_period_idx < 6:
+                    period_cfg = ctx.cultivate_detail.facility_period_configs[f_period_idx]
+                    if period_cfg.get('enabled', False):
+                        f_key = FACILITY_NAME_MAP.get(TrainingType(idx + 1))
+                        if f_key:
+                            f_clicks = ctx.cultivate_detail.facility_clicks.get(f_key, 0)
+                            f_ratio_list = period_cfg.get('ratios', [1.0] * 5)
+                            f_ratio = f_ratio_list[idx] if len(f_ratio_list) > idx else 1.0
+                            facility_bonus = float(period_cfg.get('base', 0.0)) + (float(period_cfg.get('scale', 0.0)) * f_clicks * f_ratio)
+                            score += facility_bonus
+                            if facility_bonus != 0:
+                                scenario_formula_parts.append(f"fac:{facility_bonus:.1f}")
+            except Exception as e:
+                log.debug(f"Facility bonus error: {e}")
 
             pre_mult_score = score
 
