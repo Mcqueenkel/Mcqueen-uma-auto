@@ -99,8 +99,8 @@ def script_main_menu(ctx: UmamusumeContext):
 
 def script_scenario_select(ctx: UmamusumeContext):
     img_gray = ctx.ctrl.get_screen(to_gray=True)
-
     next_match = image_match(img_gray, REF_NEXT)
+    
     if next_match.find_match and next_match.center_point[0] > 400:
         return
 

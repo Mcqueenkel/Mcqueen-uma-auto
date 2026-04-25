@@ -1617,6 +1617,7 @@ def handle_anklet(ctx):
     if percentile is None:
         return False
 
+
     threshold = getattr(mant_cfg, 'training_weights_threshold', 40)
     
     if percentile < threshold:
