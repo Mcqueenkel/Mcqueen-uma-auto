@@ -167,31 +167,35 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
                     return
         if ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_RACE:
             race_id_up = ctx.cultivate_detail.turn_info.turn_operation.race_id
-            scroll_up_deadline = time.time() + 3.0
+            scroll_up_deadline = time.time() + 4.0
             while time.time() < scroll_up_deadline:
                 img_up = ctx.ctrl.get_screen()
                 selected_up = find_race(ctx, img_up, race_id_up)
                 if selected_up:
                     try_use_cleat(ctx, race_id_up)
-                    time.sleep(0.58)
+                    time.sleep(0.5)
                     ctx.ctrl.click_by_point(CULTIVATE_GOAL_RACE_INTER_1)
-                    time.sleep(0.58)
+                    time.sleep(0.5)
                     return
-                ctx.ctrl.swipe(x1=340, y1=741, x2=347, y2=898, duration=580, name="")
-                time.sleep(0.58)
+                ctx.ctrl.swipe(x1=340, y1=600, x2=340, y2=1000, duration=400, name="")
+                time.sleep(0.5)
 
             swiped = False
             scroll_attempts = 0
-            max_scroll_attempts = 50
+            max_scroll_attempts = 30
             while scroll_attempts < max_scroll_attempts:
                 scroll_attempts += 1
-                img = cv2.cvtColor(ctx.ctrl.get_screen(), cv2.COLOR_BGR2RGB)
+                img_data = ctx.ctrl.get_screen()
+                img = cv2.cvtColor(img_data, cv2.COLOR_BGR2RGB)
                 if not compare_color_equal(img[705, 701], [211, 209, 219]):
-                    if swiped is True:
-                        time.sleep(1.5)
                     break
-                ctx.ctrl.swipe(x1=40, y1=850, x2=40, y2=1000, duration=200, name="")
+                ctx.ctrl.swipe(x1=340, y1=600, x2=340, y2=1100, duration=300, name="")
+                time.sleep(0.5)
                 swiped = True
+            
+            if swiped:
+                time.sleep(0.5)
+
             img = ctx.ctrl.get_screen()
             ctx.current_screen = img
             ti = ctx.cultivate_detail.turn_info
@@ -199,8 +203,9 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
             if not hasattr(ti, 'race_search_started_at') or getattr(ti, 'race_search_id', None) != current_race_id:
                 ti.race_search_started_at = time.time()
                 ti.race_search_id = current_race_id
+            
             while True:
-                if time.time() - ti.race_search_started_at > 30:
+                if time.time() - ti.race_search_started_at > 40:
                     try:
                         if getattr(ctx.task.detail, 'extra_race_list', None) is ctx.cultivate_detail.extra_race_list:
                             ctx.cultivate_detail.extra_race_list = list(ctx.cultivate_detail.extra_race_list)
@@ -212,44 +217,42 @@ def script_cultivate_race_list(ctx: UmamusumeContext):
                     if hasattr(ti, 'race_search_started_at'):
                         delattr(ti, 'race_search_started_at')
                     return
+                
                 race_id = ctx.cultivate_detail.turn_info.turn_operation.race_id
-                log.info(f"Looking for race ID: {race_id}")
+                
                 selected = False
-                for retry in range(3):
+                for retry in range(2):
+                    img = ctx.ctrl.get_screen()
                     selected = find_race(ctx, img, race_id)
                     if selected:
                         break
-                    if retry < 2:
-                        time.sleep(0.5)
-                        img = ctx.ctrl.get_screen()
-                        ctx.current_screen = img
+                    time.sleep(0.3)
+                
                 if selected:
-                    log.info(f"Found race ID: {race_id}")
                     if hasattr(ti, 'race_search_started_at'):
                         delattr(ti, 'race_search_started_at')
                     if hasattr(ti, 'race_search_id'):
                         delattr(ti, 'race_search_id')
-                    if hasattr(ti, 'race_search_retried'):
-                        delattr(ti, 'race_search_retried')
                     try_use_cleat(ctx, race_id)
-                    time.sleep(0.58)
+                    time.sleep(0.5)
                     ctx.ctrl.click_by_point(CULTIVATE_GOAL_RACE_INTER_1)
-                    time.sleep(0.58)
                     return
-                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                if not compare_color_equal(img[1006, 701], [211, 209, 219]):
-                    log.info(f"Bottom reached")
-                    spam_deadline = time.time() + 3.7
-                    while time.time() < spam_deadline:
-                        ctx.ctrl.swipe(x1=40, y1=850, x2=40, y2=1000, duration=1000, name="")
-                        time.sleep(0.17)
-                    time.sleep(0.3)
+                
+                img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                if not compare_color_equal(img_rgb[1006, 701], [211, 209, 219]):
+                    time.sleep(0.5)
                     img = ctx.ctrl.get_screen()
-                    ctx.current_screen = img
-                ctx.ctrl.swipe(x1=40, y1=1000, x2=40, y2=850, duration=1000, name="")
-                time.sleep(1.0)
-                img = ctx.ctrl.get_screen()
-                ctx.current_screen = img
+                    if find_race(ctx, img, race_id):
+                        try_use_cleat(ctx, race_id)
+                        time.sleep(0.5)
+                        ctx.ctrl.click_by_point(CULTIVATE_GOAL_RACE_INTER_1)
+                        return
+                    
+                    ctx.cultivate_detail.turn_info.turn_operation = None
+                    return
+                
+                ctx.ctrl.swipe(x1=340, y1=1000, x2=340, y2=700, duration=600, name="")
+                time.sleep(0.5)
         else:
             ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
 
