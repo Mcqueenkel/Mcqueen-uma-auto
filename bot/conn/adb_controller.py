@@ -13,6 +13,9 @@ from bot.base.point import ClickPoint, ClickPointType
 from bot.recog.image_matcher import image_match
 from config import CONFIG
 
+class ADBTimeoutError(Exception):
+    pass
+
 class AdbController(AndroidController):
     def __init__(self, device_name: str):
         self.client = AdbClient(device_name)
@@ -23,6 +26,15 @@ class AdbController(AndroidController):
         self.max_age = 0.120
         self.last_click = 0.0
         self.trigger_decision_reset = False
+        
+        self.recent_click_buckets = []
+        self.fallback_block_until = 0.0
+        self.repetitive_click_name = None
+        self.repetitive_click_count = 0
+        self.repetitive_other_clicks = 0
+        self.last_click_time = 0.0
+        self.last_recovery_time = 0
+        self.recovery_grace_until = 0.0
 
     def init_env(self) -> None:
         try:
@@ -61,44 +73,160 @@ class AdbController(AndroidController):
             except Exception: time.sleep(0.1)
         return None
 
+    def in_fallback_block(self, name):
+        if isinstance(name, str) and name == "Default fallback click":
+            if time.time() < self.fallback_block_until:
+                return True
+        return False
+
+    def update_click_buckets(self, x, y):
+        bucket = (int(x/25), int(y/25))
+        if bucket not in self.recent_click_buckets:
+            self.recent_click_buckets.append(bucket)
+            if len(self.recent_click_buckets) > 2:
+                self.recent_click_buckets.pop(0)
+            self.fallback_block_until = time.time() + 2.0
+
+    def build_click_key(self, x, y, name):
+        if isinstance(name, str) and name.strip() != "":
+            return name.strip()
+        return f"{int(x/50)}:{int(y/50)}"
+
+    def update_repetitive_click(self, click_key):
+        try:
+            from bot.base.runtime_state import update_repetitive, get_repetitive_threshold
+            repetitive_threshold = int(get_repetitive_threshold())
+        except Exception:
+            repetitive_threshold = 11
+            update_repetitive = None
+
+        if isinstance(click_key, str):
+            click_key = click_key.strip()
+
+        if self.repetitive_click_name is None:
+            self.repetitive_click_name = click_key
+            self.repetitive_click_count = 1
+            self.repetitive_other_clicks = 0
+            if update_repetitive: update_repetitive(1, 0)
+            return False
+
+        current_name = self.repetitive_click_name.strip() if isinstance(self.repetitive_click_name, str) else self.repetitive_click_name
+        is_same_key = (click_key == current_name) or (
+            isinstance(click_key, str) and isinstance(current_name, str) and
+            click_key.lower() == current_name.lower()
+        )
+
+        if is_same_key:
+            self.repetitive_click_count += 1
+        else:
+            self.repetitive_other_clicks += 1
+            if self.repetitive_other_clicks >= 2:
+                self.repetitive_click_name = click_key
+                self.repetitive_click_count = 1
+                self.repetitive_other_clicks = 0
+        
+        if update_repetitive: update_repetitive(self.repetitive_click_count, self.repetitive_other_clicks)
+
+        if time.time() < self.recovery_grace_until:
+            self.repetitive_click_name = None
+            self.repetitive_click_count = 0
+            self.repetitive_other_clicks = 0
+            return False
+
+        if self.repetitive_click_name == click_key and self.repetitive_click_count >= repetitive_threshold:     
+            try:
+                self.recover_home_and_reopen()
+            finally:
+                self.repetitive_click_name = None
+                self.repetitive_click_count = 0
+                self.repetitive_other_clicks = 0
+                if update_repetitive: update_repetitive(0, 0)
+            return True
+        return False
+
+    def safety_dont_click(self, x, y):
+        if 263 <= x <= 458 and 559 <= y <= 808:
+            from module.umamusume.asset.template import REF_DONT_CLICK
+            screen_gray = self.get_screen(to_gray=True)
+            match = image_match(screen_gray, REF_DONT_CLICK)
+            if getattr(match, "find_match", False):
+                return True
+        return False
+
+    def wait_click_interval(self):
+        elapsed = time.time() - self.last_click_time
+        min_interval = random.uniform(0.06, 0.09)
+        wait_needed = max(0.0, min_interval - elapsed)
+        if wait_needed > 0: time.sleep(wait_needed)
+
+    def recover_home_and_reopen(self):
+        if time.time() - self.last_recovery_time < 10: return
+        self.last_recovery_time = time.time()
+        self.recovery_grace_until = time.time() + 60
+        for _ in range(3):
+            self.execute_adb_shell("input keyevent 4", True)
+            time.sleep(0.4)
+        self.execute_adb_shell("input keyevent 3", True)
+        time.sleep(0.8)
+        self.execute_adb_shell("monkey -p com.cygames.umamusume -c android.intent.category.LAUNCHER 1", True)
+        time.sleep(1.2)
+        self.trigger_decision_reset = True
+
+    def back(self):
+        with self.input_lock:
+            self.execute_adb_shell("input keyevent 4", True)
+            time.sleep(CONFIG.bot.auto.adb.delay)
+
     def click(self, x, y, name="", random_offset=True, hold_duration=0):
         with self.input_lock:
             from bot.base.runtime_state import get_state
             if get_state().get("input_blocked"): return
+            
+            if self.in_fallback_block(name): return
+            self.update_click_buckets(x, y)
+            
+            click_key = self.build_click_key(x, y, name)
+            if self.update_repetitive_click(click_key): return
+            
+            if self.safety_dont_click(x, y): return
+
             if random_offset:
                 x += int(max(-8, min(8, random.gauss(0, 3))))
                 y += int(max(-8, min(8, random.gauss(0, 3))))
-            x, y = max(25, min(695, x)), max(25, min(1255, y))
-            if hold_duration > 0 and y < 110:
-                hold_duration = 0
-            if y < 110:
-                y = max(10, y)
-            elapsed = time.time() - self.last_click
-            wait = max(0.0, random.uniform(0.06, 0.09) - elapsed)
-            if wait > 0: time.sleep(wait)
+            
+            x, y = max(30, min(690, x)), max(66, min(1240, y))
+            if hold_duration > 0 and y < 66: hold_duration = 0
+            
+            self.wait_click_interval()
+            
             if hold_duration == 0:
                 self.execute_adb_shell(f"input tap {x} {y}", True)
             else:
                 duration = int(max(50, min(180, random.gauss(90, 30)))) + hold_duration
                 dx, dy = x + random.randint(-3, 3), y + random.randint(-3, 3)
-                if y < 110: dy = y
+                if y < 120: dy = y
                 self.execute_adb_shell(f"input swipe {x} {y} {dx} {dy} {duration}", True)
-            self.last_click = time.time()
+            
+            self.last_click_time = time.time()
             time.sleep(CONFIG.bot.auto.adb.delay)
 
     def swipe(self, x1, y1, x2, y2, duration=0.2, name=""):
         with self.input_lock:
             from bot.base.runtime_state import get_state
             if get_state().get("input_blocked"): return
+            
             x1 += int(max(-10, min(10, random.gauss(0, 4))))
             y1 += int(max(-10, min(10, random.gauss(0, 4))))
             x2 += int(max(-10, min(10, random.gauss(0, 4))))
             y2 += int(max(-10, min(10, random.gauss(0, 4))))
-            x1, y1 = max(25, min(695, x1)), max(25, min(1255, y1))
-            x2, y2 = max(25, min(695, x2)), max(25, min(1255, y2))
-            if y1 < 110:
+            
+            if y1 < 120:
                 self.click(x1, y1, name=name, random_offset=False, hold_duration=0)
                 return
+
+            x1, y1 = max(30, min(690, x1)), max(66, min(1240, y1))
+            x2, y2 = max(30, min(690, x2)), max(66, min(1240, y2))
+            
             d = int(duration * 1000 * random.uniform(0.94, 1.06))
             self.execute_adb_shell(f"input swipe {x1} {y1} {x2} {y2} {d}", True)
             time.sleep(CONFIG.bot.auto.adb.delay)
@@ -120,8 +248,7 @@ class AdbController(AndroidController):
                 self.click(res.center_point[0], res.center_point[1], name=point.desc, random_offset=random_offset, hold_duration=hold_duration)
 
     def execute_adb_shell(self, cmd: str, sync: bool = True):
-        if cmd.startswith("shell "):
-            cmd = cmd[6:]
+        if cmd.startswith("shell "): cmd = cmd[6:]
         if sync:
             return self.client.shell(cmd, sync=True)
         else:
@@ -132,7 +259,7 @@ class AdbController(AndroidController):
         with self.client.plock:
             if self.client.psock:
                 try: self.client.psock.close()
-                except Exception: pass
+                except: pass
                 self.client.psock = None
         try:
             self.client.kill_server()
@@ -149,25 +276,32 @@ class AdbController(AndroidController):
         with self.input_lock:
             from bot.base.runtime_state import get_state
             if get_state().get("input_blocked"): return
+            
             x1 += int(max(-10, min(10, random.gauss(0, 4))))
             y1 += int(max(-10, min(10, random.gauss(0, 4))))
             x2 += int(max(-10, min(10, random.gauss(0, 4))))
             y2 += int(max(-10, min(10, random.gauss(0, 4))))
-            x1, y1 = max(25, min(695, x1)), max(25, min(1255, y1))
-            x2, y2 = max(25, min(695, x2)), max(25, min(1255, y2))
-            if y1 < 110:
+            
+            if y1 < 120:
                 self.click(x1, y1, name=name, random_offset=False, hold_duration=0)
                 return
+                
+            x1, y1 = max(30, min(690, x1)), max(66, min(1240, y1))
+            x2, y2 = max(30, min(690, x2)), max(66, min(1240, y2))
+            
             sw_d = int(swipe_duration * random.uniform(0.94, 1.06))
             ho_d = int(hold_duration * random.uniform(0.94, 1.06))
             rev_y = y2 - 28 if y2 > y1 else y2 + 28
-            rev_y = max(110, min(1255, rev_y))
+            rev_y = max(66, min(1240, rev_y))
+            
             self.execute_adb_shell(f"input swipe {x1} {y1} {x2} {y2} {sw_d}", True)
             time.sleep(0.05)
             self.execute_adb_shell(f"input swipe {x2} {y2} {x2} {rev_y} {ho_d}", True)
             time.sleep(CONFIG.bot.auto.adb.delay)
 
     def swipe_async(self, x1, y1, x2, y2, duration_ms, name=""):
+        x1, y1 = max(30, min(690, x1)), max(66, min(1240, y1))
+        x2, y2 = max(30, min(690, x2)), max(66, min(1240, y2))
         def _run():
             with self.input_lock:
                 self.execute_adb_shell(f"input swipe {x1} {y1} {x2} {y2} {duration_ms}", True)

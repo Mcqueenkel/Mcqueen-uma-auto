@@ -102,10 +102,16 @@ TITLE = [
     "Insufficient Goal Race Result Pts", #49
     "Shop", #50
      "Exchange Complete", #51
-    "Career Complete", #52
-    "Training Items", #53
-    "Active Item Effects", #54
-    "Choose Recreation Partner", #55
+    "Career Complete", # 52
+    "Training Items", # 53
+    "Active Item Effects", # 54
+    "Choose Recreation Partner", # 55
+    "Ranking", # 56
+    "Menu", # 57
+    "Career Profile", # 58
+    "Perks", # 59
+    "Support Effect Details", # 60
+    "Sparks", # 61
 ]
 
 
@@ -226,7 +232,7 @@ def script_info(ctx: UmamusumeContext):
             ctx.ctrl.click_by_point(CULTIVATE_GOAL_RACE_INTER_3)
             time.sleep(0.5)
         if title_text == TITLE[54]:
-            ctx.ctrl.click_by_point(ESCAPE)
+            ctx.ctrl.back()
             time.sleep(0.5)
         if title_text == TITLE[1]:  # "Rest & Outing Confirmation"
             log.info("Handling Rest & Outing Confirmation")
@@ -304,6 +310,12 @@ def script_info(ctx: UmamusumeContext):
                     ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
         if title_text == TITLE[55]:
             ctx.ctrl.click_by_point(CULTIVATE_OPERATION_COMMON_CONFIRM)
+        
+        if title_text in [TITLE[56], TITLE[57], TITLE[58], TITLE[59], TITLE[60], TITLE[61]]:
+            ctx.ctrl.back()
+            time.sleep(0.5)
+            return
+            
         if title_text == TITLE[9]: #Confirmation
             ctx.ctrl.click_by_point(CULTIVATE_LEARN_SKILL_CONFIRM_AGAIN)
         if title_text == TITLE[10]: #Skills Learned

@@ -8,7 +8,7 @@ from bot.recog.image_matcher import image_match
 from module.umamusume.context import UmamusumeContext
 from module.umamusume.asset.point import (
     CULTIVATE_RESULT_CONFIRM, GOAL_ACHIEVE_CONFIRM, GOAL_FAIL_CONFIRM,
-    NEXT_GOAL_CONFIRM
+    NEXT_GOAL_CONFIRM, ESCAPE
 )
 
 log = logger.get_logger(__name__)
@@ -220,5 +220,8 @@ def script_not_found_ui(ctx: UmamusumeContext):
         pass
 
     log.debug("No specific UI detected - using default fallback click")
-    x, y = random.randint(0, 111), random.randint(1, 6)
-    ctx.ctrl.click(x, y, "Default fallback click")
+    if random.random() < 0.5:
+        ctx.ctrl.click_by_point(ESCAPE)
+    else:
+        x, y = random.randint(0, 111), random.randint(1, 6)
+        ctx.ctrl.click(x, y, "Default fallback click")

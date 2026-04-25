@@ -545,22 +545,20 @@ def scan_mant_shop(ctx):
             if not proc.is_alive():
                 break
 
-    pass
+        time.sleep(0.15)
+        final = ctx.ctrl.get_screen()
+        if final is not None and not content_same(prev_frame, final):
+            captured_frames[frame_idx] = final.copy()
+            if len(captured_frames) > max_kept_frames:
+                oldest = min(captured_frames)
+                del captured_frames[oldest]
+            f = pool.submit(classify_items_in_frame, final)
+            futures.append((frame_idx, f))
 
-    time.sleep(0.15)
-    final = ctx.ctrl.get_screen()
-    if final is not None and not content_same(prev_frame, final):
-        captured_frames[frame_idx] = final.copy()
-        if len(captured_frames) > max_kept_frames:
-            oldest = min(captured_frames)
-            del captured_frames[oldest]
-        f = pool.submit(classify_items_in_frame, final)
-        futures.append((frame_idx, f))
-
-    for fi, f in futures:
-        hits, _ = f.result()
-        for key, conf, abs_y, turns, buyable in hits:
-            all_detections.append((key, conf, fi, abs_y, turns, buyable))
+        for fi, f in futures:
+            hits, _ = f.result()
+            for key, conf, abs_y, turns, buyable in hits:
+                all_detections.append((key, conf, fi, abs_y, turns, buyable))
 
     time.sleep(0.2)
     for _extra_pass in range(20):
