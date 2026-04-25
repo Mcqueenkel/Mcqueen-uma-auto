@@ -224,10 +224,12 @@ class CultivateContextDetail:
 class UmamusumeContext(BotContext):
     task: UmamusumeTask
     cultivate_detail: CultivateContextDetail
+    fallback_click_count: int
 
     def __init__(self, task, ctrl):
         super().__init__(task, ctrl)
         self.adb = ctrl
+        self.fallback_click_count = 0
 
     def is_task_finish(self) -> bool:
         return False

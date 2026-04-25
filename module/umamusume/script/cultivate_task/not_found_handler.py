@@ -42,10 +42,12 @@ def script_not_found_ui(ctx: UmamusumeContext):
                 img_gray_full = cv2.cvtColor(ctx.current_screen, cv2.COLOR_BGR2GRAY)
             next_match = image_match(img_gray_full, REF_NEXT)
             if next_match.find_match:
+                if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
                 ctx.ctrl.click(next_match.center_point[0], next_match.center_point[1], "REF_NEXT")
                 return
             next2_match = image_match(img_gray_full, REF_NEXT2)
             if next2_match.find_match:
+                if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
                 ctx.ctrl.click(next2_match.center_point[0], next2_match.center_point[1], "REF_NEXT2")
                 return
         except Exception:
@@ -63,6 +65,7 @@ def script_not_found_ui(ctx: UmamusumeContext):
             roi = img_gray_full[y1c:y2c, x1c:x2c]
             res = image_match(roi, UI_CULTIVATE_RACE_LIST_2)
             if res.find_match:
+                if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
                 from module.umamusume.script.cultivate_task.race_handlers import script_cultivate_race_list
                 script_cultivate_race_list(ctx)
                 return
@@ -77,6 +80,7 @@ def script_not_found_ui(ctx: UmamusumeContext):
             result = image_match(img_gray, UI_CULTIVATE_RESULT_1)
             
             if result.find_match:
+                if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
                 log.info("Cultivate Result 1 template matched! Clicking confirm button")
                 ctx.ctrl.click_by_point(CULTIVATE_RESULT_CONFIRM)
                 return
@@ -95,6 +99,7 @@ def script_not_found_ui(ctx: UmamusumeContext):
             
             result_keywords = ['rewards', 'result', 'cultivation', 'complete', 'finish']
             if any(keyword in title_text for keyword in result_keywords):
+                if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
                 log.info(f"Potential cultivation result detected: '{title_text[:50]}...'")
                 log.info("Attempting to click cultivation result confirm button")
                 ctx.ctrl.click_by_point(CULTIVATE_RESULT_CONFIRM)
@@ -104,6 +109,7 @@ def script_not_found_ui(ctx: UmamusumeContext):
             bond_text = ocr_line(bond_area).lower()
             log.debug(f"Bond area OCR: '{bond_text[:100]}...'")
             if 'bond level' in bond_text or 'total fans' in bond_text:
+                if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
                 log.info(f"Rewards screen detected via bond/fans text: '{bond_text[:50]}...'")
                 log.info("Attempting to click cultivation result confirm button")
                 ctx.ctrl.click_by_point(CULTIVATE_RESULT_CONFIRM)
@@ -128,6 +134,7 @@ def script_not_found_ui(ctx: UmamusumeContext):
             combined_text = f"{title_text} {middle_text}"
             
             if any(keyword in combined_text for keyword in goal_keywords):
+                if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
                 log.info(f"Fallback goal screen detected: '{combined_text[:50]}...'")
                 
                 if any(word in combined_text for word in ['complete', 'achieved']):
@@ -180,6 +187,7 @@ def script_not_found_ui(ctx: UmamusumeContext):
         if not follow_check.find_match:
             next_match = image_match(img_gray, REF_NEXT)
             if next_match.find_match:
+                if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
                 ctx.ctrl.click(next_match.center_point[0], next_match.center_point[1], "Next button")
                 return
     except Exception:
@@ -190,6 +198,7 @@ def script_not_found_ui(ctx: UmamusumeContext):
         img_gray = getattr(ctx, 'current_screen_gray', None) or cv2.cvtColor(ctx.current_screen, cv2.COLOR_BGR2GRAY)
         edit_team_match = image_match(img_gray, REF_EDIT_TEAM)
         if edit_team_match.find_match:
+            if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
             x = random.randint(276, 452)
             y = random.randint(1155, 1196)
             ctx.ctrl.click(x, y, "Default fallback click")
@@ -202,6 +211,7 @@ def script_not_found_ui(ctx: UmamusumeContext):
         img_gray = getattr(ctx, 'current_screen_gray', None) or cv2.cvtColor(ctx.current_screen, cv2.COLOR_BGR2GRAY)
         tp_match = image_match(img_gray, REF_TP)
         if tp_match.find_match:
+            if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
             return
     except Exception:
         pass
@@ -214,12 +224,22 @@ def script_not_found_ui(ctx: UmamusumeContext):
             img_gray = getattr(ctx, 'current_screen_gray', None) or cv2.cvtColor(ctx.current_screen, cv2.COLOR_BGR2GRAY)
             final_match = image_match(img_gray, REF_MANT_FINAL_END)
             if final_match.find_match:
+                if hasattr(ctx, 'fallback_click_count'): ctx.fallback_click_count = 0
                 ctx.ctrl.click(360, 1110, "MANT final end Next")
                 return
     except Exception:
         pass
 
     log.debug("No specific UI detected - using default fallback click")
+    if not hasattr(ctx, 'fallback_click_count'):
+        ctx.fallback_click_count = 0
+
+    if ctx.fallback_click_count >= 2:
+        ctx.ctrl.back()
+        ctx.fallback_click_count = 0
+        return
+
+    ctx.fallback_click_count += 1
     if random.random() < 0.5:
         ctx.ctrl.click_by_point(ESCAPE)
     else:
