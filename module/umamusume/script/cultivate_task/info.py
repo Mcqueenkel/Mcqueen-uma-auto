@@ -112,6 +112,7 @@ TITLE = [
     "Perks", # 59
     "Support Effect Details", # 60
     "Sparks", # 61
+    "Career Playthrough Difficulty", # 62
 ]
 
 
@@ -728,4 +729,6 @@ def script_info(ctx: UmamusumeContext):
             ctx.ctrl.click(95, 1228)
         if title_text == TITLE[52]:
             ctx.ctrl.click(200, 805, "Career Complete to home")
+        if title_text == TITLE[62]:
+            ctx.ctrl.click(517, 1180, "Confirm difficulty")
         time.sleep(0.5)
