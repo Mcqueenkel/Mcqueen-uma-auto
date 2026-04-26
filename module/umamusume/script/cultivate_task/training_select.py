@@ -137,9 +137,13 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                         mant_skip = True
                     else:
                         from module.umamusume.asset.race_data import get_races_for_period
-                        next_date = ctx.cultivate_detail.turn_info.date + 1
+                        date = ctx.cultivate_detail.turn_info.date
+                        available_races_now = get_races_for_period(date)
+                        next_date = date + 1
                         available_races_next = get_races_for_period(next_date)
-                        if any(r in ctx.cultivate_detail.extra_race_list for r in available_races_next):
+                        has_race_now = any(r in ctx.cultivate_detail.extra_race_list for r in available_races_now)
+                        has_race_next = any(r in ctx.cultivate_detail.extra_race_list for r in available_races_next)
+                        if has_race_now or has_race_next:
                             mant_skip = True
                 except Exception:
                     pass
@@ -975,14 +979,24 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
         gc_percentile = getattr(ctx.cultivate_detail, 'group_card_percentile', 26)
         if gc_dates and len(history) >= 2:
             if percentile < gc_percentile:
-                from module.umamusume.script.cultivate_task.helpers import TRAINING_REPLACEMENT_DATES
-                matching = [d for d in TRAINING_REPLACEMENT_DATES if d in gc_dates]
-                if matching:
-                    log.info(f"Group card override: percentile {percentile:.1f} < {gc_percentile}, switching to REST")
-                    ctx.cultivate_detail.turn_info.turn_operation = TurnOperation()
-                    ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST
-                    ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
-                    return
+                from module.umamusume.asset.race_data import get_races_for_period
+                date = ctx.cultivate_detail.turn_info.date
+                available_races = get_races_for_period(date)
+                has_race_this_turn = any(r in ctx.cultivate_detail.extra_race_list for r in available_races)
+                has_scheduled = False
+                try:
+                    from module.umamusume.scenario.mant.inventory import has_scheduled_race_this_turn as check_fn
+                    has_scheduled = check_fn(ctx)
+                except Exception:
+                    pass
+                if not (has_race_this_turn or has_scheduled):
+                    from module.umamusume.script.cultivate_task.helpers import TRAINING_REPLACEMENT_DATES
+                    matching = [d for d in TRAINING_REPLACEMENT_DATES if d in gc_dates]
+                    if matching:
+                        ctx.cultivate_detail.turn_info.turn_operation = TurnOperation()
+                        ctx.cultivate_detail.turn_info.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST
+                        ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
+                        return
 
     try:
         best_idx_tmp = int(np.argmax(computed_scores))

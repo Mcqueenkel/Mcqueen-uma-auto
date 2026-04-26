@@ -246,11 +246,23 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
             time.sleep(0.15)
             energy = read_energy()
         if energy > 0 and energy < 33:
-            if should_use_pal_outing_simple(ctx):
-                ctx.ctrl.click_by_point(get_trip(ctx))
-            else:
-                ctx.ctrl.click_by_point(CULTIVATE_REST)
-            return
+            has_race = False
+            try:
+                from module.umamusume.asset.race_data import get_races_for_period
+                date = ctx.cultivate_detail.turn_info.date
+                available_races = get_races_for_period(date)
+                has_race = any(r in ctx.cultivate_detail.extra_race_list for r in available_races)
+                if not has_race:
+                    from module.umamusume.scenario.mant.inventory import has_scheduled_race_this_turn as check_fn
+                    has_race = check_fn(ctx)
+            except Exception:
+                pass
+            if not has_race:
+                if should_use_pal_outing_simple(ctx):
+                    ctx.ctrl.click_by_point(get_trip(ctx))
+                else:
+                    ctx.ctrl.click_by_point(CULTIVATE_REST)
+                return
 
     if is_mant(ctx):
         from module.umamusume.scenario.mant.main_menu import handle_mant_rival_race

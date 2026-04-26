@@ -89,40 +89,45 @@ def get_operation(ctx: UmamusumeContext) -> TurnOperation | None:
                         mant_skip_fast_path = True
                     else:
                         from module.umamusume.asset.race_data import get_races_for_period
-                        next_date = ctx.cultivate_detail.turn_info.date + 1
+                        date = ctx.cultivate_detail.turn_info.date
+                        available_races_now = get_races_for_period(date)
+                        next_date = date + 1
                         available_races_next = get_races_for_period(next_date)
-                        if any(r in ctx.cultivate_detail.extra_race_list for r in available_races_next):
+                        has_race_now = any(r in ctx.cultivate_detail.extra_race_list for r in available_races_now)
+                        has_race_next = any(r in ctx.cultivate_detail.extra_race_list for r in available_races_next)
+                        if has_race_now or has_race_next:
                             mant_skip_fast_path = True
     except Exception:
         pass
 
     if ctx.cultivate_detail.turn_info.medic_room_available and energy <= ENERGY_FAST_MEDIC and not mant_skip_fast_path:
-        if not has_scheduled_race_this_turn(ctx):
+        if not has_scheduled_race_this_turn(ctx) and not has_optional_race_this_turn(ctx):
             turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_MEDIC
             return turn_operation
 
     if (mood_raw is not None) and energy < ENERGY_FAST_TRIP and mood_val < mood_threshold and not mant_skip_fast_path:
-        if getattr(ctx.cultivate_detail, 'prioritize_recreation', False) and ctx.cultivate_detail.pal_event_stage > 0:
-            try:
-                img = ctx.current_screen
-                if img is not None:
-                    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                    from module.umamusume.asset.template import UI_RECREATION_FRIEND_NOTIFICATION
-                    result = image_match(img_gray, UI_RECREATION_FRIEND_NOTIFICATION)
-                    if result.find_match:
-                        turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_TRIP
-                        return turn_operation
-            except Exception:
-                pass
-        else:
-            turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_TRIP
-            return turn_operation
+        if not has_optional_race_this_turn(ctx):
+            if getattr(ctx.cultivate_detail, 'prioritize_recreation', False) and ctx.cultivate_detail.pal_event_stage > 0:
+                try:
+                    img = ctx.current_screen
+                    if img is not None:
+                        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                        from module.umamusume.asset.template import UI_RECREATION_FRIEND_NOTIFICATION
+                        result = image_match(img_gray, UI_RECREATION_FRIEND_NOTIFICATION)
+                        if result.find_match:
+                            turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_TRIP
+                            return turn_operation
+                except Exception:
+                    pass
+            else:
+                turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_TRIP
+                return turn_operation
 
     limit = getattr(ctx.cultivate_detail, 'rest_threshold', getattr(ctx.cultivate_detail, 'rest_treshold', getattr(ctx.cultivate_detail, 'fast_path_energy_limit', 48)))
     if limit == 0:
         energy = 100
     if energy <= limit and not mant_skip_fast_path:
-        if not has_scheduled_race_this_turn(ctx):
+        if not has_scheduled_race_this_turn(ctx) and not has_optional_race_this_turn(ctx):
             if getattr(ctx.cultivate_detail, 'prioritize_recreation', False) and ctx.cultivate_detail.pal_event_stage > 0:
                 try:
                     img = ctx.current_screen
@@ -162,9 +167,8 @@ def get_operation(ctx: UmamusumeContext) -> TurnOperation | None:
                     except Exception:
                         pass
                     if not skip_race:
-                        pass
-                    else:
-                        turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST
+                        turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_RACE
+                        turn_operation.race_id = extra_race_this_turn[0]
                         return turn_operation
                 else:
                     turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_REST
@@ -435,3 +439,9 @@ def get_operation(ctx: UmamusumeContext) -> TurnOperation | None:
 def has_scheduled_race_this_turn(ctx):
     from module.umamusume.scenario.mant.inventory import has_scheduled_race_this_turn as check_fn
     return check_fn(ctx)
+
+def has_optional_race_this_turn(ctx):
+    from module.umamusume.asset.race_data import get_races_for_period
+    date = ctx.cultivate_detail.turn_info.date
+    available_races = get_races_for_period(date)
+    return any(r in ctx.cultivate_detail.extra_race_list for r in available_races)
