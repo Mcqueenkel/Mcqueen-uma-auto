@@ -21,17 +21,39 @@ detected_portraits_log = {}
 detected_items_log = {}
 detected_shop_items_log = {}
 
-def log_detected_portrait(name, favor_level, is_npc=False):
+CARD_TYPE_MAPPING = {
+    1: "Speed",
+    2: "Stamina",
+    3: "Power",
+    4: "Guts",
+    5: "Wits",
+    6: "Friend",
+    7: "Group",
+    10: "NPC"
+}
+
+def log_detected_portrait(name, favor_level, is_npc=False, card_type=None):
     if not name or not favor_level:
         return
+    
+    type_name = "Unknown"
+    if card_type is not None:
+        if hasattr(card_type, "value"):
+            type_name = CARD_TYPE_MAPPING.get(card_type.value, "Unknown")
+        else:
+            type_name = CARD_TYPE_MAPPING.get(card_type, "Unknown")
+
     existing = detected_portraits_log.get(name)
     if existing:
         existing["favor"] = favor_level
+        if type_name != "Unknown":
+            existing["card_type"] = type_name
     else:
         detected_portraits_log[name] = {
             "name": name,
             "favor": favor_level,
             "is_npc": is_npc,
+            "card_type": type_name
         }
 
 def clear_detected_portraits():

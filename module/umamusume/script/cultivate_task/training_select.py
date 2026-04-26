@@ -266,7 +266,7 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                                         from module.umamusume.context import log_detected_portrait
                                         card_type = getattr(sc_list[slot_idx], "card_type", None)
                                         is_npc = (card_type == SupportCardType.SUPPORT_CARD_TYPE_NPC)
-                                        log_detected_portrait(name, favor.value, is_npc=is_npc)
+                                        log_detected_portrait(name, favor.value, is_npc=is_npc, card_type=card_type)
                             except Exception:
                                 pass
             except Exception:
@@ -489,6 +489,36 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
 
         char_configs = getattr(ctx.cultivate_detail, 'character_score_configs', {})
         period_key = 'junior' if period_idx == 0 else 'classic' if period_idx == 1 else 'senior'
+
+        deck_multipliers = [1.0] * 5
+        try:
+            pcs = getattr(ctx.task.detail, 'pal_card_store', {})
+            if isinstance(pcs, dict):
+                deck_counts = [0] * 6
+                for card_info in pcs.values():
+                    if not isinstance(card_info, dict):
+                        continue
+                    c_type = card_info.get('type')
+                    if c_type is None:
+                        continue
+                    if hasattr(c_type, 'value'):
+                        c_type = c_type.value
+                    if isinstance(c_type, str):
+                        c_type_lower = c_type.lower()
+                        if 'speed' in c_type_lower: c_type = 1
+                        elif 'stamina' in c_type_lower: c_type = 2
+                        elif 'power' in c_type_lower: c_type = 3
+                        elif 'guts' in c_type_lower or 'will' in c_type_lower: c_type = 4
+                        elif 'wit' in c_type_lower or 'intelligence' in c_type_lower: c_type = 5
+                        else: continue
+                    if isinstance(c_type, int) and 1 <= c_type <= 5:
+                        deck_counts[c_type] += 1
+                for i in range(5):
+                    deck_multipliers[i] = 1.0 + (deck_counts[i+1] * 0.016)
+            if any(m != 1.0 for m in deck_multipliers) and date < 60:
+                log.info(f"Deck multipliers: Spd:{deck_multipliers[0]:.3f} Sta:{deck_multipliers[1]:.3f} Pow:{deck_multipliers[2]:.3f} Guts:{deck_multipliers[3]:.3f} Wit:{deck_multipliers[4]:.3f}")
+        except Exception:
+            pass
 
         for idx in range(5):
             til = ctx.cultivate_detail.turn_info.training_info_list[idx]
@@ -733,6 +763,11 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                     weight_mult = 2.0
                 score *= weight_mult
 
+            deck_mult = 1.0
+            if date < 60:
+                deck_mult = deck_multipliers[idx]
+                score *= deck_mult
+
             computed_scores[idx] = score
             original_scores[idx] = pre_fail_score
             facility_mults[idx] = score / pre_mult_score if abs(pre_mult_score) > 1e-12 else 0.0
@@ -775,6 +810,8 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                 mult_parts.append(f"target:x{target_mult:.2f}")
             if weight_mult != 1.0:
                 mult_parts.append(f"weight:x{weight_mult:.2f}")
+            if deck_mult != 1.0:
+                mult_parts.append(f"deck:x{deck_mult:.3f}")
             
             formula_str = " ".join(formula_parts)
             if mult_parts:

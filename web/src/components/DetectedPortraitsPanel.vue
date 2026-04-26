@@ -13,7 +13,10 @@
               <img :src="'/training-icon/' + p.name" :alt="p.name" class="portrait-img" @error="onImgError">
             </div>
             <div class="portrait-name">{{ formatName(p.name) }}</div>
-            <div class="portrait-type-badge" :class="p.is_npc ? 'badge-npc' : 'badge-deck'">{{ p.is_npc ? 'NPC' : 'Deck' }}</div>
+            <div class="badge-container">
+              <div class="portrait-type-badge" :class="p.is_npc ? 'badge-npc' : 'badge-deck'">{{ p.is_npc ? 'NPC' : 'Deck' }}</div>
+              <div v-if="p.card_type && p.card_type !== 'Unknown' && p.card_type !== 'NPC'" class="portrait-type-badge" :class="getCardTypeClass(p.card_type)">{{ p.card_type }}</div>
+            </div>
             <div class="favor-bar">
               <div class="favor-pip" v-for="i in 4" :key="i" :class="{ filled: i <= p.favor, ['lv' + p.favor]: i <= p.favor }"></div>
             </div>
@@ -39,6 +42,11 @@ export default {
     },
     onImgError(e) {
       e.target.style.display = 'none'
+    },
+    getCardTypeClass(type) {
+      if (!type) return '';
+      const t = type.toLowerCase();
+      return `badge-type-${t}`;
     }
   }
 }
@@ -117,14 +125,21 @@ export default {
   max-width: 80px;
   margin-bottom: 4px;
 }
-.portrait-type-badge {
-  font-size: 9px;
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 4px;
+.badge-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
   margin-bottom: 4px;
+}
+.portrait-type-badge {
+  font-size: 8px;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 3px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  line-height: 1;
 }
 .badge-deck {
   background: rgba(42, 192, 255, .2);
@@ -134,6 +149,15 @@ export default {
   background: rgba(255,255,255,.08);
   color: rgba(255,255,255,.45);
 }
+
+.badge-type-speed { background: rgba(42, 192, 255, .2); color: #2ac0ff; }
+.badge-type-stamina { background: rgba(255, 100, 100, .2); color: #ff6464; }
+.badge-type-power { background: rgba(255, 173, 30, .2); color: #ffad1e; }
+.badge-type-guts { background: rgba(255, 100, 200, .2); color: #ff64c8; }
+.badge-type-wits { background: rgba(162, 230, 30, .2); color: #a2e61e; }
+.badge-type-friend { background: rgba(180, 100, 255, .2); color: #b464ff; }
+.badge-type-group { background: rgba(100, 150, 255, .2); color: #6496ff; }
+
 .favor-bar {
   display: flex;
   gap: 3px;
@@ -151,5 +175,3 @@ export default {
 .favor-pip.filled.lv4 { background: #ffeb78 }
 .empty-state { color: var(--muted); font-size: 13px; padding: 8px 0 }
 </style>
-
-
