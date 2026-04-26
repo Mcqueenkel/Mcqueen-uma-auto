@@ -358,13 +358,13 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
                 if is_summer:
                     check_point = img_rgb[1118, 100]
                 else:
-                    check_point = img_rgb[1125, 40]
+                    check_point = img_rgb[1125, 43]
             elif is_summer:
                 check_point = img_rgb[1130, 200]
             else:
                 check_point = img_rgb[1125, 105]
             if not (check_point[0] > 200 and check_point[1] > 200 and check_point[2] > 200):
-                # We'll use get_state() to signal a reset if needed, or stick with current ctx.ctrl if we add it there
+                ctx.cultivate_detail.turn_info.medic_room_available = False
                 from bot.base.runtime_state import get_state
                 get_state()["trigger_decision_reset"] = True
         elif turn_operation.turn_operation_type == TurnOperationType.TURN_OPERATION_TYPE_TRIP:

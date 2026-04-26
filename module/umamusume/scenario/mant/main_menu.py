@@ -821,7 +821,7 @@ def handle_mant_afflictions(ctx, img):
     if is_summer_camp_period(current_date):
         medic_px = img_rgb[1118, 100]
     else:
-        medic_px = img_rgb[1125, 40]
+        medic_px = img_rgb[1125, 43]
     medic_lit = medic_px[0] > 200 and medic_px[1] > 200 and medic_px[2] > 200
     if not medic_lit:
         ctx.cultivate_detail.mant_afflictions = []

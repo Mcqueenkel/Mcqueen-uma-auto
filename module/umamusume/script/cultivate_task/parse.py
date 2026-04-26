@@ -436,6 +436,10 @@ def parse_train_main_menu_operations_availability(ctx: UmamusumeContext, img):
     btn_trip_check_point = img[1115, 305]
     btn_race_check_point = img[1130, 490]
 
+    from module.umamusume.define import ScenarioType
+    if ctx.cultivate_detail.scenario.scenario_type() == ScenarioType.SCENARIO_TYPE_MANT:
+        btn_medic_room_check_point = img[1125, 43]
+
 
     if ctx.cultivate_detail.turn_info and ctx.cultivate_detail.turn_info.date and (36 < ctx.cultivate_detail.turn_info.date <= 40 or 60 < ctx.cultivate_detail.turn_info.date <= 64):
         btn_medic_room_check_point = img[1130, 200]
