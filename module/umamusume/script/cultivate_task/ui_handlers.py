@@ -123,7 +123,7 @@ def script_scenario_select(ctx: UmamusumeContext):
             return
 
         log.debug(f"Scenario does not match, checking next scenario")
-        ctx.ctrl.swipe(x1=400, y1=600, x2=500, y2=600, duration=300, name="swipe right")
+        ctx.ctrl.swipe(x1=400, y1=600, x2=500, y2=600, duration=0.3, name="swipe right")
         time.sleep(0.7)
 
     log.error(f"Could not find specified scenario")
@@ -138,6 +138,7 @@ def script_umamusume_select(ctx: UmamusumeContext):
         return
     time.sleep(2)
     click_next_button(ctx, prefer_right=True)
+    time.sleep(2.5)
 
 
 def script_extend_umamusume_select(ctx: UmamusumeContext):
@@ -148,7 +149,7 @@ def script_extend_umamusume_select(ctx: UmamusumeContext):
     try:
         if getattr(ctx.cultivate_detail, 'use_last_parents', False):
             click_next_button(ctx, prefer_right=True)
-            time.sleep(1.0)
+            time.sleep(2.5)
             return
     except Exception:
         pass
@@ -159,7 +160,7 @@ def script_extend_umamusume_select(ctx: UmamusumeContext):
     ctx.ctrl.click_by_point(TO_CULTIVATE_PREPARE_CONFIRM)
     time.sleep(1.5)
     click_next_button(ctx, prefer_right=True)
-    time.sleep(1.0)
+    time.sleep(2.5)
 
 
 def script_support_card_select(ctx: UmamusumeContext):

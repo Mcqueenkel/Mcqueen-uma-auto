@@ -157,9 +157,9 @@ class AdbController(AndroidController):
 
     def safety_dont_click(self, x, y):
         if 263 <= x <= 458 and 559 <= y <= 808:
-            from module.umamusume.asset.template import REF_DONT_CLICK
+            from module.umamusume.asset.template import UI_CULTIVATE_SUPPORT_CARD_SELECT
             screen_gray = self.get_screen(to_gray=True, force=True)
-            match = image_match(screen_gray, REF_DONT_CLICK)
+            match = image_match(screen_gray, UI_CULTIVATE_SUPPORT_CARD_SELECT)
             if getattr(match, "find_match", False):
                 return True
         return False
