@@ -513,8 +513,14 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                         else: continue
                     if isinstance(c_type, int) and 1 <= c_type <= 5:
                         deck_counts[c_type] += 1
+                passed_days = max(1, int(date)) - 1
+                decay = passed_days * 0.0018
                 for i in range(5):
-                    deck_multipliers[i] = 1.0 + (deck_counts[i+1] * 0.016)
+                    count = deck_counts[i+1]
+                    card_boost = 0.0
+                    for j in range(count):
+                        card_boost += max(0.0, 0.018 - (j * 0.001))
+                    deck_multipliers[i] = 1.0 + max(0.0, card_boost - decay)
             if any(m != 1.0 for m in deck_multipliers) and date < 60:
                 log.info(f"Deck multipliers: Spd:{deck_multipliers[0]:.3f} Sta:{deck_multipliers[1]:.3f} Pow:{deck_multipliers[2]:.3f} Guts:{deck_multipliers[3]:.3f} Wit:{deck_multipliers[4]:.3f}")
         except Exception:

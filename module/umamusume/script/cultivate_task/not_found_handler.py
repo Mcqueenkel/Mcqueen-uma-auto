@@ -234,7 +234,7 @@ def script_not_found_ui(ctx: UmamusumeContext):
     if not hasattr(ctx, 'fallback_click_count'):
         ctx.fallback_click_count = 0
 
-    if ctx.fallback_click_count >= 2:
+    if ctx.fallback_click_count >= 7:
         ctx.ctrl.back()
         ctx.fallback_click_count = 0
         return
