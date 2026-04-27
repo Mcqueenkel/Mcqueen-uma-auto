@@ -1,4 +1,4 @@
-Cygames appears to be nuking adb connections in general. stop clanking effective immediately.
+Cygames appears to be going scorched earth against adb in general. stop clanking effective immediately.
 
 turn auto use items on for mant 
 also significantly reduced progress for a bit gonna go map out all the event response for dumper 
