@@ -1,3 +1,5 @@
+# CEASE 
+
 Cygames appears to be going scorched earth against adb in general. stop clanking effective immediately.
 
 Time to go headless ig since my previous experiment proved that no client somehow puts u at less risk 
