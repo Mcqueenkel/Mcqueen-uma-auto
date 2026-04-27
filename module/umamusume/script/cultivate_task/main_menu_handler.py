@@ -297,7 +297,7 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
                 date = ctx.cultivate_detail.turn_info.date
                 from module.umamusume.scenario.mant.inventory import has_charm
                 if date >= 13 and has_charm(ctx):
-                    pass
+                    ctx.cultivate_detail.turn_info.energy_recovery_deferred = True
                 else:
                     from module.umamusume.scenario.mant.inventory import handle_energy_recovery
                     if handle_energy_recovery(ctx):

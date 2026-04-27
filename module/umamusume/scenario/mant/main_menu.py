@@ -220,6 +220,28 @@ def handle_mant_shop_scan(ctx, current_date):
 
         all_cures = set(AILMENT_CURE_MAP.values())
 
+        deck_counts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+        try:
+            pcs = getattr(ctx.task.detail, 'pal_card_store', {})
+            if isinstance(pcs, dict):
+                for card_info in pcs.values():
+                    if not isinstance(card_info, dict): continue
+                    c_type = card_info.get('type')
+                    if c_type is None: continue
+                    if hasattr(c_type, 'value'): c_type = c_type.value
+                    if isinstance(c_type, str):
+                        c_type_lower = c_type.lower()
+                        if 'speed' in c_type_lower: c_type = 1
+                        elif 'stamina' in c_type_lower: c_type = 2
+                        elif 'power' in c_type_lower: c_type = 3
+                        elif 'guts' in c_type_lower or 'will' in c_type_lower: c_type = 4
+                        elif 'wit' in c_type_lower or 'intelligence' in c_type_lower: c_type = 5
+                        else: continue
+                    if isinstance(c_type, int) and 1 <= c_type <= 5:
+                        deck_counts[c_type] += 1
+        except Exception:
+            pass
+
         def should_skip(display_name):
             if display_name in priority_set:
                 return True
@@ -240,6 +262,12 @@ def handle_mant_shop_scan(ctx, current_date):
                 return True
             if display_name == "Energy Drink MAX" and owned_map.get("Energy Drink MAX", 0) > 0:
                 return True
+            if "Training Application" in display_name or "Ankle Weights" in display_name:
+                if "Speed" in display_name and deck_counts.get(1, 0) == 0: return True
+                if "Stamina" in display_name and deck_counts.get(2, 0) == 0: return True
+                if "Power" in display_name and deck_counts.get(3, 0) == 0: return True
+                if "Guts" in display_name and deck_counts.get(4, 0) == 0: return True
+                if "Wit" in display_name and deck_counts.get(5, 0) == 0: return True
             return False
 
         from module.umamusume.constants.game_constants import CLASSIC_YEAR_END, SENIOR_YEAR_END, SUMMER_CAMP_2_END
@@ -420,6 +448,28 @@ def handle_mant_emergency_shop_buys(ctx, current_date):
             from module.umamusume.constants.game_constants import SUMMER_CAMP_2_END
             post_senior_summer = current_date > SUMMER_CAMP_2_END
 
+            deck_counts_em = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+            try:
+                pcs_em = getattr(ctx.task.detail, 'pal_card_store', {})
+                if isinstance(pcs_em, dict):
+                    for card_info in pcs_em.values():
+                        if not isinstance(card_info, dict): continue
+                        c_type = card_info.get('type')
+                        if c_type is None: continue
+                        if hasattr(c_type, 'value'): c_type = c_type.value
+                        if isinstance(c_type, str):
+                            c_type_lower = c_type.lower()
+                            if 'speed' in c_type_lower: c_type = 1
+                            elif 'stamina' in c_type_lower: c_type = 2
+                            elif 'power' in c_type_lower: c_type = 3
+                            elif 'guts' in c_type_lower or 'will' in c_type_lower: c_type = 4
+                            elif 'wit' in c_type_lower or 'intelligence' in c_type_lower: c_type = 5
+                            else: continue
+                        if isinstance(c_type, int) and 1 <= c_type <= 5:
+                            deck_counts_em[c_type] += 1
+            except Exception:
+                pass
+
             tmp_budget = budget
             from module.umamusume.persistence import get_ignore_grilled_carrots as _get_ig_grilled
             ignore_grilled_carrots_em = _get_ig_grilled()
@@ -474,6 +524,13 @@ def handle_mant_emergency_shop_buys(ctx, current_date):
                         owned_em = {n: q for n, q in getattr(ctx.cultivate_detail, 'mant_owned_items', [])}
                         if owned_em.get("Energy Drink MAX", 0) > 0:
                             continue
+
+                    if "Training Application" in display or "Ankle Weights" in display:
+                        if "Speed" in display and deck_counts_em.get(1, 0) == 0: continue
+                        if "Stamina" in display and deck_counts_em.get(2, 0) == 0: continue
+                        if "Power" in display and deck_counts_em.get(3, 0) == 0: continue
+                        if "Guts" in display and deck_counts_em.get(4, 0) == 0: continue
+                        if "Wit" in display and deck_counts_em.get(5, 0) == 0: continue
 
                     cost = SHOP_ITEM_COSTS.get(display, 9999)
                     copies = expiring_counts.get(display, 0)

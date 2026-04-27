@@ -1034,12 +1034,34 @@ def handle_energy_recovery(ctx):
         if energy > limit:
             break
 
-    if not used_any and energy <= limit:
-        smallest = available[-1]
-        ok = use_item_and_update_inventory(ctx, smallest[0])
-        if ok:
+    while energy <= limit:
+        owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
+        owned_map = {n: q for n, q in owned}
+        item_to_use = None
+        
+        best_diff = 9999
+        for item_name, raw_energy in ENERGY_ITEMS.items():
+            if owned_map.get(item_name, 0) > 0:
+                if energy + raw_energy > limit:
+                    if energy + raw_energy - limit < best_diff:
+                        best_diff = energy + raw_energy - limit
+                        item_to_use = item_name
+
+        if not item_to_use:
+            for item_name, raw_energy in sorted(ENERGY_ITEMS.items(), key=lambda x: x[1], reverse=True):
+                if owned_map.get(item_name, 0) > 0:
+                    item_to_use = item_name
+                    break
+        
+        if item_to_use:
+            ok = use_item_and_update_inventory(ctx, item_to_use)
+            if not ok:
+                break
+            energy += ENERGY_ITEMS[item_to_use]
             used_any = True
-            ctx.cultivate_detail.turn_info.cached_energy = energy + smallest[1]
+            ctx.cultivate_detail.turn_info.cached_energy = energy
+        else:
+            break
 
     if used_any:
         ctx.cultivate_detail.turn_info.parse_main_menu_finish = False
@@ -1152,7 +1174,10 @@ def handle_charm(ctx):
 
     charm_threshold = getattr(mant_cfg, 'charm_threshold', 40)
 
-    if percentile <= charm_threshold:
+    date = getattr(ctx.cultivate_detail.turn_info, 'date', 0)
+    from module.umamusume.constants.game_constants import SUMMER_CAMP_2_START
+
+    if date <= SUMMER_CAMP_2_START and percentile <= charm_threshold:
         return False
 
     til = ctx.cultivate_detail.turn_info.training_info_list[best_idx]
