@@ -1,6 +1,7 @@
 import cv2
 import random
 import time
+import numpy as np
 
 import bot.base.log as logger
 from bot.recog.ocr import ocr_line
@@ -234,10 +235,29 @@ def script_not_found_ui(ctx: UmamusumeContext):
     if not hasattr(ctx, 'fallback_click_count'):
         ctx.fallback_click_count = 0
 
-    if ctx.fallback_click_count >= 7:
-        ctx.ctrl.back()
-        ctx.fallback_click_count = 0
-        return
+    if ctx.fallback_click_count >= 10:
+        old_screen = ctx.current_screen
+        time.sleep(1)
+        new_screen = ctx.ctrl.get_screen()
+        if new_screen is not None and old_screen is not None:
+            if old_screen.shape == new_screen.shape:
+                diff = cv2.absdiff(old_screen, new_screen)
+                diff_mean = np.mean(diff)
+                if diff_mean < 0.65:
+                    ctx.ctrl.back()
+                    ctx.fallback_click_count = 0
+                    return
+                else:
+                    ctx.fallback_click_count = 0
+                    return
+            else:
+                ctx.ctrl.back()
+                ctx.fallback_click_count = 0
+                return
+        else:
+            ctx.ctrl.back()
+            ctx.fallback_click_count = 0
+            return
 
     ctx.fallback_click_count += 1
     if random.random() < 0.5:

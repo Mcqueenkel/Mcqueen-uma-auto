@@ -1479,50 +1479,6 @@ def compute_mega_urgency(ctx):
     return mega_turns / training_remaining
 
 
-def should_dump_megaphones(ctx, date, owned_map, active_turns):
-    total_available_turns = total_megaphone_turns(owned_map) + active_turns
-    turns_left = (78 - date + 1) if date <= 78 else 0
-    if turns_left <= 0:
-        return False
-    return total_available_turns >= turns_left
-
-
-def handle_megaphone_endgame(ctx):
-    owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
-    owned_map = {n: q for n, q in owned}
-    date = getattr(ctx.cultivate_detail.turn_info, 'date',0)
-    active_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
-    active_turns = getattr(ctx.cultivate_detail, 'mant_megaphone_turns', 0)
-
-    if date >= MANT_CLIMAX_START and date not in MANT_CLIMAX_TRAINING_TURNS:
-        return False
-
-    dump = should_dump_megaphones(ctx, date, owned_map, active_turns)
-    if not dump:
-        return False
-
-    used_any = False
-    for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: x[1][0]):
-        if active_turns > 0 and tier < active_tier:
-            continue
-        while owned_map.get(name, 0) > 0:
-            ok = use_item_and_update_inventory(ctx, name)
-            if ok:
-                used_any = True
-                owned_map[name] = owned_map.get(name, 0) - 1
-                ctx.cultivate_detail.mant_megaphone_tier = tier
-                ctx.cultivate_detail.mant_megaphone_turns = duration
-                active_tier = tier
-                active_turns = duration
-                from module.umamusume.persistence import save_megaphone_state
-                save_megaphone_state(tier, duration)
-            else:
-                break
-
-    return used_any
-
-
-
 def handle_megaphone(ctx):
     mant_cfg = getattr(ctx.task.detail.scenario_config, 'mant_config', None)
     if mant_cfg is None:
@@ -1532,9 +1488,6 @@ def handle_megaphone(ctx):
     if date >= MANT_CLIMAX_START and date not in MANT_CLIMAX_TRAINING_TURNS:
         return False
 
-    if handle_megaphone_endgame(ctx):
-        return True
-
     owned = getattr(ctx.cultivate_detail, 'mant_owned_items', [])
     owned_map = {n: q for n, q in owned}
     active_tier = getattr(ctx.cultivate_detail, 'mant_megaphone_tier', 0)
@@ -1542,29 +1495,21 @@ def handle_megaphone(ctx):
 
     total_available = total_megaphone_turns(owned_map) + active_turns
     remaining = remaining_training_turns_real(ctx, date)
-    dump = total_available >= remaining
-
-    if dump and active_turns == 0:
-        for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: x[1][0]):
-            while owned_map.get(name, 0) > 0:
-                ok = use_item_and_update_inventory(ctx, name)
-                if ok:
-                    owned_map[name] = owned_map.get(name, 0) - 1
-                    ctx.cultivate_detail.mant_megaphone_tier = tier
-                    ctx.cultivate_detail.mant_megaphone_turns = duration
-                    active_tier = tier
-                    active_turns = duration
-                    from module.umamusume.persistence import save_megaphone_state
-                    save_megaphone_state(tier, duration)
-                else:
-                    break
-        return True
-
-    if dump and active_turns > 0:
-        return True
+    
+    energy_sum = sum(owned_map.get(item, 0) * raw_energy for item, raw_energy in ENERGY_ITEMS.items())
+    cupcake_count = owned_map.get('Plain Cupcake', 0) + owned_map.get('Berry Sweet Cupcake', 0)
+    
+    reduction_pct = 0.0
+    if energy_sum < 200:
+        reduction_pct += 0.15
+    if cupcake_count <= 0:
+        reduction_pct += 0.05
+        
+    effective_remaining = remaining * (1.0 - reduction_pct)
+        
+    dump = total_available >= effective_remaining
 
     percentile = get_stat_only_percentile(ctx)
-
     if percentile is None:
         return False
 
@@ -1618,6 +1563,13 @@ def handle_megaphone(ctx):
             best_mega = name
             best_tier = tier
             break
+
+    if best_mega is None and dump and active_turns == 0:
+        for name, (tier, duration) in sorted(MEGAPHONE_TIERS.items(), key=lambda x: x[1][0]):
+            if owned_map.get(name, 0) > 0:
+                best_mega = name
+                best_tier = tier
+                break
 
     if best_mega is None:
         return False
