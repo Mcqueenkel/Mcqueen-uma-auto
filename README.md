@@ -1,6 +1,4 @@
-<img width="224" height="101" alt="image" src="https://github.com/user-attachments/assets/864febfc-aa47-4b9f-99c9-2b88d55f2281" />       
-
-this event is scripted btw. the numbers aren't adding up with what I'm scraping.       
+Cygames appears to be nuking adb connections in general. stop clanking effective immediately.
 
 turn auto use items on for mant 
 also significantly reduced progress for a bit gonna go map out all the event response for dumper 
