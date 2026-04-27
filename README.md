@@ -1,6 +1,8 @@
-<img width="224" height="101" alt="image" src="https://github.com/user-attachments/assets/864febfc-aa47-4b9f-99c9-2b88d55f2281" />       
+# CEASE 
 
-this event is scripted btw. the numbers aren't adding up with what I'm scraping.       
+Cygames appears to be going scorched earth against adb in general. stop clanking effective immediately.
+
+Time to go headless ig since my previous experiment proved that no client somehow puts u at less risk 
 
 turn auto use items on for mant 
 also significantly reduced progress for a bit gonna go map out all the event response for dumper 
