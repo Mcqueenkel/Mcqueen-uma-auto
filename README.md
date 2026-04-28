@@ -1,6 +1,7 @@
 # CEASE 
+# Stop clanking effective immediately.
 
-Cygames appears to be going scorched earth against adb in general. stop clanking effective immediately.
+It can be assumed that cygames is now tracking suspicious inputs
 
 Time to go headless ig since my previous experiment proved that no client somehow puts u at less risk 
 
