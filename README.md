@@ -4,6 +4,7 @@
 It can be assumed that cygames is now tracking suspicious inputs
 
 Time to go headless ig since my previous experiment proved that no client somehow puts u at less risk    
+
 give or take 2 weeks for rebuild, icarus is currently hardcoded to me   
 
 turn auto use items on for mant 
