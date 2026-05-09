@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        try {
+            const theme = localStorage.getItem('theme') === 'blue' ? 'blue' : 'pink';
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.classList.toggle('theme-blue', theme === 'blue');
+        } catch (e) {}
+    </script>
+    <title>Sweepy改二</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+        <div id="loading-screen" class="loading-screen">
+        <div class="loading-shell">
+            <div class="loading-art">
+                <div class="loading-broom-aura"></div>
+                <img class="loading-broom" src="/broom.png" alt="">
+                <img class="loading-sweep" src="/sweep.png" alt="">
+            </div>
+            <div class="loading-text">Girls are preparing<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
+        </div>
+    </div>
+    <div id="app">
+        <header class="navbar">
+            <div class="brand">
+                <h1 id="theme-toggle" class="title">SWEEPY<span>改二</span></h1>
+            </div>
+            <div class="navbar-actions">
+                <div id="turn-delay-control" class="turn-delay-control">
+                    <span class="turn-delay-label">MIN TURN DELAY(S)</span>
+                    <input id="turn-delay-min" class="turn-delay-input" type="number" min="0" step="0.001" value="1.6">
+                    <span class="turn-delay-separator">–</span>
+                    <input id="turn-delay-max" class="turn-delay-input" type="number" min="0" step="0.001" value="3.7">
+                    <button id="tempt-fate-btn" class="btn btn-sm turn-delay-button" type="button">DANCHUD PLEASER 9000</button>
+                </div>
+                <div id="account-strip" class="account-strip"></div>
+                <button id="logout-btn" class="btn btn-sm" style="display:none">LOGOUT</button>
+            </div>
+        </header>
+        <main class="main-container">
+            <div id="login-view" class="login-wrapper">
+                <div class="login-panel">
+                    <form id="login-form" autocomplete="on">
+                        <div id="standard-fields">
+                            <div class="form-group">
+                                <label class="form-label" for="username">STEAM USERNAME</label>
+                                <input id="username" name="username" type="text" class="form-input" placeholder="..." autocomplete="username">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="password">STEAM PASSWORD</label>
+                                <input id="password" name="password" type="password" class="form-input" placeholder="..." autocomplete="current-password">
+                            </div>
+                        </div>
+                        <div id="2fa-fields" style="display:none">
+                            <div class="form-group">
+                                <label class="form-label" for="code">STEAM GUARD CODE</label>
+                                <input id="code" name="code" type="text" class="form-input" placeholder="..." maxlength="5" autocomplete="one-time-code">
+                            </div>
+                        </div>
+                        <div id="error-msg" class="status-msg"></div>
+                        <button id="login-btn" type="submit" class="btn btn-primary">LOGIN</button>
+                    </form>
+                </div>
+            </div>
+            <div id="dashboard-view" class="dashboard-container">
+                <div class="split-left" id="setup-panel">
+                    <div class="panel-header">
+                        <span class="panel-header-title">SETUP</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="team-slots">
+                            <div class="team-item" id="team-slot-deck">
+                                <span class="team-item-role">Deck</span>
+                                <span class="team-item-empty">select a deck</span>
+                            </div>
+                            <div class="team-item" id="team-slot-friend">
+                                <span class="team-item-role">Friend</span>
+                                <span class="team-item-empty">select a friend support</span>
+                            </div>
+                            <div class="team-item" id="team-slot-trainee">
+                                <span class="team-item-role">Trainee</span>
+                                <span class="team-item-empty">select a trainee</span>
+                            </div>
+                            <div class="team-item" id="team-slot-vet1">
+                                <span class="team-item-role">Parent 1</span>
+                                <span class="team-item-empty">select a parent</span>
+                            </div>
+                            <div class="team-item" id="team-slot-vet2">
+                                <span class="team-item-role">Parent 2</span>
+                                <span class="team-item-empty">select a parent</span>
+                            </div>
+                        </div>
+
+                        <section class="dashboard-section" id="race-schedule-section">
+                            <h2 class="dashboard-section-title section-title-toggle" id="race-toggle">
+                                <span class="collapse-chevron" id="race-chevron">&#9658;</span>
+                                RACE SCHEDULE
+                            </h2>
+                            <div id="race-body" class="collapsible-body">
+                                <div id="race-slot-popup-overlay" class="race-slot-popup-overlay" style="display: none;">
+                                    <div class="race-slot-popup">
+                                        <div class="race-slot-popup-header">
+                                            <div id="race-slot-popup-title" class="race-slot-popup-title">Select Race</div>
+                                            <button id="race-slot-popup-close" class="race-slot-popup-close">&times;</button>
+                                        </div>
+                                        <div id="race-slot-popup-body" class="race-slot-popup-body"></div>
+                                    </div>
+                                </div>
+                                <div class="race-options-content" id="race-options-content"></div>
+                            </div>
+                        </section>
+
+                        <div class="start-panel">
+                            <button id="start-career-btn" class="btn btn-primary" type="button" disabled>RUN CAREER</button>
+                            <div id="start-status" class="start-status"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="split-right" id="content-panel">
+                    <div class="panel-header">
+                        <span class="panel-header-title">LIBRARY</span>
+                    </div>
+                    <div class="panel-body">
+                        <section class="dashboard-section">
+                            <h2 class="dashboard-section-title section-title-toggle" id="decks-toggle">
+                                <span class="collapse-chevron expanded" id="decks-chevron">&#9658;</span>
+                                DECKS
+                            </h2>
+                            <div id="decks-body" class="collapsible-body expanded">
+                                <div id="deck-list"></div>
+                            </div>
+                        </section>
+                        <section class="dashboard-section">
+                            <h2 class="dashboard-section-title section-title-toggle" id="friends-toggle">
+                                <span class="collapse-chevron expanded" id="friends-chevron">&#9658;</span>
+                                FRIEND SUPPORTS <span id="friend-count"></span>
+                                <button id="friend-refresh-btn" class="btn btn-sm section-title-action" type="button">REFRESH</button>
+                            </h2>
+                            <div id="friends-body" class="collapsible-body expanded">
+                                <div class="friend-toolbar">
+                                    <div id="friend-status" class="friend-status">Loading friends...</div>
+                                </div>
+                                <div id="friend-grid" class="data-grid"></div>
+                            </div>
+                        </section>
+                        <section class="dashboard-section">
+                            <h2 class="dashboard-section-title section-title-toggle" id="trainees-toggle">
+                                <span class="collapse-chevron expanded" id="trainees-chevron">&#9658;</span>
+                                TRAINEES <span id="uma-count"></span>
+                            </h2>
+                            <div id="trainees-body" class="collapsible-body expanded">
+                                <div id="uma-grid" class="data-grid"></div>
+                            </div>
+                        </section>
+                        <section class="dashboard-section">
+                            <h2 class="dashboard-section-title section-title-toggle" id="parents-toggle">
+                                <span class="collapse-chevron expanded" id="parents-chevron">&#9658;</span>
+                                PARENTS <span id="parent-count"></span>
+                            </h2>
+                            <div id="parents-body" class="collapsible-body expanded">
+                                <div id="parent-grid" class="data-grid"></div>
+                            </div>
+                        </section>
+                        <section class="dashboard-section">
+                            <h2 class="dashboard-section-title section-title-toggle" id="cards-toggle">
+                                <span class="collapse-chevron" id="cards-chevron">&#9658;</span>
+                                OWNED CARDS <span id="card-count"></span>
+                            </h2>
+                            <div id="card-grid-wrapper" class="collapsible-body">
+                                <div id="card-grid" class="data-grid"></div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="split-gutter-controls" aria-label="Panel controls">
+                    <button class="panel-collapse-btn panel-collapse-btn-left" id="setup-collapse-btn" type="button" data-panel-label="Setup" title="Collapse setup" aria-label="Collapse setup"></button>
+                    <button class="panel-collapse-btn panel-collapse-btn-right" id="content-collapse-btn" type="button" data-panel-label="Library" title="Collapse library" aria-label="Collapse library"></button>
+                </div>
+            </div>
+        </main>
+        <div id="career-modal" class="modal-backdrop">
+            <div class="modal-panel">
+                <div class="modal-title">Delete Career?</div>
+                <div id="career-modal-copy" class="modal-copy">This will force-delete the ongoing career.</div>
+                <div class="modal-actions">
+                    <button id="career-cancel-btn" type="button" class="btn btn-sm">CANCEL</button>
+                    <button id="career-delete-btn" type="button" class="btn btn-sm btn-danger">DELETE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js?v=2"></script>
+</body>
+</html>
+
