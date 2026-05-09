@@ -1,3 +1,4 @@
+will fix megaphones tmr im going to sleep    
 # Sweepy — /vg/'s Uma Musume Bot (UAT REHASHED)
 
 > [!IMPORTANT]
