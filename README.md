@@ -7,14 +7,14 @@ will fix megaphones tmr im going to sleep
 
 ---
 
-## click this button for comedic effect
+## click this button for comedic effect (8mins mant lmao)
 
 <img width="471" height="53" alt="image" src="https://github.com/user-attachments/assets/a2dbe989-f001-4e41-a5b3-1c01c287b97f" />
 
 ---
 
 
-uses lobotobized/halfported sweepy decision engine, no intention of fully porting/upgrading it as I will be migrating to MCTS soon.
+uses lobotobized/halfported sweepy decision engine, no intention of fully porting/upgrading it as I will be migrating to MCTS soon (ts gonna take months given my hardware). 
 
 oh and uh looping removed lest someone tries to be funny (takes like 2 mins to figure out anyways but at least it wont be my fault)
 
