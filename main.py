@@ -1,6 +1,7 @@
 import os
 import json
 import re
+import subprocess
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
@@ -243,9 +244,15 @@ def get_turn_delay():
         "disabled": turn_delay_disabled
     }
 
+GLOBAL_SESSION_JITTER = random.uniform(-0.08, 0.08)
+
 def wait_for_game_turn_delay(delay_type="turn"):
-    roll = random.uniform(turn_delay_min_sec, turn_delay_max_sec)
-    
+    range_span = turn_delay_max_sec - turn_delay_min_sec
+    mu = ((turn_delay_min_sec + turn_delay_max_sec) / 2.0) + (GLOBAL_SESSION_JITTER * range_span)
+    sigma = range_span / 6.0
+    roll = random.gauss(mu, sigma)
+    roll = max(turn_delay_min_sec, min(turn_delay_max_sec, roll))
+
     if delay_type == "api":
         multiplier = 0.2
         label = "API"
@@ -570,8 +577,10 @@ def get_account_status(data, career_data=None):
     item_list = data.get('item_list') or data.get('user_item_array') or []
     career = data.get('single_mode_chara_light') or None
     
-    if career_data and career_data.get('chara_info'):
-        career = career_data.get('chara_info')
+    if career_data:
+        career_payload = career_data.get('data') if career_data.get('data') else career_data
+        if career_payload.get('chara_info'):
+            career = career_payload.get('chara_info')
 
     status = {
         "tp": {
@@ -584,6 +593,7 @@ def get_account_status(data, career_data=None):
             "total": (coin_info.get('fcoin', 0) or 0) + (coin_info.get('coin', 0) or 0)
         },
         "gold": get_item_count(item_list, 59),
+        "clocks": active_client.item_map.get(95, 0) if active_client else 0,
         "career": None
     }
 
@@ -595,7 +605,9 @@ def get_account_status(data, career_data=None):
 
         friend_viewer_id = None
         friend_card_id = None
+        friend_support = None
         current_deck_cards = []
+        current_deck_supports = []
         
         support_array = career.get('support_card_array') or []
         for sc in support_array:
@@ -603,8 +615,25 @@ def get_account_status(data, career_data=None):
             if pos == 6:
                 friend_viewer_id = sc.get('owner_viewer_id')
                 friend_card_id = sc.get('support_card_id')
+                friend_info = support_map.get(str(friend_card_id))
+                friend_support = {
+                    "viewer_id": friend_viewer_id,
+                    "support_card_id": friend_card_id,
+                    "support_name": friend_info['name'] if friend_info else f"Unknown ({friend_card_id})",
+                    "rarity": friend_info['rarity'] if friend_info else "?",
+                    "type": display_support_type(friend_info['type']) if friend_info else "?",
+                    "limit_break_count": sc.get('limit_break_count')
+                }
             elif 1 <= pos <= 5:
-                current_deck_cards.append(sc.get('support_card_id'))
+                support_card_id = sc.get('support_card_id')
+                current_deck_cards.append(support_card_id)
+                support_info = support_map.get(str(support_card_id))
+                current_deck_supports.append({
+                    "id": str(support_card_id),
+                    "name": support_info['name'] if support_info else f"Unknown ({support_card_id})",
+                    "rarity": support_info['rarity'] if support_info else "?",
+                    "type": display_support_type(support_info['type']) if support_info else "?"
+                })
 
         matched_deck_id = None
         user_decks = data.get('support_card_deck_array') or []
@@ -626,8 +655,11 @@ def get_account_status(data, career_data=None):
             "vital": career.get('vital', 0),
             "max_vital": career.get('max_vital', 0),
             "deck_id": matched_deck_id,
+            "support_card_ids": current_deck_cards,
+            "support_cards": current_deck_supports,
             "friend_viewer_id": friend_viewer_id,
             "friend_card_id": friend_card_id,
+            "friend": friend_support,
             "parent_id_1": p1,
             "parent_id_2": p2,
         }
@@ -661,6 +693,7 @@ class StartCareerRequest(BaseModel):
     difficulty: int = 0
     is_boost: int = 0
     boost_story_event_id: int = 0
+    burn_clocks: bool = False
 
 class RunCareerRequest(BaseModel):
     card_id: int = 0
@@ -678,6 +711,7 @@ class RunCareerRequest(BaseModel):
     boost_story_event_id: int = 0
     preset_name: str = ""
     max_steps: int = 2500
+    burn_clocks: bool = False
 
 class SaveRacesRequest(BaseModel):
     races: list[int]
@@ -776,11 +810,12 @@ def apply_career_result(result):
     global active_account, active_dashboard_data
     result_data = result.get('data', {})
     update_start_state(result_data)
-    account = get_account_status(result_data)
+    account = get_account_status(result_data, result)
     chara_info = result_data.get('chara_info') or {}
     if chara_info:
-        card_id = str(chara_info.get('card_id', ''))
-        account["career"] = {
+        account["career"] = account.get("career") or {}
+        card_id = str(chara_info.get('card_id', account["career"].get("card_id", '')))
+        account["career"].update({
             "active": True,
             "card_id": card_id,
             "name": chara_map.get(card_id, f"Unknown ({card_id})"),
@@ -789,7 +824,7 @@ def apply_career_result(result):
             "fans": chara_info.get('fans', 0),
             "vital": chara_info.get('vital', 0),
             "max_vital": chara_info.get('max_vital', 0)
-        }
+        })
     active_account = account
     if active_dashboard_data:
         active_dashboard_data["account"] = account
@@ -1080,7 +1115,9 @@ async def run_career(req: RunCareerRequest):
                 return started
             result = started["result"]
             account, chara_info = apply_career_result(result)
-        career_runner.start(active_client, preset, result, max(1, min(int(req.max_steps or 2500), 3000)))
+
+        apply_deck_type_counts(preset, req=req, chara_info=chara_info)
+        career_runner.start(active_client, preset, result, max(1, min(int(req.max_steps or 2500), 3000)), burn_clocks=req.burn_clocks)
         return {"success": True, "account": account, "chara_info": chara_info, "runner": career_runner.snapshot()}
     except Exception as e:
         return {"success": False, "detail": str(e)}
@@ -1092,6 +1129,14 @@ async def career_runner_status():
 @app.post("/api/career/runner/stop")
 async def stop_career_runner():
     career_runner.stop()
+    return {"success": True, "runner": career_runner.snapshot()}
+
+class BurnClocksRequest(BaseModel):
+    burn_clocks: bool
+
+@app.post("/api/career/runner/burn_clocks")
+async def set_burn_clocks(req: BurnClocksRequest):
+    career_runner.set_burn_clocks(req.burn_clocks)
     return {"success": True, "runner": career_runner.snapshot()}
 
 @app.post("/api/career/friends")
@@ -1197,7 +1242,7 @@ async def get_image(image_name: str):
     if exact_path.exists():
         return FileResponse(exact_path, media_type="image/png", headers={"Cache-Control": "no-cache"})
     
-    for fallback_id in ['100101', '10010', '10001']:
+    for fallback_id in ['100101', '10010', '10000', '10001']:
         fb_path = images_dir / f"{fallback_id}.png"
         if fb_path.exists():
             return FileResponse(fb_path, media_type="image/png", headers={"Cache-Control": "no-cache"})
@@ -1414,6 +1459,11 @@ def refresh_auth_before_serving(timeout_sec=None):
 if __name__ == "__main__":
     import sys
     import uvicorn
+    try:
+        subprocess.run(["git", "pull"], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception:
+        pass
+
     set_console_topmost()
     kill_listeners_on_port(1616)
     if not refresh_auth_before_serving():

@@ -324,6 +324,7 @@ class UmaClient:
         self.item_map = {}
         self.session = requests.Session()
         self.update_headers()
+        self.api_jitter = random.uniform(-0.02, 0.02)
 
         self.on_api_log = None
         self.trace_file = None
@@ -539,6 +540,16 @@ class UmaClient:
         
         self.api_log("RES", ep, res, req_id)
         
+        data = res.get('data', {})
+        if isinstance(data, dict):
+            item_list = data.get('user_item') or data.get('user_item_array')
+            if isinstance(item_list, list):
+                for item in item_list:
+                    iid = item.get('item_id')
+                    num = item.get('number')
+                    if iid is not None and num is not None:
+                        self.item_map[int(iid)] = int(num)
+        
         if rc == 709:
             new_vid = dh.get('viewer_id') or res.get('data', {}).get('viewer_id')
             if new_vid and new_vid != self.viewer_id:
@@ -548,19 +559,20 @@ class UmaClient:
             raise Exception(f'709 on {ep}')
         if rc != 1:
             if rc == 205 and retry_205 > 0:
-                print(f"205 on {ep}, retrying in 0.2s... ({retry_205} left)")
-                time.sleep(0.2)
+                print(f"205 on {ep}, retrying... ({retry_205} left)")
+                time.sleep(max(0.17, min(0.23, random.gauss(0.20, 0.01))))
                 return self.call(ep, args, retry_208=retry_208, retry_205=retry_205 - 1)
 
             if rc == 208 and retry_208 > 0:
                 if retry_208 < 6:
                     print(f"API error 208 (DOUBLE_CLICK_ERROR) on {ep}, sleeping and retrying... (attempts left: {retry_208-1})")
-                time.sleep(random.uniform(0.17, 0.36))
+                time.sleep(max(0.17, min(0.36, random.gauss(0.265, 0.031))))
                 return self.call(ep, args, retry_208=retry_208 - 1)
 
             err_detail = format_api_error(ep, rc, res)
             err_msg = f'API error {rc} on {ep}: {err_detail}'
-            print(err_msg)
+            if not (rc == 102 and ep in {"single_mode_free/race_end", "single_mode_free/race_out"}):
+                print(err_msg)
             raise Exception(err_msg)
         if dh.get('sid') and isinstance(dh['sid'], str) and dh['sid'].strip():
             self.sid = next_sid(dh['sid'])
@@ -568,7 +580,6 @@ class UmaClient:
         return res
 
     def hard_reset(self):
-        print("!!! Executing HARD RESET...")
         self.sid = bytes(16)
         self.regen_sid()
         self.session.close()

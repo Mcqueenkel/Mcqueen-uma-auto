@@ -1,7 +1,11 @@
+import gzip
+import base64
+import msgpack
 import threading
 import time
 import json
 import os
+import random
 from datetime import datetime
 from pathlib import Path
 
@@ -51,6 +55,7 @@ class CareerRunner:
         self.lock = threading.Lock()
         self.thread = None
         self.stop_requested = False
+        self.burn_clocks = False
         self.race_planner = RacePlanner(base_dir)
         self.skill_buyer = SkillBuyer(base_dir)
         self.item_manager = MantItemManager()
@@ -66,6 +71,7 @@ class CareerRunner:
             "skills_bought": 0,
             "items_bought": 0,
             "items_used": 0,
+            "clocks_used": 0,
             "log": [],
             "action_history": [],
         }
@@ -91,7 +97,7 @@ class CareerRunner:
         if self.report:
             add_event(self.report, row)
 
-    def start(self, client, preset, initial_result, max_steps=2500):
+    def start(self, client, preset, initial_result, max_steps=2500, burn_clocks=False):
         with self.lock:
             if self.status["running"]:
                 raise RuntimeError("Career runner already active")
@@ -100,6 +106,7 @@ class CareerRunner:
             if not strategy_cls:
                 raise RuntimeError(f"No runner for scenario {scenario_id}")
             self.stop_requested = False
+            self.burn_clocks = burn_clocks
             self.status = {
                 "running": True,
                 "preset": preset.get("name", ""),
@@ -112,13 +119,14 @@ class CareerRunner:
                 "skills_bought": 0,
                 "items_bought": 0,
                 "items_used": 0,
+                "clocks_used": 0,
                 "log": [],
                 "action_history": [],
             }
             self.report = new_report(preset, scenario_id)
             if client:
                 client.report = self.report
-            self._log_locked("started", 0, f"preset {preset.get('name', '')}")
+            self._log_locked("started", 0, f"preset {preset.get('name', '')} (burn_clocks={burn_clocks})")
             self.thread = threading.Thread(target=self._run, args=(client, preset, initial_result, strategy_cls(self.race_planner), max_steps), daemon=True)
             self.thread.start()
 
@@ -128,7 +136,14 @@ class CareerRunner:
 
     def snapshot(self):
         with self.lock:
-            return dict(self.status)
+            data = dict(self.status)
+            data["burn_clocks"] = self.burn_clocks
+            return data
+
+    def set_burn_clocks(self, value):
+        with self.lock:
+            self.burn_clocks = value
+            self._log_locked("update_setting", 0, f"burn_clocks set to {value}")
 
     def _run(self, client, preset, result, strategy, max_steps):
 
@@ -155,7 +170,6 @@ class CareerRunner:
                     self.stop()
                     break
                 
-                # Reset transient results before each turn loop to prevent log contamination
                 self.skill_buyer.last_attempt = []
                 self.skill_buyer.last_result = {}
                 self.item_manager.last_buy_attempt = []
@@ -247,8 +261,6 @@ class CareerRunner:
 
                     self._record_action(decision, chara)
 
-                    # Spend ALL points at the very end
-                    print("!!! Career Finish Action: Attempting final skill purchase...")
                     state = self._buy_skills(client, state, preset, True)
 
                     data = state.get("data") or {}
@@ -263,7 +275,6 @@ class CareerRunner:
                                 raise
                     state = self._drain_events(client, strategy, state, limit=50)
 
-                    # One last attempt to spend if we still have points and previous attempt might have failed
                     chara = (state.get("data") or {}).get("chara_info") or {}
                     if int(chara.get("skill_point") or 0) > 200:
                         print(f"SP still high ({chara.get('skill_point')}), retrying final purchase...")
@@ -284,7 +295,6 @@ class CareerRunner:
                     break
                 
                 if decision.action not in {"finish"}:
-                    # Buy skills during normal loop
                     state = self._buy_skills(client, state, preset, False)
                 
                 self._advance(decision.action)
@@ -712,11 +722,103 @@ class CareerRunner:
                 return current
             event = events[0] or {}
             choice = strategy._choice(event)
-            payload = {"event_id": event.get("event_id"), "chara_id": event.get("chara_id", 0), "choice_number": choice, "current_turn": (data.get("chara_info") or {}).get("turn", 1)}
+            chara_turn = (data.get("chara_info") or {}).get("turn")
+            turn = chara_turn if chara_turn is not None else self.status.get("turn")
+            turn = turn if turn is not None else 1
+            payload = {"event_id": event.get("event_id"), "chara_id": event.get("chara_id", 0), "choice_number": choice, "current_turn": turn}
             if choice is None:
-                payload = {"event_id": event.get("event_id"), "_event": event, "_current_turn": (data.get("chara_info") or {}).get("turn", 1)}
+                payload = {"event_id": event.get("event_id"), "_event": event, "_current_turn": turn}
             current = self._event(client, strategy, payload)
         return current
+
+    def _get_clocks_left(self, root, max_clocks=5):
+        data = root.get("data") or {}
+
+        home_info = data.get("home_info")
+        if isinstance(home_info, dict) and "available_continue_num" in home_info:
+            std = int(home_info.get("available_continue_num", 0))
+            free = int(home_info.get("available_free_continue_num", 0))
+            continue_type = 1 if free > 0 else 2
+            return {
+                "source": "data.home_info.available_continue_num",
+                "clocks_left": std + free,
+                "continue_type": continue_type,
+            }
+
+        race_start_info = data.get("race_start_info")
+        if isinstance(race_start_info, dict) and "continue_num" in race_start_info:
+            used = int(race_start_info["continue_num"])
+            return {
+                "source": "data.race_start_info.continue_num",
+                "clocks_used": used,
+                "clocks_left": max_clocks - used,
+                "continue_type": 2,
+            }
+
+        return {"source": "unknown", "clocks_left": 0, "continue_type": 2}
+
+    def _parse_race_rank(self, res):
+        import base64
+        import gzip
+        import struct
+
+        data = res.get("data", {})
+        headers = res.get("data_headers", {})
+        viewer_id = headers.get("viewer_id")
+
+        race_start_info = data.get("race_start_info", {})
+        horses = race_start_info.get("race_horse_data", [])
+
+        player = next((horse for horse in horses if horse.get("viewer_id") == viewer_id), None)
+        if not player:
+            return 1
+
+        frame_order = player.get("frame_order")
+        if frame_order is None:
+            return 1
+
+        result_index = frame_order - 1
+
+        scenario_b64 = data.get("race_scenario")
+        if not scenario_b64:
+            return 1
+
+        try:
+            blob = gzip.decompress(base64.b64decode(scenario_b64))
+        except Exception:
+            return 1
+
+        offset = 0
+
+        if len(blob) < offset + 4: return 1
+        header_len = struct.unpack_from("<i", blob, offset)[0]
+        offset += 4 + header_len
+
+        if len(blob) < offset + 16: return 1
+        distance_diff_max, horse_num, horse_frame_size, horse_result_size = struct.unpack_from("<fiii", blob, offset)
+        offset += 16
+
+        if len(blob) < offset + 4: return 1
+        pad_len = struct.unpack_from("<i", blob, offset)[0]
+        offset += 4 + pad_len
+
+        if len(blob) < offset + 8: return 1
+        frame_count, frame_size = struct.unpack_from("<ii", blob, offset)
+        offset += 8 + frame_count * frame_size
+
+        if len(blob) < offset + 4: return 1
+        pad_len = struct.unpack_from("<i", blob, offset)[0]
+        offset += 4 + pad_len
+
+        if not (0 <= result_index < horse_num):
+            return 1
+
+        if len(blob) < offset + (result_index + 1) * horse_result_size:
+            return 1
+
+        finish_order = struct.unpack_from("<i", blob, offset + result_index * horse_result_size)[0]
+
+        return finish_order + 1
 
     def _race(self, client, state, preset, payload):
         if int((preset or {}).get("scenario_id") or (preset or {}).get("scenario") or 4) == 4:
@@ -738,7 +840,6 @@ class CareerRunner:
                 with self.lock:
                     self.status["items_used"] += used
                     self._log_locked("items_use", payload.get("current_turn") or 1, f"pre-race {used}")
-                # Trust the state from reload or successful action
                 try:
                     fresh_state = client.load_career() if hasattr(client, "load_career") else client.call("single_mode_free/load", {})
                     state = fresh_state
@@ -764,42 +865,79 @@ class CareerRunner:
                 entry = self._drain_events(client, strategy, entry)
         race_start_info = (entry.get("data") or {}).get("race_start_info") or {}
         is_short = 1 if race_start_info.get("is_short") else 0
-        client.race_start(is_short=is_short, current_turn=current_turn)
+
+        res = client.race_start(is_short=is_short, current_turn=current_turn)
         self._log("race_start", current_turn, f"short {is_short}")
-        
-        # Check state before race_end to avoid 102
-        try:
-            fresh = client.load_career()
-            state_val = (fresh.get("data", {}).get("chara_info", {})).get("playing_state")
-            if state_val in {1}:
-                self._log("race_end_skip", current_turn, f"already home (state={state_val})")
-            else:
-                try:
-                    client.race_end(current_turn=current_turn)
-                    self._log("race_end", current_turn, "")
-                except Exception as e:
-                    if "102" in str(e):
-                        self._log("race_end_reconciled", current_turn, "server already done (102)")
+
+        rank = self._parse_race_rank(res)
+        self._log("race_rank", current_turn, f"rank {rank}")
+
+        home_info = (state.get("data") or {}).get("home_info") or {}
+        std_clocks = int(home_info.get("available_continue_num", 0))
+        free_clocks = int(home_info.get("available_free_continue_num", 0))
+
+        while self.burn_clocks and rank > 1 and (std_clocks > 0 or free_clocks > 0):
+            clocks_left = std_clocks + free_clocks
+            continue_type = 1 if free_clocks > 0 else 2
+            
+            self._log("race_clock", current_turn, f"rank {rank}, using clock ({clocks_left} left, type {continue_type})...")
+            try:
+                cont_res = client.race_continue(current_turn=current_turn, continue_type=continue_type)
+                
+                cont_data = cont_res.get("data") or {}
+                new_home_info = cont_data.get("home_info")
+                if isinstance(new_home_info, dict):
+                    std_clocks = int(new_home_info.get("available_continue_num", 0))
+                    free_clocks = int(new_home_info.get("available_free_continue_num", 0))
+                else:
+                    if free_clocks > 0:
+                        free_clocks -= 1
                     else:
-                        raise
+                        std_clocks -= 1
+
+                if strategy:
+                    if cont_data.get("unchecked_event_array"):
+                        self._drain_events(client, strategy, cont_res)
+                
+                roll = random.gauss(0.2 + client.api_jitter, 0.01)
+                time.sleep(max(0.17, min(0.23, roll)))
+                res = client.race_start(is_short=is_short, current_turn=current_turn)
+                rank = self._parse_race_rank(res)
+                self._log("race_rank_retry", current_turn, f"rank {rank} after clock")
+                with self.lock:
+                    self.status["clocks_used"] = int(self.status.get("clocks_used") or 0) + 1
+            except Exception as e:
+                self._log("race_clock_failed", current_turn, str(e))
+                break
+
+        if strategy:
+            res_data = res.get("data") or {}
+            if res_data.get("unchecked_event_array"):
+                res = self._drain_events(client, strategy, res)
+
+        out = res
+        try:
+            client.race_end(current_turn=current_turn)
+            self._log("race_end", current_turn, "")
         except Exception as e:
             if "102" in str(e):
                 self._log("race_end_reconciled", current_turn, "server already done (102)")
             else:
-                try:
-                    client.race_end(current_turn=current_turn)
-                    self._log("race_end", current_turn, "fallback")
-                except Exception as ee:
-                    if "102" in str(ee):
-                        self._log("race_end_reconciled", current_turn, "server already done (102)")
-                    else:
-                        raise
-        
-        out = client.race_out(current_turn=current_turn)
-        if strategy:
-            out_data = out.get("data") or {}
-            if out_data.get("unchecked_event_array"):
-                out = self._drain_events(client, strategy, out)
+                raise
+
+        try:
+            out_res = client.race_out(current_turn=current_turn)
+            out = out_res
+            if strategy:
+                out_data = out.get("data") or {}
+                if out_data.get("unchecked_event_array"):
+                    out = self._drain_events(client, strategy, out)
+        except Exception as e:
+            if "102" in str(e):
+                self._log("race_out_reconciled", current_turn, "server already done (102)")
+            else:
+                raise
+
         return out
 
     def _race_progress(self, client, payload):
@@ -872,7 +1010,6 @@ class CareerRunner:
                 "result": self._api_result(event.get("result") or {}),
             })
         if self.skill_buyer.attempt_events or self.skill_buyer.recover_after_error:
-            # Always re-fetch state if an attempt was made or recovery is needed
             try:
                 state = self._fresh_career_state(client)
                 self._debug_turn(state, preset)
@@ -924,7 +1061,6 @@ class CareerRunner:
                     self._log_locked("items_buy", turn, bought)
                 if used:
                     self._log_locked("items_use", turn, used)
-            # Fresh state is already handled by handle() or recovery logic
         return state
 
     def _merge_state(self, old_state, new_state):

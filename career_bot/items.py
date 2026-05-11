@@ -1285,9 +1285,9 @@ class MantItemManager:
         if type_idx is not None:
             counts = (preset or {}).get("_deck_type_counts") or []
             count = int(counts[type_idx] or 0) if len(counts) > type_idx else 0
-            if count >= 1:
-                return False
-            return not ((turn >= 49 and budget >= 300) or (turn >= 65 and budget >= 150))
+            if count < 2:
+                return True
+            return False
         if name in ONE_TIME_BUFF_ITEMS and name in self.used_buffs:
             return True
         return False

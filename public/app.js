@@ -1,65 +1,70 @@
 (() => {
 const state = { 
-            needs2fa: false, 
-            isLoading: false, 
-            account: null, 
-            isDeletingCareer: false, 
-            isFetchingFriends: false, 
-            isStartingCareer: false, 
-            presets: [], 
-            selectedPreset: "xguri parent", 
-            runnerTimer: 0, 
-            isSavingPreset: false,
-            raceData: [],
-            selectedRaces: new Set()
-        };
-        const els = {
-            loadingScreen: document.getElementById('loading-screen'),
-            navbar: document.querySelector('.navbar'),
-            themeToggle: document.getElementById('theme-toggle'),
-            brandMark: document.querySelector('.title span'),
-            loginBtn: document.getElementById('login-btn'),
-            logoutBtn: document.getElementById('logout-btn'),
-            turnDelayMin: document.getElementById('turn-delay-min'),
-            turnDelayMax: document.getElementById('turn-delay-max'),
-            temptFateBtn: document.getElementById('tempt-fate-btn'),
-            loginView: document.getElementById('login-view'),
-            dashboardView: document.getElementById('dashboard-view'),
-            errorMsg: document.getElementById('error-msg'),
-            standardFields: document.getElementById('standard-fields'),
-            faFields: document.getElementById('2fa-fields'),
-            umaGrid: document.getElementById('uma-grid'),
-            cardGrid: document.getElementById('card-grid'),
-            cardGridWrapper: document.getElementById('card-grid-wrapper'),
-            cardsToggle: document.getElementById('cards-toggle'),
-            cardsChevron: document.getElementById('cards-chevron'),
-            parentGrid: document.getElementById('parent-grid'),
-            friendGrid: document.getElementById('friend-grid'),
-            deckList: document.getElementById('deck-list'),
-            umaCount: document.getElementById('uma-count'),
-            cardCount: document.getElementById('card-count'),
-            parentCount: document.getElementById('parent-count'),
-            friendCount: document.getElementById('friend-count'),
-            friendStatus: document.getElementById('friend-status'),
-            friendRefreshBtn: document.getElementById('friend-refresh-btn'),
-            presetSelect: document.getElementById('preset-select'),
-            startCareerBtn: document.getElementById('start-career-btn'),
-            startStatus: document.getElementById('start-status'),
-            accountStrip: document.getElementById('account-strip'),
-            careerModal: document.getElementById('career-modal'),
-            careerModalCopy: document.getElementById('career-modal-copy'),
-            careerCancelBtn: document.getElementById('career-cancel-btn'),
-            careerDeleteBtn: document.getElementById('career-delete-btn'),
-            raceToggle: document.getElementById('race-toggle'),
-            raceChevron: document.getElementById('race-chevron'),
-            raceBody: document.getElementById('race-body'),
-            saveRacesBtn: document.getElementById('save-races-btn'),
-            raceOptionsContent: document.getElementById('race-options-content'),
-            racePopupOverlay: document.getElementById('race-slot-popup-overlay'),
-            racePopupTitle: document.getElementById('race-slot-popup-title'),
-            racePopupBody: document.getElementById('race-slot-popup-body'),
-            racePopupClose: document.getElementById('race-slot-popup-close')
-        };
+    needs2fa: false, 
+    isLoading: false, 
+    account: null, 
+    isDeletingCareer: false, 
+    isFetchingFriends: false, 
+    isStartingCareer: false, 
+    presets: [], 
+    selectedPreset: "xguri parent", 
+    runnerTimer: 0, 
+    isSavingPreset: false,
+    raceData: [],
+    selectedRaces: new Set(),
+    burnClocks: false,
+    displayedClocksUsed: 0
+};
+const els = {
+    loadingScreen: document.getElementById('loading-screen'),
+    navbar: document.querySelector('.navbar'),
+    themeToggle: document.getElementById('theme-toggle'),
+    brandMark: document.querySelector('.title span'),
+    loginBtn: document.getElementById('login-btn'),
+    logoutBtn: document.getElementById('logout-btn'),
+    turnDelayMin: document.getElementById('turn-delay-min'),
+    turnDelayMax: document.getElementById('turn-delay-max'),
+    temptFateBtn: document.getElementById('tempt-fate-btn'),
+    burnClocksBtn: document.getElementById('burn-clocks-btn'),
+    loginView: document.getElementById('login-view'),
+    dashboardView: document.getElementById('dashboard-view'),
+    errorMsg: document.getElementById('error-msg'),
+    standardFields: document.getElementById('standard-fields'),
+    faFields: document.getElementById('2fa-fields'),
+    umaGrid: document.getElementById('uma-grid'),
+    cardGrid: document.getElementById('card-grid'),
+    cardGridWrapper: document.getElementById('card-grid-wrapper'),
+    cardsToggle: document.getElementById('cards-toggle'),
+    cardsChevron: document.getElementById('cards-chevron'),
+    parentGrid: document.getElementById('parent-grid'),
+    friendGrid: document.getElementById('friend-grid'),
+    deckList: document.getElementById('deck-list'),
+    umaCount: document.getElementById('uma-count'),
+    cardCount: document.getElementById('card-count'),
+    parentCount: document.getElementById('parent-count'),
+    friendCount: document.getElementById('friend-count'),
+    friendStatus: document.getElementById('friend-status'),
+    friendRefreshBtn: document.getElementById('friend-refresh-btn'),
+    presetSelect: document.getElementById('preset-select'),
+    startCareerBtn: document.getElementById('start-career-btn'),
+    startStatus: document.getElementById('start-status'),
+    accountStrip: document.getElementById('account-strip'),
+    careerModal: document.getElementById('career-modal'),
+    careerModalCopy: document.getElementById('career-modal-copy'),
+    careerCancelBtn: document.getElementById('career-cancel-btn'),
+    careerDeleteBtn: document.getElementById('career-delete-btn'),
+    raceToggle: document.getElementById('race-toggle'),
+    raceChevron: document.getElementById('race-chevron'),
+    raceBody: document.getElementById('race-body'),
+    saveRacesBtn: document.getElementById('save-races-btn'),
+    raceOptionsContent: document.getElementById('race-options-content'),
+    racePopupOverlay: document.getElementById('race-slot-popup-overlay'),
+    racePopupTitle: document.getElementById('race-slot-popup-title'),
+    racePopupBody: document.getElementById('race-slot-popup-body'),
+    racePopupClose: document.getElementById('race-slot-popup-close')
+};
+        const delaySettingsStorageKey = 'uma_turn_delay_settings';
+        const burnClocksStorageKey = 'uma_burn_clocks';
         function setLoadingScreen(visible) {
             if (!els.loadingScreen) return;
             els.loadingScreen.classList.toggle('hidden', !visible);
@@ -276,6 +281,19 @@ const state = {
             const res = await fetch(url, options);
             return res.json();
         }
+        function writeLocalSetting(key, value) {
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+            } catch (e) {}
+        }
+        function readLocalSetting(value, fallback = null) {
+            if (!value) return fallback;
+            try {
+                return JSON.parse(value);
+            } catch (e) {
+                return fallback;
+            }
+        }
         function escapeHtml(value) {
             return String(value ?? '').replace(/[&<>"']/g, char => ({
                 '&': '&amp;',
@@ -318,7 +336,9 @@ const state = {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(settings)
             });
-            setDelayControls(normalizeDelayBounds(data.min, data.max, data.disabled, data.restore_min, data.restore_max));
+            const normalized = normalizeDelayBounds(data.min, data.max, data.disabled, data.restore_min, data.restore_max);
+            setDelayControls(normalized);
+            writeLocalSetting(delaySettingsStorageKey, normalized);
         }
         async function loadDelaySettings() {
             if (!els.turnDelayMin || !els.turnDelayMax || !els.temptFateBtn) return;
@@ -347,6 +367,15 @@ const state = {
             });
             loadDelaySettings();
         }
+        window.addEventListener('storage', event => {
+            if (event.key !== delaySettingsStorageKey || !event.newValue) return;
+            const settings = readLocalSetting(event.newValue);
+            if (settings) setDelayControls(normalizeDelayBounds(settings.min, settings.max, settings.disabled, settings.restoreMin, settings.restoreMax));
+        });
+        window.addEventListener('storage', event => {
+            if (event.key !== burnClocksStorageKey || !event.newValue) return;
+            setBurnClocks(readLocalSetting(event.newValue, false));
+        });
         function resetLoginState() {
             state.isLoading = false;
             els.loginBtn.innerText = state.needs2fa ? 'VALIDATE' : 'LOGIN';
@@ -477,6 +506,33 @@ const state = {
         els.careerModal.addEventListener('click', event => {
             if (event.target === els.careerModal) closeCareerModal();
         });
+        function syncBurnClocksControls() {
+            if (!els.burnClocksBtn) return;
+            const clocks = state.account ? Number(state.account.clocks || 0) : 0;
+            const disabled = clocks <= 11;
+            
+            if (disabled) {
+                state.burnClocks = false;
+                els.burnClocksBtn.disabled = true;
+                els.burnClocksBtn.classList.remove('is-active');
+                els.burnClocksBtn.innerText = `BURN CLOCKS: LOW (${clocks})`;
+            } else {
+                els.burnClocksBtn.disabled = false;
+                els.burnClocksBtn.classList.toggle('is-active', state.burnClocks);
+                els.burnClocksBtn.innerText = `BURN CLOCKS: ${state.burnClocks ? 'ON' : 'OFF'}`;
+            }
+        }
+        function setBurnClocks(value, options = {}) {
+            state.burnClocks = Boolean(value);
+            syncBurnClocksControls();
+            if (options.persist) writeLocalSetting(burnClocksStorageKey, state.burnClocks);
+        }
+        function loadStoredBurnClocks() {
+            if (state.runner && state.runner.running) return;
+            const stored = readLocalSetting(localStorage.getItem(burnClocksStorageKey));
+            if (stored !== null) setBurnClocks(stored);
+        }
+
         function renderAccountStrip(account) {
             state.account = account || null;
             if (!account) {
@@ -487,20 +543,61 @@ const state = {
             const tp = account.tp || {};
             const career = account.career;
             const careerHtml = career && career.active ? `
-                <button type="button" id="career-pill" class="account-pill account-pill-career account-pill-clickable">ONGOING <strong>CAREER</strong></button>
-            ` : `<span class="account-pill account-pill-career">NO CAREER</span>`;
+                <div id="career-pill" class="account-pill pill-career account-pill-clickable">
+                    <span class="label">CAREER</span>
+                    <strong>ONGOING</strong>
+                </div>
+            ` : `<div class="account-pill" style="opacity: 0.25;">
+                    <span class="label">CAREER</span>
+                    <strong>NONE</strong>
+                </div>`;
             const carrots = account.carrots || {};
             els.accountStrip.innerHTML = `
-                <span class="account-pill">TP <strong>${tp.current || 0}/${tp.max || 0}</strong></span>
-                <span class="account-pill">FREE CARROTS <strong>${formatNumber(carrots.free)}</strong></span>
-                <span class="account-pill">PAID CARROTS <strong>${formatNumber(carrots.paid)}</strong></span>
-                <span class="account-pill">GOLD <strong>${formatNumber(account.gold)}</strong></span>
+                <div class="account-pill pill-tp">
+                    <span class="label">TP</span>
+                    <strong>${tp.current || 0}/${tp.max || 0}</strong>
+                </div>
+                <div class="account-pill pill-carrots">
+                    <span class="label">CARROTS</span>
+                    <strong>${formatNumber(carrots.total)}</strong>
+                </div>
+                <div class="account-pill pill-gold">
+                    <span class="label">GOLD</span>
+                    <strong>${formatNumber(account.gold)}</strong>
+                </div>
+                <div class="account-pill pill-clk">
+                    <span class="label">CLOCKS</span>
+                    <strong>${formatNumber(account.clocks)}</strong>
+                </div>
                 ${careerHtml}
             `;
             els.accountStrip.style.display = 'flex';
             const careerPill = document.getElementById('career-pill');
             if (careerPill) careerPill.addEventListener('click', openCareerModal);
+            loadStoredBurnClocks();
+            syncBurnClocksControls();
         }
+
+        els.burnClocksBtn.addEventListener('click', async () => {
+            setBurnClocks(!state.burnClocks, { persist: true });
+            if (state.runner && state.runner.running) {
+                try {
+                    const data = await apiJson('/api/career/runner/burn_clocks', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ burn_clocks: state.burnClocks })
+                    });
+                    if (!data.success) throw new Error(data.detail || 'Failed to update burn_clocks');
+                    if (data.runner) applyRunnerSnapshot(data.runner);
+                } catch (e) {
+                    console.error("Failed to update burn_clocks mid-run", e);
+                    if (state.runner && state.runner.burn_clocks !== undefined) {
+                        setBurnClocks(state.runner.burn_clocks, { persist: true });
+                    }
+                }
+            }
+        });
+
         const rankMap = {
             1: 'G', 2: 'G+', 3: 'F', 4: 'F+', 5: 'E', 6: 'E+',
             7: 'D', 8: 'D+', 9: 'C', 10: 'C+', 11: 'B', 12: 'B+',
@@ -628,7 +725,7 @@ const state = {
                         <img class="team-item-portrait" src="/api/images/${selection.friend.support_card_id || '10001'}.png" onerror="hideBrokenImage(this)">
                         <div class="team-item-text">
                             <span class="team-item-name">${selection.friend.support_name || 'Unknown'}</span>
-                            <span class="team-item-sub">LB${selection.friend.limit_break_count ?? '?'}</span>
+                            <span class="team-item-sub">${selection.friend.type || '?'} | LB${selection.friend.limit_break_count ?? '?'}</span>
                         </div>
                     </div>
                 `, 'friend', null, 'select friend');
@@ -760,6 +857,52 @@ const state = {
                 const friend = visibleFriends[i];
                 el.classList.toggle('selected', Boolean(selection.friend && friend && friendKey(selection.friend) === friendKey(friend)));
             });
+        }
+        function findDeckIndexForCareer(activeCareer) {
+            const decks = (dashData && dashData.validDecks) || [];
+            if (!activeCareer || !decks.length) return -1;
+            if (activeCareer.deck_id) {
+                const deckIdx = decks.findIndex(d => Number(d.id) === Number(activeCareer.deck_id));
+                if (deckIdx >= 0) return deckIdx;
+            }
+            const supportIds = (activeCareer.support_card_ids || []).map(id => String(id)).filter(Boolean);
+            if (!supportIds.length) return -1;
+            const careerSet = new Set(supportIds);
+            return decks.findIndex(deck => {
+                const deckIds = (deck.cards || []).map(card => String(card.id || '')).filter(Boolean);
+                return deckIds.length === careerSet.size && deckIds.every(id => careerSet.has(id));
+            });
+        }
+        function selectCareerDeck(activeCareer) {
+            const deckIdx = findDeckIndexForCareer(activeCareer);
+            if (deckIdx >= 0) {
+                selection.deck = dashData.validDecks[deckIdx];
+                const deckEls = document.querySelectorAll('.deck-container');
+                if (deckEls[deckIdx]) deckEls[deckIdx].classList.add('selected');
+                return;
+            }
+            const supportCards = (activeCareer && activeCareer.support_cards) || [];
+            if (supportCards.length) {
+                selection.deck = {
+                    id: activeCareer.deck_id || 'active',
+                    name: activeCareer.deck_id ? `Deck ${activeCareer.deck_id}` : 'Active career deck',
+                    cards: supportCards
+                };
+            }
+        }
+        function selectCareerFriend(activeCareer) {
+            if (!activeCareer || !activeCareer.friend_viewer_id || !activeCareer.friend_card_id) return;
+            state.pendingFriendSelection = {
+                viewer_id: String(activeCareer.friend_viewer_id),
+                support_card_id: String(activeCareer.friend_card_id)
+            };
+            if (activeCareer.friend) {
+                selection.friend = {
+                    ...activeCareer.friend,
+                    viewer_id: String(activeCareer.friend_viewer_id),
+                    support_card_id: String(activeCareer.friend_card_id)
+                };
+            }
         }
         async function loadRaceData() {
             try {
@@ -952,7 +1095,7 @@ const state = {
                     <img src="/api/images/${imgId}.png" onerror="hideBrokenImage(this)">
                     <div class="grid-card-overlay">
                         <span class="grid-card-name">${friend.support_name || 'Unknown'}</span>
-                        <span class="grid-card-kicker">LB${lb}</span>
+                        <span class="grid-card-kicker">${friend.type || '?'} | LB${lb}</span>
                     </div>
                 </div>`;
             }).filter(Boolean).join('');
@@ -1023,7 +1166,8 @@ const state = {
             const activeCareer = state.account && state.account.career && state.account.career.active;
             const body = activeCareer ? {
                 preset_name: state.selectedPreset,
-                max_steps: 2500
+                max_steps: 2500,
+                burn_clocks: state.burnClocks
             } : {
                 card_id: Number(selection.trainee.id),
                 support_card_ids: selection.deck.cards.map(card => Number(card.id)),
@@ -1039,7 +1183,8 @@ const state = {
                 is_boost: 0,
                 boost_story_event_id: 0,
                 preset_name: state.selectedPreset,
-                max_steps: 2500
+                max_steps: 2500,
+                burn_clocks: state.burnClocks
             };
             try {
                 const data = await apiJson('/api/career/run', {
@@ -1048,7 +1193,12 @@ const state = {
                     body: JSON.stringify(body)
                 });
                 if (!data.success) throw new Error(data.detail || 'Start failed');
+                state.displayedClocksUsed = Number(data.runner && data.runner.clocks_used || 0);
                 renderAccountStrip(data.account);
+                if (data.account && data.account.career && data.account.career.active) {
+                    autoLoadCareerSelection();
+                    renderFriends();
+                }
                 startRunnerPolling();
                 finalMessage = 'Career runner started';
             } catch (e) {
@@ -1063,11 +1213,37 @@ const state = {
                 }
             }
         }
+        function applyRunnerSettings(runner) {
+            if (runner.running && runner.burn_clocks !== undefined && state.burnClocks !== runner.burn_clocks) {
+                setBurnClocks(runner.burn_clocks, { persist: true });
+            }
+        }
+        function applyRunnerClockUsage(runner) {
+            const clocksUsed = Number(runner.clocks_used || 0);
+            if (state.account && clocksUsed > state.displayedClocksUsed) {
+                const delta = clocksUsed - state.displayedClocksUsed;
+                state.account = {
+                    ...state.account,
+                    clocks: Math.max(0, Number(state.account.clocks || 0) - delta)
+                };
+                state.displayedClocksUsed = clocksUsed;
+                renderAccountStrip(state.account);
+            } else if (clocksUsed < state.displayedClocksUsed) {
+                state.displayedClocksUsed = clocksUsed;
+            }
+        }
+        function applyRunnerSnapshot(runner) {
+            state.runner = runner;
+            applyRunnerSettings(runner);
+            applyRunnerClockUsage(runner);
+        }
         async function refreshRunnerStatus() {
             try {
                 const data = await apiJson('/api/career/runner');
                 if (!data.success || !data.runner) return;
                 const runner = data.runner;
+                applyRunnerSnapshot(runner);
+
                 const rows = (runner.action_history && runner.action_history.length) ? runner.action_history : deriveActionHistory(runner.log || []);
                 if (rows.length) renderActionHistory(rows);
                 if (runner.running) {
@@ -1245,7 +1421,7 @@ const state = {
                     return `<div class="grid-card deck-card">
                         <img src="/api/images/${imgId}.png" onerror="hideBrokenImage(this)">
                         <div class="grid-card-overlay">
-                            <span class="grid-card-kicker">${card.rarity || '?'}</span>
+                            <span class="grid-card-kicker">${card.type || '?'} | ${card.rarity || '?'}</span>
                             <span class="grid-card-name">${card.name || 'Unknown'}</span>
                         </div>
                     </div>`;
@@ -1353,14 +1529,11 @@ const state = {
             const activeCareer = state.account && state.account.career && state.account.career.active ? state.account.career : null;
             if (!activeCareer) return;
 
-            if (activeCareer.deck_id && dashData.validDecks) {
-                const deckIdx = dashData.validDecks.findIndex(d => Number(d.id) === Number(activeCareer.deck_id));
-                if (deckIdx >= 0) {
-                    selection.deck = dashData.validDecks[deckIdx];
-                    const deckEls = document.querySelectorAll('.deck-container');
-                    if (deckEls[deckIdx]) deckEls[deckIdx].classList.add('selected');
-                }
-            }
+            resetSelection();
+            document.querySelectorAll('.deck-container.selected, #uma-grid .grid-card.selected, #parent-grid .grid-card.selected, #friend-grid .grid-card.selected')
+                .forEach(el => el.classList.remove('selected'));
+
+            selectCareerDeck(activeCareer);
 
             if (activeCareer.card_id && dashData.umas) {
                 const umaIdx = dashData.umas.findIndex(u => String(u.id) === String(activeCareer.card_id));
@@ -1391,12 +1564,8 @@ const state = {
                 }
             }
 
-            if (activeCareer.friend_viewer_id && activeCareer.friend_card_id) {
-                state.pendingFriendSelection = {
-                    viewer_id: String(activeCareer.friend_viewer_id),
-                    support_card_id: String(activeCareer.friend_card_id)
-                };
-            }
+            selectCareerFriend(activeCareer);
+            renderTeamPanel();
         }
 
         function applyServerSelection(serverSelection) {
