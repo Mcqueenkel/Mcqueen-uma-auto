@@ -14,7 +14,7 @@ will fix megaphones tmr im going to sleep
 ---
 
 
-uses lobotobized/halfported sweepy decision engine, no intention of fully porting/upgrading it as I will be migrating to MCTS soon (ts gonna take months given my hardware). 
+uses lobotobized/halfported sweepy decision engine, no intention of fully porting/upgrading it as I will be migrating to MCTS soon (ts gonna take months given my hardware [nvm that architecture is straight up not realistic for mant]). 
 
 oh and uh looping removed lest someone tries to be funny (takes like 2 mins to figure out anyways but at least it wont be my fault)
 
