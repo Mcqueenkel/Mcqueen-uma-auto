@@ -1257,19 +1257,20 @@ def manage_career_loop(req, preset, initial_result):
         if not req.dev_mode:
             break
             
-        for _ in range(5):
+        for _ in range(6):
             if backend_loop_stop:
                 return
             time.sleep(1)
+            
         started_ok = False
         while not started_ok and not backend_loop_stop:
             try:
                 started = start_career_from_request(req)
                 if not started.get("success"):
                     consecutive_fails += 1
-                    if consecutive_fails >= 3:
+                    if consecutive_fails >= 5:
                         break
-                    for _ in range(5):
+                    for _ in range(15):
                         if backend_loop_stop:
                             return
                         time.sleep(1)
@@ -1281,9 +1282,9 @@ def manage_career_loop(req, preset, initial_result):
                 consecutive_fails = 0
             except Exception as e:
                 consecutive_fails += 1
-                if consecutive_fails >= 3:
+                if consecutive_fails >= 5:
                     break
-                for _ in range(5):
+                for _ in range(15):
                     if backend_loop_stop:
                         return
                     time.sleep(1)
@@ -1318,6 +1319,16 @@ async def run_career(req: RunCareerRequest):
             
             account = get_account_status(load_data, career_result)
             active_account = account
+            
+            career_status = account.get("career")
+            req.card_id = int(career_status.get("card_id"))
+            req.support_card_ids = career_status.get("support_card_ids")
+            req.friend_viewer_id = int(career_status.get("friend_viewer_id"))
+            req.friend_card_id = int(career_status.get("friend_card_id"))
+            req.parent_id_1 = int(career_status.get("parent_id_1"))
+            req.parent_id_2 = int(career_status.get("parent_id_2"))
+            req.deck_id = int(career_status.get("deck_id"))
+            
             chara_info = career_data.get('chara_info') or {}
             if active_dashboard_data:
                 active_dashboard_data["account"] = account

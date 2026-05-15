@@ -298,16 +298,6 @@ class CareerRunner:
 
                     try:
                         state = client.finish_career(current_turn=decision.payload.get("current_turn", 78), is_force_delete=False)
-                        time.sleep(random.uniform(1.0, 3.0))
-                        
-                        if random.random() < 0.8:
-                            try:
-                                client.call("chara/nickname", {"nickname_id": 1, "trained_chara_id": state.get("data", {}).get("trained_chara", [{}])[0].get("trained_chara_id", 0)})
-                                time.sleep(random.uniform(0.5, 1.5))
-                            except Exception:
-                                pass
-                                
-                        client.call("home/index", {})
                     except Exception as e:
                         if any(err in str(e) for err in ("102", "201", "StateRecoveryError")):
                             self._log("finish_reconciled", decision.payload.get("current_turn", 78), f"graceful exit: {e}")
