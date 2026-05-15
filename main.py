@@ -284,7 +284,7 @@ def wait_for_game_turn_delay(delay_type="turn", endpoint=None):
         mu = math.log(target_mean) - (sigma**2) / 2.0
         roll = random.lognormvariate(mu, sigma)
         seconds = min(target_mean * 3.0, max(0.1, roll))
-        label = f"API({target_mean:.1f}s)"
+        label = "API"
     elif delay_type == "complex":
         range_span = turn_delay_max_sec - turn_delay_min_sec
         target_mean = ((turn_delay_min_sec + turn_delay_max_sec) / 2.0) + (GLOBAL_SESSION_JITTER * range_span)
@@ -307,7 +307,7 @@ def wait_for_game_turn_delay(delay_type="turn", endpoint=None):
     if seconds <= 0:
         return
 
-    print(f"{label}: {seconds:.3f}s", flush=True)
+    print(label, flush=True)
     time.sleep(seconds)
 
 def attach_turn_delay(client):
