@@ -88,6 +88,27 @@ class RacePlanner:
         race = data.get("race_start_info") or {}
         return int(race.get("program_id") or 0)
 
+    def check_aptitude(self, chara, program_id):
+        info = self.program.get(int(program_id or 0)) or {}
+        ground = int(info.get("ground") or 1)
+        distance = int(info.get("distance") or 1200)
+        
+        if ground == 2:
+            g_apt = int(chara.get("proper_ground_dirt") or 1)
+        else:
+            g_apt = int(chara.get("proper_ground_turf") or 1)
+            
+        if distance <= 1400:
+            d_apt = int(chara.get("proper_distance_short") or 1)
+        elif distance <= 1800:
+            d_apt = int(chara.get("proper_distance_mile") or 1)
+        elif distance <= 2400:
+            d_apt = int(chara.get("proper_distance_middle") or 1)
+        else:
+            d_apt = int(chara.get("proper_distance_long") or 1)
+            
+        return g_apt >= 6 and d_apt >= 6
+
     def choose(self, state, preset):
         data = state.get("data") or {}
         turn = int((data.get("chara_info") or {}).get("turn") or 0)
@@ -106,6 +127,12 @@ class RacePlanner:
         valid_wanted = [pid for pid in wanted if pid in available and (turn, pid) not in self.rejected]
         
         if not valid_wanted:
+            chara = data.get("chara_info") or {}
+            fans = int(chara.get("fans") or 0)
+            if fans < 350 and turn > 11:
+                for pid in available:
+                    if (turn, pid) not in self.rejected and self.check_aptitude(chara, pid):
+                        return pid
             return 0
             
         is_mant = int((data.get("chara_info") or {}).get("scenario_id") or 0) == 4

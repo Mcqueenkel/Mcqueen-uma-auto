@@ -245,14 +245,25 @@ class CareerRunner:
                     break
                 
                 if decision.action == "event":
-                    state = self._event(client, strategy, decision.payload)
+                    try:
+                        state = self._event(client, strategy, decision.payload)
+                    except Exception as exc:
+                        if "Network error" in str(exc) or "201" in str(exc) or "205" in str(exc) or "208" in str(exc):
+                            state = self._fresh_career_state(client, strategy)
+                            continue
+                        raise
                 elif decision.action == "command":
                     self._log("command_exec", decision.payload.get("current_turn", 0), f"{decision.payload.get('command_type')}:{decision.payload.get('command_id')}:{decision.payload.get('command_group_id')}")
                     self._record_action(decision, chara)
                     try:
                         state = client.exec_command(**decision.payload)
+                        data = state.get("data") or {}
+                        if data.get("unchecked_event_array"):
+                            state = self._drain_events(client, strategy, state)
                     except Exception as exc:
-                        print(f"Command Error at turn {chara.get('turn', 0)}: {exc}")
+                        if "Network error" in str(exc) or "201" in str(exc) or "205" in str(exc) or "208" in str(exc):
+                            state = self._fresh_career_state(client, strategy)
+                            continue
                         if not any(err in str(exc) for err in ("102", "1503")):
                             raise
                         state = self._recover_blocked_state(client, strategy, state)
@@ -262,9 +273,6 @@ class CareerRunner:
                             self._mark(last_action=f"blocked state {chara.get('playing_state')}")
                             break
                         continue
-                    data = state.get("data") or {}
-                    if data.get("unchecked_event_array"):
-                        state = self._drain_events(client, strategy, state)
                 elif decision.action == "race":
 
                     self._record_action(decision, chara)
@@ -695,13 +703,22 @@ class CareerRunner:
         return sum(costs.get(int(row.get("shop_item_id") or 0), 0) for row in attempt or [])
 
     def _fresh_career_state(self, client, strategy=None):
+        import time
         errors = []
-        for relogin in (False, True):
+        max_retries = 8
+        for attempt in range(max_retries):
+            relogin = attempt > 0
             try:
                 if relogin:
                     if not hasattr(client, "login"):
                         break
-                    client.login()
+                    try:
+                        client.login()
+                    except Exception as e:
+                        if "Network error" in str(e) or "102" in str(e) or "201" in str(e) or "208" in str(e):
+                            raise e
+                        else:
+                            raise
                 if hasattr(client, "load_career"):
                     state = client.load_career()
                 else:
@@ -712,8 +729,13 @@ class CareerRunner:
                 self.item_manager.reset_scoped_failures()
                 return state
             except Exception as exc:
-                errors.append(str(exc))
-        raise RuntimeError("career recovery failed: " + " | ".join(errors))
+                err_str = str(exc)
+                errors.append(err_str)
+                if attempt < max_retries - 1:
+                    time.sleep(10)
+        if hasattr(client, "hard_reset"):
+            return client.hard_reset()
+        raise RuntimeError("career recovery failed: " + " | ".join(errors[-2:]))
 
     def _event(self, client, strategy, payload):
         data = dict(payload)
@@ -1132,3 +1154,4 @@ class CareerRunner:
                     if len(dh) > 48:
                         dh.pop(0)
                         sh.pop(0)
+

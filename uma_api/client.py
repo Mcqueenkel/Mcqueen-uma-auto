@@ -539,15 +539,15 @@ class UmaClient:
             "payload": payload,
         }, req_id)
         
-        max_retries = 3
+        max_retries = 8
         for attempt in range(max_retries):
             try:
                 resp = self.session.post(BASE_URL + ep, data=body, headers=headers, timeout=30)
                 break
             except Exception as e:
-                print(f"[API] Request failed (attempt {attempt+1}/{max_retries}): {e}")
                 if attempt < max_retries - 1:
-                    time.sleep(0.83)
+                    wait_time = min(1.0 + (attempt * 2.5), 15.0)
+                    time.sleep(wait_time)
                     continue
                 self.api_log("ERR", ep, {"error": str(e)}, req_id)
                 raise Exception(f'Network error on {ep}: {e}')

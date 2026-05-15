@@ -416,6 +416,7 @@ def synthesize_race_map(base_dir, master_data):
     for program_id, info in sorted(race_context.items()):
         row = info["program"]
         race_instance_id = info["race_instance_id"]
+        course = info["course"]
         month = int(row.get("month") or 0)
         half = int(row.get("half") or 0)
         programs[str(program_id)] = {
@@ -423,6 +424,8 @@ def synthesize_race_map(base_dir, master_data):
             "month": month,
             "half": half,
             "name": info["name"],
+            "ground": int(course.get("ground") or 0),
+            "distance": int(course.get("distance") or 0),
         }
         instances.setdefault(str(race_instance_id), []).append(program_id)
         for year_offset in year_offsets_for_permission(row.get("race_permission")):

@@ -5832,4453 +5832,5937 @@
       "race_instance_id": 100101,
       "month": 2,
       "half": 2,
-      "name": "February Stakes"
+      "name": "February Stakes",
+      "ground": 2,
+      "distance": 1600
     },
     "2": {
       "race_instance_id": 100201,
       "month": 3,
       "half": 2,
-      "name": "Takamatsunomiya Kinen"
+      "name": "Takamatsunomiya Kinen",
+      "ground": 1,
+      "distance": 1200
     },
     "3": {
       "race_instance_id": 100301,
       "month": 3,
       "half": 2,
-      "name": "Osaka Hai"
+      "name": "Osaka Hai",
+      "ground": 1,
+      "distance": 2000
     },
     "4": {
       "race_instance_id": 100601,
       "month": 4,
       "half": 2,
-      "name": "Tenno Sho (Spring)"
+      "name": "Tenno Sho (Spring)",
+      "ground": 1,
+      "distance": 3200
     },
     "5": {
       "race_instance_id": 100801,
       "month": 5,
       "half": 1,
-      "name": "Victoria Mile"
+      "name": "Victoria Mile",
+      "ground": 1,
+      "distance": 1600
     },
     "6": {
       "race_instance_id": 200101,
       "month": 1,
       "half": 1,
-      "name": "Nikkei Shinshun Hai"
+      "name": "Nikkei Shinshun Hai",
+      "ground": 1,
+      "distance": 2400
     },
     "7": {
       "race_instance_id": 200201,
       "month": 1,
       "half": 2,
-      "name": "Tokai Stakes"
+      "name": "Tokai Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "8": {
       "race_instance_id": 200301,
       "month": 1,
       "half": 2,
-      "name": "American JCC"
+      "name": "American JCC",
+      "ground": 1,
+      "distance": 2200
     },
     "9": {
       "race_instance_id": 200401,
       "month": 2,
       "half": 1,
-      "name": "Kyoto Kinen"
+      "name": "Kyoto Kinen",
+      "ground": 1,
+      "distance": 2200
     },
     "10": {
       "race_instance_id": 200501,
       "month": 2,
       "half": 2,
-      "name": "Nakayama Kinen"
+      "name": "Nakayama Kinen",
+      "ground": 1,
+      "distance": 1800
     },
     "11": {
       "race_instance_id": 200701,
       "month": 3,
       "half": 1,
-      "name": "Kinko Sho"
+      "name": "Kinko Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "12": {
       "race_instance_id": 200901,
       "month": 3,
       "half": 2,
-      "name": "Hanshin Daishoten"
+      "name": "Hanshin Daishoten",
+      "ground": 1,
+      "distance": 3000
     },
     "13": {
       "race_instance_id": 201101,
       "month": 3,
       "half": 2,
-      "name": "Nikkei Sho"
+      "name": "Nikkei Sho",
+      "ground": 1,
+      "distance": 2500
     },
     "14": {
       "race_instance_id": 201201,
       "month": 4,
       "half": 1,
-      "name": "Hanshin Umamusume Stakes"
+      "name": "Hanshin Umamusume Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "15": {
       "race_instance_id": 201401,
       "month": 4,
       "half": 2,
-      "name": "Milers Cup"
+      "name": "Milers Cup",
+      "ground": 1,
+      "distance": 1600
     },
     "16": {
       "race_instance_id": 201801,
       "month": 5,
       "half": 1,
-      "name": "Keio Hai Spring Cup"
+      "name": "Keio Hai Spring Cup",
+      "ground": 1,
+      "distance": 1400
     },
     "17": {
       "race_instance_id": 201901,
       "month": 5,
       "half": 2,
-      "name": "Meguro Kinen"
+      "name": "Meguro Kinen",
+      "ground": 1,
+      "distance": 2500
     },
     "18": {
       "race_instance_id": 300101,
       "month": 1,
       "half": 1,
-      "name": "Kyoto Kimpai"
+      "name": "Kyoto Kimpai",
+      "ground": 1,
+      "distance": 1600
     },
     "19": {
       "race_instance_id": 300201,
       "month": 1,
       "half": 1,
-      "name": "Nakayama Kimpai"
+      "name": "Nakayama Kimpai",
+      "ground": 1,
+      "distance": 2000
     },
     "20": {
       "race_instance_id": 300501,
       "month": 1,
       "half": 1,
-      "name": "Aichi Hai"
+      "name": "Aichi Hai",
+      "ground": 1,
+      "distance": 2000
     },
     "21": {
       "race_instance_id": 300701,
       "month": 1,
       "half": 2,
-      "name": "Silk Road Stakes"
+      "name": "Silk Road Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "22": {
       "race_instance_id": 300801,
       "month": 1,
       "half": 2,
-      "name": "Negishi Stakes"
+      "name": "Negishi Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "23": {
       "race_instance_id": 301001,
       "month": 2,
       "half": 1,
-      "name": "Tokyo Shimbun Hai"
+      "name": "Tokyo Shimbun Hai",
+      "ground": 1,
+      "distance": 1600
     },
     "24": {
       "race_instance_id": 301301,
       "month": 2,
       "half": 2,
-      "name": "Kyoto Umamusume Stakes"
+      "name": "Kyoto Umamusume Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "25": {
       "race_instance_id": 301401,
       "month": 2,
       "half": 2,
-      "name": "Diamond Stakes"
+      "name": "Diamond Stakes",
+      "ground": 1,
+      "distance": 3400
     },
     "26": {
       "race_instance_id": 301501,
       "month": 2,
       "half": 2,
-      "name": "Kokura Daishoten"
+      "name": "Kokura Daishoten",
+      "ground": 1,
+      "distance": 1800
     },
     "27": {
       "race_instance_id": 301701,
       "month": 2,
       "half": 2,
-      "name": "Hankyu Hai"
+      "name": "Hankyu Hai",
+      "ground": 1,
+      "distance": 1400
     },
     "28": {
       "race_instance_id": 301901,
       "month": 3,
       "half": 1,
-      "name": "Ocean Stakes"
+      "name": "Ocean Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "29": {
       "race_instance_id": 302001,
       "month": 3,
       "half": 1,
-      "name": "Nakayama Umamusume Stakes"
+      "name": "Nakayama Umamusume Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "30": {
       "race_instance_id": 302401,
       "month": 3,
       "half": 2,
-      "name": "March Stakes"
+      "name": "March Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "31": {
       "race_instance_id": 302501,
       "month": 4,
       "half": 1,
-      "name": "Lord Derby Challenge Trophy"
+      "name": "Lord Derby Challenge Trophy",
+      "ground": 1,
+      "distance": 1600
     },
     "32": {
       "race_instance_id": 302601,
       "month": 4,
       "half": 1,
-      "name": "Antares Stakes"
+      "name": "Antares Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "33": {
       "race_instance_id": 302701,
       "month": 4,
       "half": 2,
-      "name": "Fukushima Umamusume Stakes"
+      "name": "Fukushima Umamusume Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "34": {
       "race_instance_id": 302801,
       "month": 5,
       "half": 1,
-      "name": "Niigata Daishoten"
+      "name": "Niigata Daishoten",
+      "ground": 1,
+      "distance": 2000
     },
     "35": {
       "race_instance_id": 302901,
       "month": 5,
       "half": 2,
-      "name": "Heian Stakes"
+      "name": "Heian Stakes",
+      "ground": 2,
+      "distance": 1900
     },
     "36": {
       "race_instance_id": 400101,
       "month": 1,
       "half": 1,
-      "name": "Manyo Stakes"
+      "name": "Manyo Stakes",
+      "ground": 1,
+      "distance": 3000
     },
     "37": {
       "race_instance_id": 400301,
       "month": 1,
       "half": 1,
-      "name": "Yodo Tankyori Stakes"
+      "name": "Yodo Tankyori Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "38": {
       "race_instance_id": 400401,
       "month": 1,
       "half": 1,
-      "name": "Pollux Stakes"
+      "name": "Pollux Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "39": {
       "race_instance_id": 400501,
       "month": 1,
       "half": 1,
-      "name": "January Stakes"
+      "name": "January Stakes",
+      "ground": 2,
+      "distance": 1200
     },
     "40": {
       "race_instance_id": 400601,
       "month": 1,
       "half": 1,
-      "name": "New Year Stakes"
+      "name": "New Year Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "41": {
       "race_instance_id": 400801,
       "month": 1,
       "half": 2,
-      "name": "Subaru Stakes"
+      "name": "Subaru Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "42": {
       "race_instance_id": 401001,
       "month": 1,
       "half": 1,
-      "name": "Carbuncle Stakes"
+      "name": "Carbuncle Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "43": {
       "race_instance_id": 401101,
       "month": 1,
       "half": 2,
-      "name": "Shirafuji Stakes"
+      "name": "Shirafuji Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "44": {
       "race_instance_id": 401301,
       "month": 2,
       "half": 1,
-      "name": "Yamato Stakes"
+      "name": "Yamato Stakes",
+      "ground": 2,
+      "distance": 1200
     },
     "45": {
       "race_instance_id": 401501,
       "month": 2,
       "half": 1,
-      "name": "Rakuyo Stakes"
+      "name": "Rakuyo Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "46": {
       "race_instance_id": 401601,
       "month": 2,
       "half": 1,
-      "name": "Aldebaran Stakes"
+      "name": "Aldebaran Stakes",
+      "ground": 2,
+      "distance": 1900
     },
     "47": {
       "race_instance_id": 401701,
       "month": 2,
       "half": 1,
-      "name": "Valentine Stakes"
+      "name": "Valentine Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "48": {
       "race_instance_id": 401901,
       "month": 2,
       "half": 2,
-      "name": "Sobu Stakes"
+      "name": "Sobu Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "49": {
       "race_instance_id": 402101,
       "month": 3,
       "half": 1,
-      "name": "Osakajo Stakes"
+      "name": "Osakajo Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "50": {
       "race_instance_id": 402201,
       "month": 3,
       "half": 1,
-      "name": "Polaris Stakes"
+      "name": "Polaris Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "51": {
       "race_instance_id": 402301,
       "month": 3,
       "half": 1,
-      "name": "Nigawa Stakes"
+      "name": "Nigawa Stakes",
+      "ground": 2,
+      "distance": 2000
     },
     "52": {
       "race_instance_id": 402601,
       "month": 3,
       "half": 1,
-      "name": "Kochi Stakes"
+      "name": "Kochi Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "53": {
       "race_instance_id": 402801,
       "month": 3,
       "half": 2,
-      "name": "Chiba Stakes"
+      "name": "Chiba Stakes",
+      "ground": 2,
+      "distance": 1200
     },
     "55": {
       "race_instance_id": 403001,
       "month": 3,
       "half": 2,
-      "name": "Rokko Stakes"
+      "name": "Rokko Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "56": {
       "race_instance_id": 403101,
       "month": 4,
       "half": 1,
-      "name": "Coral Stakes"
+      "name": "Coral Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "58": {
       "race_instance_id": 403601,
       "month": 4,
       "half": 1,
-      "name": "Keiyo Stakes"
+      "name": "Keiyo Stakes",
+      "ground": 2,
+      "distance": 1200
     },
     "59": {
       "race_instance_id": 403701,
       "month": 4,
       "half": 1,
-      "name": "Shunrai Stakes"
+      "name": "Shunrai Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "60": {
       "race_instance_id": 403801,
       "month": 4,
       "half": 1,
-      "name": "Fukushima Mimpo Hai"
+      "name": "Fukushima Mimpo Hai",
+      "ground": 1,
+      "distance": 2000
     },
     "61": {
       "race_instance_id": 404001,
       "month": 4,
       "half": 2,
-      "name": "Oasis Stakes"
+      "name": "Oasis Stakes",
+      "ground": 2,
+      "distance": 1600
     },
     "62": {
       "race_instance_id": 404101,
       "month": 4,
       "half": 2,
-      "name": "Tennozan Stakes"
+      "name": "Tennozan Stakes",
+      "ground": 2,
+      "distance": 1200
     },
     "63": {
       "race_instance_id": 404401,
       "month": 5,
       "half": 1,
-      "name": "Tanigawadake Stakes"
+      "name": "Tanigawadake Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "64": {
       "race_instance_id": 404601,
       "month": 5,
       "half": 1,
-      "name": "Metropolitan Stakes"
+      "name": "Metropolitan Stakes",
+      "ground": 1,
+      "distance": 2400
     },
     "65": {
       "race_instance_id": 404701,
       "month": 5,
       "half": 1,
-      "name": "Kurama Stakes"
+      "name": "Kurama Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "66": {
       "race_instance_id": 404801,
       "month": 5,
       "half": 1,
-      "name": "Brilliant Stakes"
+      "name": "Brilliant Stakes",
+      "ground": 2,
+      "distance": 2100
     },
     "67": {
       "race_instance_id": 404901,
       "month": 5,
       "half": 1,
-      "name": "Miyakooji Stakes"
+      "name": "Miyakooji Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "68": {
       "race_instance_id": 405101,
       "month": 5,
       "half": 1,
-      "name": "Ritto Stakes"
+      "name": "Ritto Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "69": {
       "race_instance_id": 405301,
       "month": 5,
       "half": 2,
-      "name": "May Stakes"
+      "name": "May Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "70": {
       "race_instance_id": 405501,
       "month": 5,
       "half": 2,
-      "name": "Idaten Stakes"
+      "name": "Idaten Stakes",
+      "ground": 1,
+      "distance": 1000
     },
     "71": {
       "race_instance_id": 405701,
       "month": 5,
       "half": 2,
-      "name": "Keyaki Stakes"
+      "name": "Keyaki Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "72": {
       "race_instance_id": 405801,
       "month": 5,
       "half": 2,
-      "name": "Azuchijo Stakes"
+      "name": "Azuchijo Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "73": {
       "race_instance_id": 101101,
       "month": 6,
       "half": 1,
-      "name": "Yasuda Kinen"
+      "name": "Yasuda Kinen",
+      "ground": 1,
+      "distance": 1600
     },
     "74": {
       "race_instance_id": 101201,
       "month": 6,
       "half": 2,
-      "name": "Takarazuka Kinen"
+      "name": "Takarazuka Kinen",
+      "ground": 1,
+      "distance": 2200
     },
     "75": {
       "race_instance_id": 101301,
       "month": 9,
       "half": 2,
-      "name": "Sprinters Stakes"
+      "name": "Sprinters Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "76": {
       "race_instance_id": 101601,
       "month": 10,
       "half": 2,
-      "name": "Tenno Sho (Autumn)"
+      "name": "Tenno Sho (Autumn)",
+      "ground": 1,
+      "distance": 2000
     },
     "77": {
       "race_instance_id": 101701,
       "month": 11,
       "half": 1,
-      "name": "Queen Elizabeth II Cup"
+      "name": "Queen Elizabeth II Cup",
+      "ground": 1,
+      "distance": 2200
     },
     "78": {
       "race_instance_id": 101801,
       "month": 11,
       "half": 2,
-      "name": "Mile Championship"
+      "name": "Mile Championship",
+      "ground": 1,
+      "distance": 1600
     },
     "79": {
       "race_instance_id": 101901,
       "month": 11,
       "half": 2,
-      "name": "Japan Cup"
+      "name": "Japan Cup",
+      "ground": 1,
+      "distance": 2400
     },
     "80": {
       "race_instance_id": 102001,
       "month": 12,
       "half": 1,
-      "name": "Champions Cup"
+      "name": "Champions Cup",
+      "ground": 2,
+      "distance": 1800
     },
     "81": {
       "race_instance_id": 102301,
       "month": 12,
       "half": 2,
-      "name": "Arima Kinen"
+      "name": "Arima Kinen",
+      "ground": 1,
+      "distance": 2500
     },
     "82": {
       "race_instance_id": 202001,
       "month": 8,
       "half": 2,
-      "name": "Sapporo Kinen"
+      "name": "Sapporo Kinen",
+      "ground": 1,
+      "distance": 2000
     },
     "83": {
       "race_instance_id": 202101,
       "month": 9,
       "half": 1,
-      "name": "Centaur Stakes"
+      "name": "Centaur Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "84": {
       "race_instance_id": 202401,
       "month": 9,
       "half": 2,
-      "name": "Kobe Shimbun Hai"
+      "name": "Kobe Shimbun Hai",
+      "ground": 1,
+      "distance": 2400
     },
     "85": {
       "race_instance_id": 202501,
       "month": 9,
       "half": 2,
-      "name": "All Comers"
+      "name": "All Comers",
+      "ground": 1,
+      "distance": 2200
     },
     "86": {
       "race_instance_id": 202601,
       "month": 10,
       "half": 1,
-      "name": "Mainichi Okan"
+      "name": "Mainichi Okan",
+      "ground": 1,
+      "distance": 1800
     },
     "87": {
       "race_instance_id": 202701,
       "month": 10,
       "half": 1,
-      "name": "Kyoto Daishoten"
+      "name": "Kyoto Daishoten",
+      "ground": 1,
+      "distance": 2400
     },
     "88": {
       "race_instance_id": 202801,
       "month": 10,
       "half": 1,
-      "name": "Fuchu Umamusume Stakes"
+      "name": "Fuchu Umamusume Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "89": {
       "race_instance_id": 202901,
       "month": 10,
       "half": 2,
-      "name": "Swan Stakes"
+      "name": "Swan Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "90": {
       "race_instance_id": 203101,
       "month": 11,
       "half": 1,
-      "name": "Copa Republica Argentina"
+      "name": "Copa Republica Argentina",
+      "ground": 1,
+      "distance": 2500
     },
     "91": {
       "race_instance_id": 203301,
       "month": 12,
       "half": 1,
-      "name": "Stayers Stakes"
+      "name": "Stayers Stakes",
+      "ground": 1,
+      "distance": 3600
     },
     "92": {
       "race_instance_id": 203401,
       "month": 12,
       "half": 2,
-      "name": "Hanshin Cup"
+      "name": "Hanshin Cup",
+      "ground": 1,
+      "distance": 1400
     },
     "93": {
       "race_instance_id": 303001,
       "month": 6,
       "half": 1,
-      "name": "Naruo Kinen"
+      "name": "Naruo Kinen",
+      "ground": 1,
+      "distance": 2000
     },
     "94": {
       "race_instance_id": 303101,
       "month": 6,
       "half": 1,
-      "name": "Mermaid Stakes"
+      "name": "Mermaid Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "95": {
       "race_instance_id": 303201,
       "month": 6,
       "half": 1,
-      "name": "Epsom Cup"
+      "name": "Epsom Cup",
+      "ground": 1,
+      "distance": 1800
     },
     "96": {
       "race_instance_id": 303401,
       "month": 6,
       "half": 2,
-      "name": "Hakodate Sprint Stakes"
+      "name": "Hakodate Sprint Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "97": {
       "race_instance_id": 303501,
       "month": 7,
       "half": 1,
-      "name": "CBC Sho"
+      "name": "CBC Sho",
+      "ground": 1,
+      "distance": 1200
     },
     "98": {
       "race_instance_id": 303701,
       "month": 7,
       "half": 1,
-      "name": "Procyon Stakes"
+      "name": "Procyon Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "99": {
       "race_instance_id": 303801,
       "month": 7,
       "half": 1,
-      "name": "Tanabata Sho"
+      "name": "Tanabata Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "100": {
       "race_instance_id": 303901,
       "month": 7,
       "half": 1,
-      "name": "Hakodate Kinen"
+      "name": "Hakodate Kinen",
+      "ground": 1,
+      "distance": 2000
     },
     "101": {
       "race_instance_id": 304001,
       "month": 7,
       "half": 2,
-      "name": "Chukyo Kinen"
+      "name": "Chukyo Kinen",
+      "ground": 1,
+      "distance": 1600
     },
     "102": {
       "race_instance_id": 304201,
       "month": 7,
       "half": 2,
-      "name": "Ibis Summer Dash"
+      "name": "Ibis Summer Dash",
+      "ground": 1,
+      "distance": 1000
     },
     "103": {
       "race_instance_id": 304301,
       "month": 7,
       "half": 2,
-      "name": "Queen Stakes"
+      "name": "Queen Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "104": {
       "race_instance_id": 304401,
       "month": 8,
       "half": 1,
-      "name": "Kokura Kinen"
+      "name": "Kokura Kinen",
+      "ground": 1,
+      "distance": 2000
     },
     "105": {
       "race_instance_id": 304601,
       "month": 8,
       "half": 1,
-      "name": "Sekiya Kinen"
+      "name": "Sekiya Kinen",
+      "ground": 1,
+      "distance": 1600
     },
     "106": {
       "race_instance_id": 304701,
       "month": 8,
       "half": 1,
-      "name": "Elm Stakes"
+      "name": "Elm Stakes",
+      "ground": 2,
+      "distance": 1700
     },
     "107": {
       "race_instance_id": 304801,
       "month": 8,
       "half": 2,
-      "name": "Kitakyushu Kinen"
+      "name": "Kitakyushu Kinen",
+      "ground": 1,
+      "distance": 1200
     },
     "108": {
       "race_instance_id": 305001,
       "month": 8,
       "half": 2,
-      "name": "Keeneland Cup"
+      "name": "Keeneland Cup",
+      "ground": 1,
+      "distance": 1200
     },
     "109": {
       "race_instance_id": 305301,
       "month": 9,
       "half": 1,
-      "name": "Niigata Kinen"
+      "name": "Niigata Kinen",
+      "ground": 1,
+      "distance": 2000
     },
     "110": {
       "race_instance_id": 305501,
       "month": 9,
       "half": 1,
-      "name": "Keisei Hai Autumn Handicap"
+      "name": "Keisei Hai Autumn Handicap",
+      "ground": 1,
+      "distance": 1600
     },
     "111": {
       "race_instance_id": 305601,
       "month": 9,
       "half": 2,
-      "name": "Sirius Stakes"
+      "name": "Sirius Stakes",
+      "ground": 2,
+      "distance": 2000
     },
     "112": {
       "race_instance_id": 305801,
       "month": 10,
       "half": 2,
-      "name": "Fuji Stakes"
+      "name": "Fuji Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "113": {
       "race_instance_id": 306101,
       "month": 11,
       "half": 1,
-      "name": "Miyako Stakes"
+      "name": "Miyako Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "114": {
       "race_instance_id": 306201,
       "month": 11,
       "half": 1,
-      "name": "Musashino Stakes"
+      "name": "Musashino Stakes",
+      "ground": 2,
+      "distance": 1600
     },
     "115": {
       "race_instance_id": 306301,
       "month": 11,
       "half": 1,
-      "name": "Fukushima Kinen"
+      "name": "Fukushima Kinen",
+      "ground": 1,
+      "distance": 2000
     },
     "116": {
       "race_instance_id": 306601,
       "month": 11,
       "half": 2,
-      "name": "Keihan Hai"
+      "name": "Keihan Hai",
+      "ground": 1,
+      "distance": 1200
     },
     "117": {
       "race_instance_id": 306701,
       "month": 12,
       "half": 1,
-      "name": "Challenge Cup"
+      "name": "Challenge Cup",
+      "ground": 1,
+      "distance": 2000
     },
     "118": {
       "race_instance_id": 306801,
       "month": 12,
       "half": 1,
-      "name": "Chunichi Shimbun Hai"
+      "name": "Chunichi Shimbun Hai",
+      "ground": 1,
+      "distance": 2000
     },
     "119": {
       "race_instance_id": 306901,
       "month": 12,
       "half": 1,
-      "name": "Capella Stakes"
+      "name": "Capella Stakes",
+      "ground": 2,
+      "distance": 1200
     },
     "120": {
       "race_instance_id": 307001,
       "month": 12,
       "half": 1,
-      "name": "Turquoise Stakes"
+      "name": "Turquoise Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "121": {
       "race_instance_id": 405901,
       "month": 6,
       "half": 2,
-      "name": "Akhalteke Stakes"
+      "name": "Akhalteke Stakes",
+      "ground": 2,
+      "distance": 1600
     },
     "122": {
       "race_instance_id": 406001,
       "month": 6,
       "half": 1,
-      "name": "Tempozan Stakes"
+      "name": "Tempozan Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "123": {
       "race_instance_id": 406101,
       "month": 6,
       "half": 2,
-      "name": "Yonago Stakes"
+      "name": "Yonago Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "124": {
       "race_instance_id": 406201,
       "month": 6,
       "half": 2,
-      "name": "Onuma Stakes"
+      "name": "Onuma Stakes",
+      "ground": 2,
+      "distance": 1700
     },
     "125": {
       "race_instance_id": 406301,
       "month": 6,
       "half": 2,
-      "name": "Paradise Stakes"
+      "name": "Paradise Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "126": {
       "race_instance_id": 406401,
       "month": 7,
       "half": 1,
-      "name": "Tomoe Sho"
+      "name": "Tomoe Sho",
+      "ground": 1,
+      "distance": 1800
     },
     "127": {
       "race_instance_id": 406501,
       "month": 7,
       "half": 1,
-      "name": "Marine Stakes"
+      "name": "Marine Stakes",
+      "ground": 2,
+      "distance": 1700
     },
     "129": {
       "race_instance_id": 406901,
       "month": 7,
       "half": 2,
-      "name": "Fukushima TV Open"
+      "name": "Fukushima TV Open",
+      "ground": 1,
+      "distance": 1200
     },
     "130": {
       "race_instance_id": 407101,
       "month": 8,
       "half": 1,
-      "name": "Sapporo Nikkei Open"
+      "name": "Sapporo Nikkei Open",
+      "ground": 1,
+      "distance": 2600
     },
     "131": {
       "race_instance_id": 407201,
       "month": 8,
       "half": 1,
-      "name": "UHB Sho"
+      "name": "UHB Sho",
+      "ground": 1,
+      "distance": 1200
     },
     "132": {
       "race_instance_id": 407301,
       "month": 8,
       "half": 1,
-      "name": "Aso Stakes"
+      "name": "Aso Stakes",
+      "ground": 2,
+      "distance": 1700
     },
     "133": {
       "race_instance_id": 407601,
       "month": 8,
       "half": 2,
-      "name": "NST Sho"
+      "name": "NST Sho",
+      "ground": 2,
+      "distance": 1200
     },
     "134": {
       "race_instance_id": 407901,
       "month": 8,
       "half": 2,
-      "name": "BSN Sho"
+      "name": "BSN Sho",
+      "ground": 2,
+      "distance": 1800
     },
     "135": {
       "race_instance_id": 408001,
       "month": 8,
       "half": 2,
-      "name": "Kokura Nikkei Open"
+      "name": "Kokura Nikkei Open",
+      "ground": 1,
+      "distance": 1800
     },
     "136": {
       "race_instance_id": 408101,
       "month": 8,
       "half": 2,
-      "name": "Toki Stakes"
+      "name": "Toki Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "137": {
       "race_instance_id": 408201,
       "month": 9,
       "half": 1,
-      "name": "Tancho Stakes"
+      "name": "Tancho Stakes",
+      "ground": 1,
+      "distance": 2600
     },
     "138": {
       "race_instance_id": 408401,
       "month": 9,
       "half": 1,
-      "name": "Enif Stakes"
+      "name": "Enif Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "139": {
       "race_instance_id": 408601,
       "month": 9,
       "half": 1,
-      "name": "Radio Nippon Sho"
+      "name": "Radio Nippon Sho",
+      "ground": 2,
+      "distance": 1800
     },
     "140": {
       "race_instance_id": 409001,
       "month": 9,
       "half": 2,
-      "name": "Port Island Stakes"
+      "name": "Port Island Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "141": {
       "race_instance_id": 409101,
       "month": 10,
       "half": 1,
-      "name": "Opal Stakes"
+      "name": "Opal Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "142": {
       "race_instance_id": 409201,
       "month": 10,
       "half": 1,
-      "name": "Green Channel Cup"
+      "name": "Green Channel Cup",
+      "ground": 2,
+      "distance": 1400
     },
     "143": {
       "race_instance_id": 409401,
       "month": 10,
       "half": 1,
-      "name": "October Stakes"
+      "name": "October Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "144": {
       "race_instance_id": 409501,
       "month": 10,
       "half": 1,
-      "name": "Shinetsu Stakes"
+      "name": "Shinetsu Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "145": {
       "race_instance_id": 409701,
       "month": 10,
       "half": 2,
-      "name": "Muromachi Stakes"
+      "name": "Muromachi Stakes",
+      "ground": 2,
+      "distance": 1200
     },
     "146": {
       "race_instance_id": 409801,
       "month": 10,
       "half": 2,
-      "name": "Brazil Cup"
+      "name": "Brazil Cup",
+      "ground": 2,
+      "distance": 2100
     },
     "147": {
       "race_instance_id": 410001,
       "month": 10,
       "half": 2,
-      "name": "Cassiopeia Stakes"
+      "name": "Cassiopeia Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "148": {
       "race_instance_id": 410101,
       "month": 10,
       "half": 2,
-      "name": "Lumiere Autumn Dash"
+      "name": "Lumiere Autumn Dash",
+      "ground": 1,
+      "distance": 1000
     },
     "149": {
       "race_instance_id": 410201,
       "month": 11,
       "half": 1,
-      "name": "Oro Cup"
+      "name": "Oro Cup",
+      "ground": 1,
+      "distance": 1400
     },
     "150": {
       "race_instance_id": 410401,
       "month": 11,
       "half": 2,
-      "name": "Andromeda Stakes"
+      "name": "Andromeda Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "151": {
       "race_instance_id": 410501,
       "month": 11,
       "half": 2,
-      "name": "Shimotsuki Stakes"
+      "name": "Shimotsuki Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "152": {
       "race_instance_id": 410601,
       "month": 11,
       "half": 2,
-      "name": "Fukushima Minyu Cup"
+      "name": "Fukushima Minyu Cup",
+      "ground": 2,
+      "distance": 1700
     },
     "153": {
       "race_instance_id": 410701,
       "month": 11,
       "half": 2,
-      "name": "Capital Stakes"
+      "name": "Capital Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "154": {
       "race_instance_id": 410801,
       "month": 11,
       "half": 2,
-      "name": "Autumn Leaf Stakes"
+      "name": "Autumn Leaf Stakes",
+      "ground": 2,
+      "distance": 1200
     },
     "155": {
       "race_instance_id": 410901,
       "month": 12,
       "half": 1,
-      "name": "Lapis Lazuli Stakes"
+      "name": "Lapis Lazuli Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "156": {
       "race_instance_id": 411001,
       "month": 12,
       "half": 1,
-      "name": "Shiwasu Stakes"
+      "name": "Shiwasu Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "157": {
       "race_instance_id": 411101,
       "month": 12,
       "half": 1,
-      "name": "Rigel Stakes"
+      "name": "Rigel Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "158": {
       "race_instance_id": 411201,
       "month": 12,
       "half": 1,
-      "name": "Tanzanite Stakes"
+      "name": "Tanzanite Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "159": {
       "race_instance_id": 411301,
       "month": 12,
       "half": 1,
-      "name": "December Stakes"
+      "name": "December Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "160": {
       "race_instance_id": 411501,
       "month": 12,
       "half": 2,
-      "name": "Galaxy Stakes"
+      "name": "Galaxy Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "161": {
       "race_instance_id": 411601,
       "month": 12,
       "half": 2,
-      "name": "Betelgeuse Stakes"
+      "name": "Betelgeuse Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "162": {
       "race_instance_id": 100401,
       "month": 4,
       "half": 1,
-      "name": "Oka Sho"
+      "name": "Oka Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "163": {
       "race_instance_id": 100501,
       "month": 4,
       "half": 1,
-      "name": "Satsuki Sho"
+      "name": "Satsuki Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "164": {
       "race_instance_id": 100701,
       "month": 5,
       "half": 1,
-      "name": "NHK Mile Cup"
+      "name": "NHK Mile Cup",
+      "ground": 1,
+      "distance": 1600
     },
     "165": {
       "race_instance_id": 100901,
       "month": 5,
       "half": 2,
-      "name": "Japanese Oaks"
+      "name": "Japanese Oaks",
+      "ground": 1,
+      "distance": 2400
     },
     "166": {
       "race_instance_id": 101001,
       "month": 5,
       "half": 2,
-      "name": "Tokyo Yushun (Japanese Derby)"
+      "name": "Tokyo Yushun (Japanese Derby)",
+      "ground": 1,
+      "distance": 2400
     },
     "167": {
       "race_instance_id": 101401,
       "month": 10,
       "half": 2,
-      "name": "Shuka Sho"
+      "name": "Shuka Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "168": {
       "race_instance_id": 101501,
       "month": 10,
       "half": 2,
-      "name": "Kikuka Sho"
+      "name": "Kikuka Sho",
+      "ground": 1,
+      "distance": 3000
     },
     "169": {
       "race_instance_id": 200601,
       "month": 3,
       "half": 1,
-      "name": "Yayoi Sho"
+      "name": "Yayoi Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "170": {
       "race_instance_id": 200801,
       "month": 3,
       "half": 1,
-      "name": "Fillies' Revue"
+      "name": "Fillies' Revue",
+      "ground": 1,
+      "distance": 1400
     },
     "171": {
       "race_instance_id": 201001,
       "month": 3,
       "half": 2,
-      "name": "Spring Stakes"
+      "name": "Spring Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "172": {
       "race_instance_id": 201301,
       "month": 4,
       "half": 1,
-      "name": "New Zealand Trophy"
+      "name": "New Zealand Trophy",
+      "ground": 1,
+      "distance": 1600
     },
     "173": {
       "race_instance_id": 201501,
       "month": 4,
       "half": 2,
-      "name": "Flora Stakes"
+      "name": "Flora Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "174": {
       "race_instance_id": 201601,
       "month": 4,
       "half": 2,
-      "name": "Aoba Sho"
+      "name": "Aoba Sho",
+      "ground": 1,
+      "distance": 2400
     },
     "175": {
       "race_instance_id": 201701,
       "month": 5,
       "half": 1,
-      "name": "Kyoto Shimbun Hai"
+      "name": "Kyoto Shimbun Hai",
+      "ground": 1,
+      "distance": 2200
     },
     "176": {
       "race_instance_id": 202201,
       "month": 9,
       "half": 1,
-      "name": "Rose Stakes"
+      "name": "Rose Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "177": {
       "race_instance_id": 202301,
       "month": 9,
       "half": 2,
-      "name": "St. Lite Kinen"
+      "name": "St. Lite Kinen",
+      "ground": 1,
+      "distance": 2200
     },
     "178": {
       "race_instance_id": 300301,
       "month": 1,
       "half": 1,
-      "name": "Shinzan Kinen"
+      "name": "Shinzan Kinen",
+      "ground": 1,
+      "distance": 1600
     },
     "179": {
       "race_instance_id": 300401,
       "month": 1,
       "half": 1,
-      "name": "Fairy Stakes"
+      "name": "Fairy Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "180": {
       "race_instance_id": 300601,
       "month": 1,
       "half": 1,
-      "name": "Keisei Hai"
+      "name": "Keisei Hai",
+      "ground": 1,
+      "distance": 2000
     },
     "181": {
       "race_instance_id": 300901,
       "month": 2,
       "half": 1,
-      "name": "Kisaragi Sho"
+      "name": "Kisaragi Sho",
+      "ground": 1,
+      "distance": 1800
     },
     "182": {
       "race_instance_id": 301101,
       "month": 2,
       "half": 1,
-      "name": "Queen Cup"
+      "name": "Queen Cup",
+      "ground": 1,
+      "distance": 1600
     },
     "183": {
       "race_instance_id": 301201,
       "month": 2,
       "half": 1,
-      "name": "Kyodo News Hai"
+      "name": "Kyodo News Hai",
+      "ground": 1,
+      "distance": 1800
     },
     "184": {
       "race_instance_id": 301601,
       "month": 4,
       "half": 1,
-      "name": "Arlington Cup"
+      "name": "Arlington Cup",
+      "ground": 1,
+      "distance": 1600
     },
     "185": {
       "race_instance_id": 301801,
       "month": 3,
       "half": 1,
-      "name": "Tulip Sho"
+      "name": "Tulip Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "186": {
       "race_instance_id": 302101,
       "month": 3,
       "half": 2,
-      "name": "Falcon Stakes"
+      "name": "Falcon Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "187": {
       "race_instance_id": 302201,
       "month": 3,
       "half": 2,
-      "name": "Flower Cup"
+      "name": "Flower Cup",
+      "ground": 1,
+      "distance": 1800
     },
     "188": {
       "race_instance_id": 302301,
       "month": 3,
       "half": 2,
-      "name": "Mainichi Hai"
+      "name": "Mainichi Hai",
+      "ground": 1,
+      "distance": 1800
     },
     "189": {
       "race_instance_id": 303301,
       "month": 6,
       "half": 2,
-      "name": "Unicorn Stakes"
+      "name": "Unicorn Stakes",
+      "ground": 2,
+      "distance": 1600
     },
     "190": {
       "race_instance_id": 303601,
       "month": 7,
       "half": 1,
-      "name": "Radio Nikkei Sho"
+      "name": "Radio Nikkei Sho",
+      "ground": 1,
+      "distance": 1800
     },
     "191": {
       "race_instance_id": 304501,
       "month": 8,
       "half": 1,
-      "name": "Leopard Stakes"
+      "name": "Leopard Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "192": {
       "race_instance_id": 305401,
       "month": 9,
       "half": 1,
-      "name": "Shion Stakes"
+      "name": "Shion Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "193": {
       "race_instance_id": 400201,
       "month": 1,
       "half": 1,
-      "name": "Junior Cup"
+      "name": "Junior Cup",
+      "ground": 1,
+      "distance": 1600
     },
     "194": {
       "race_instance_id": 400701,
       "month": 1,
       "half": 1,
-      "name": "Kobai Stakes"
+      "name": "Kobai Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "195": {
       "race_instance_id": 400901,
       "month": 1,
       "half": 2,
-      "name": "Wakagoma Stakes"
+      "name": "Wakagoma Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "196": {
       "race_instance_id": 401201,
       "month": 1,
       "half": 2,
-      "name": "Crocus Stakes"
+      "name": "Crocus Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "197": {
       "race_instance_id": 401401,
       "month": 2,
       "half": 1,
-      "name": "Elfin Stakes"
+      "name": "Elfin Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "198": {
       "race_instance_id": 401801,
       "month": 2,
       "half": 2,
-      "name": "Hyacinth Stakes"
+      "name": "Hyacinth Stakes",
+      "ground": 2,
+      "distance": 1600
     },
     "199": {
       "race_instance_id": 402001,
       "month": 2,
       "half": 2,
-      "name": "Sumire Stakes"
+      "name": "Sumire Stakes",
+      "ground": 1,
+      "distance": 2200
     },
     "200": {
       "race_instance_id": 402401,
       "month": 3,
       "half": 1,
-      "name": "Anemone Stakes"
+      "name": "Anemone Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "201": {
       "race_instance_id": 402501,
       "month": 3,
       "half": 1,
-      "name": "Shoryu Stakes"
+      "name": "Shoryu Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "202": {
       "race_instance_id": 402701,
       "month": 3,
       "half": 2,
-      "name": "Wakaba Stakes"
+      "name": "Wakaba Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "203": {
       "race_instance_id": 403201,
       "month": 2,
       "half": 2,
-      "name": "Marguerite Stakes"
+      "name": "Marguerite Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "204": {
       "race_instance_id": 403301,
       "month": 4,
       "half": 1,
-      "name": "Fukuryu Stakes"
+      "name": "Fukuryu Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "205": {
       "race_instance_id": 403501,
       "month": 4,
       "half": 1,
-      "name": "Wasurenagusa Sho"
+      "name": "Wasurenagusa Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "206": {
       "race_instance_id": 403901,
       "month": 4,
       "half": 2,
-      "name": "Tachibana Stakes"
+      "name": "Tachibana Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "207": {
       "race_instance_id": 404201,
       "month": 4,
       "half": 2,
-      "name": "Tango Stakes"
+      "name": "Tango Stakes",
+      "ground": 2,
+      "distance": 1400
     },
     "208": {
       "race_instance_id": 404301,
       "month": 4,
       "half": 2,
-      "name": "Sweetpea Stakes"
+      "name": "Sweetpea Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "209": {
       "race_instance_id": 404501,
       "month": 5,
       "half": 1,
-      "name": "Principal Stakes"
+      "name": "Principal Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "210": {
       "race_instance_id": 405001,
       "month": 5,
       "half": 2,
-      "name": "Aoi Stakes"
+      "name": "Aoi Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "211": {
       "race_instance_id": 405201,
       "month": 5,
       "half": 1,
-      "name": "Seiryu Stakes"
+      "name": "Seiryu Stakes",
+      "ground": 2,
+      "distance": 1600
     },
     "212": {
       "race_instance_id": 405401,
       "month": 5,
       "half": 2,
-      "name": "Hosu Stakes"
+      "name": "Hosu Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "213": {
       "race_instance_id": 405601,
       "month": 5,
       "half": 2,
-      "name": "Shirayuri Stakes"
+      "name": "Shirayuri Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "215": {
       "race_instance_id": 900880,
       "month": 1,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "216": {
       "race_instance_id": 900882,
       "month": 3,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "217": {
       "race_instance_id": 900884,
       "month": 4,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "220": {
       "race_instance_id": 900881,
       "month": 1,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "223": {
       "race_instance_id": 900940,
       "month": 1,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "224": {
       "race_instance_id": 900943,
       "month": 3,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "225": {
       "race_instance_id": 900944,
       "month": 4,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "227": {
       "race_instance_id": 900970,
       "month": 1,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "228": {
       "race_instance_id": 900971,
       "month": 3,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "229": {
       "race_instance_id": 900973,
       "month": 4,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "236": {
       "race_instance_id": 900991,
       "month": 3,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "239": {
       "race_instance_id": 901050,
       "month": 1,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "240": {
       "race_instance_id": 901052,
       "month": 3,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "241": {
       "race_instance_id": 901054,
       "month": 4,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "244": {
       "race_instance_id": 901080,
       "month": 1,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2200
     },
     "246": {
       "race_instance_id": 901081,
       "month": 3,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2200
     },
     "247": {
       "race_instance_id": 901083,
       "month": 4,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2200
     },
     "260": {
       "race_instance_id": 900990,
       "month": 1,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "261": {
       "race_instance_id": 900941,
       "month": 1,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "266": {
       "race_instance_id": 902431,
       "month": 2,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "267": {
       "race_instance_id": 902461,
       "month": 2,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "268": {
       "race_instance_id": 902491,
       "month": 2,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "270": {
       "race_instance_id": 902511,
       "month": 2,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "271": {
       "race_instance_id": 902551,
       "month": 2,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 2100
     },
     "272": {
       "race_instance_id": 902481,
       "month": 2,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "274": {
       "race_instance_id": 900942,
       "month": 3,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "275": {
       "race_instance_id": 900972,
       "month": 3,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "276": {
       "race_instance_id": 900883,
       "month": 3,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "278": {
       "race_instance_id": 901053,
       "month": 3,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "279": {
       "race_instance_id": 900992,
       "month": 3,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "280": {
       "race_instance_id": 901082,
       "month": 3,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2200
     },
     "281": {
       "race_instance_id": 902571,
       "month": 4,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2400
     },
     "282": {
       "race_instance_id": 902494,
       "month": 5,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "283": {
       "race_instance_id": 902434,
       "month": 5,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "284": {
       "race_instance_id": 902464,
       "month": 5,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "285": {
       "race_instance_id": 902484,
       "month": 5,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "286": {
       "race_instance_id": 902514,
       "month": 5,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "287": {
       "race_instance_id": 902532,
       "month": 5,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "291": {
       "race_instance_id": 902466,
       "month": 6,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "292": {
       "race_instance_id": 902556,
       "month": 6,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 2100
     },
     "293": {
       "race_instance_id": 902486,
       "month": 6,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "294": {
       "race_instance_id": 902496,
       "month": 6,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "295": {
       "race_instance_id": 902436,
       "month": 6,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "296": {
       "race_instance_id": 902454,
       "month": 6,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "297": {
       "race_instance_id": 902574,
       "month": 6,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2400
     },
     "298": {
       "race_instance_id": 904050,
       "month": 7,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1150
     },
     "299": {
       "race_instance_id": 904000,
       "month": 7,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "300": {
       "race_instance_id": 903981,
       "month": 7,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1700
     },
     "303": {
       "race_instance_id": 903941,
       "month": 7,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1150
     },
     "304": {
       "race_instance_id": 904101,
       "month": 7,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "305": {
       "race_instance_id": 904061,
       "month": 7,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1200
     },
     "306": {
       "race_instance_id": 904001,
       "month": 7,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "308": {
       "race_instance_id": 903961,
       "month": 7,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1200
     },
     "309": {
       "race_instance_id": 904021,
       "month": 7,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "310": {
       "race_instance_id": 903471,
       "month": 8,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "311": {
       "race_instance_id": 903411,
       "month": 8,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "314": {
       "race_instance_id": 903451,
       "month": 8,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "315": {
       "race_instance_id": 903611,
       "month": 8,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "316": {
       "race_instance_id": 903531,
       "month": 8,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1000
     },
     "317": {
       "race_instance_id": 903491,
       "month": 8,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "319": {
       "race_instance_id": 903430,
       "month": 8,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "320": {
       "race_instance_id": 903591,
       "month": 8,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "321": {
       "race_instance_id": 903381,
       "month": 8,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1000
     },
     "322": {
       "race_instance_id": 901021,
       "month": 9,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "323": {
       "race_instance_id": 900891,
       "month": 9,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "324": {
       "race_instance_id": 901071,
       "month": 9,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "326": {
       "race_instance_id": 900951,
       "month": 9,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "328": {
       "race_instance_id": 900931,
       "month": 9,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1200
     },
     "330": {
       "race_instance_id": 902611,
       "month": 10,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "331": {
       "race_instance_id": 902592,
       "month": 10,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "334": {
       "race_instance_id": 902641,
       "month": 10,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "335": {
       "race_instance_id": 902681,
       "month": 10,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "337": {
       "race_instance_id": 902661,
       "month": 10,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "339": {
       "race_instance_id": 902622,
       "month": 10,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "341": {
       "race_instance_id": 902613,
       "month": 11,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "342": {
       "race_instance_id": 902582,
       "month": 11,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "344": {
       "race_instance_id": 902594,
       "month": 11,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "345": {
       "race_instance_id": 902624,
       "month": 11,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "347": {
       "race_instance_id": 902663,
       "month": 11,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "351": {
       "race_instance_id": 901023,
       "month": 12,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "352": {
       "race_instance_id": 900933,
       "month": 12,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1200
     },
     "353": {
       "race_instance_id": 900953,
       "month": 12,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "356": {
       "race_instance_id": 900893,
       "month": 12,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "357": {
       "race_instance_id": 901073,
       "month": 12,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "361": {
       "race_instance_id": 901042,
       "month": 12,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "362": {
       "race_instance_id": 901051,
       "month": 1,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "363": {
       "race_instance_id": 902554,
       "month": 5,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 2100
     },
     "398": {
       "race_instance_id": 902430,
       "month": 2,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "399": {
       "race_instance_id": 902432,
       "month": 4,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "400": {
       "race_instance_id": 902433,
       "month": 5,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "401": {
       "race_instance_id": 902435,
       "month": 6,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "404": {
       "race_instance_id": 902450,
       "month": 2,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "405": {
       "race_instance_id": 902451,
       "month": 4,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "406": {
       "race_instance_id": 902452,
       "month": 5,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "407": {
       "race_instance_id": 902453,
       "month": 6,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "408": {
       "race_instance_id": 902460,
       "month": 2,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "409": {
       "race_instance_id": 902462,
       "month": 4,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "410": {
       "race_instance_id": 902463,
       "month": 5,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "411": {
       "race_instance_id": 902465,
       "month": 6,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "417": {
       "race_instance_id": 902480,
       "month": 2,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "418": {
       "race_instance_id": 902482,
       "month": 4,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "419": {
       "race_instance_id": 902483,
       "month": 5,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "420": {
       "race_instance_id": 902485,
       "month": 6,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "422": {
       "race_instance_id": 902490,
       "month": 2,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "423": {
       "race_instance_id": 902492,
       "month": 4,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "424": {
       "race_instance_id": 902493,
       "month": 5,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "425": {
       "race_instance_id": 902495,
       "month": 6,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "430": {
       "race_instance_id": 902510,
       "month": 2,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "431": {
       "race_instance_id": 902512,
       "month": 4,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "432": {
       "race_instance_id": 902513,
       "month": 5,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "433": {
       "race_instance_id": 902515,
       "month": 6,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "437": {
       "race_instance_id": 902530,
       "month": 4,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "438": {
       "race_instance_id": 902531,
       "month": 5,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "439": {
       "race_instance_id": 902533,
       "month": 6,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "442": {
       "race_instance_id": 902550,
       "month": 2,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 2100
     },
     "443": {
       "race_instance_id": 902552,
       "month": 4,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 2100
     },
     "444": {
       "race_instance_id": 902553,
       "month": 5,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 2100
     },
     "445": {
       "race_instance_id": 902555,
       "month": 6,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 2100
     },
     "446": {
       "race_instance_id": 902560,
       "month": 5,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2300
     },
     "448": {
       "race_instance_id": 902570,
       "month": 2,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2400
     },
     "449": {
       "race_instance_id": 902572,
       "month": 5,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2400
     },
     "450": {
       "race_instance_id": 902573,
       "month": 6,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2400
     },
     "538": {
       "race_instance_id": 903380,
       "month": 8,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1000
     },
     "548": {
       "race_instance_id": 903410,
       "month": 8,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "556": {
       "race_instance_id": 903440,
       "month": 8,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "560": {
       "race_instance_id": 903450,
       "month": 8,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "561": {
       "race_instance_id": 901022,
       "month": 12,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "565": {
       "race_instance_id": 903470,
       "month": 8,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "574": {
       "race_instance_id": 903490,
       "month": 8,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "581": {
       "race_instance_id": 903520,
       "month": 8,
       "half": 2,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2400
     },
     "603": {
       "race_instance_id": 903940,
       "month": 7,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1150
     },
     "606": {
       "race_instance_id": 903960,
       "month": 7,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 1200
     },
     "610": {
       "race_instance_id": 903980,
       "month": 7,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 2,
+      "distance": 1700
     },
     "618": {
       "race_instance_id": 904020,
       "month": 7,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "622": {
       "race_instance_id": 904040,
       "month": 7,
       "half": 1,
-      "name": "Classic Maiden Race"
+      "name": "Classic Maiden Race",
+      "ground": 1,
+      "distance": 2600
     },
     "623": {
       "race_instance_id": 102101,
       "month": 12,
       "half": 1,
-      "name": "Hanshin Juvenile Fillies"
+      "name": "Hanshin Juvenile Fillies",
+      "ground": 1,
+      "distance": 1600
     },
     "624": {
       "race_instance_id": 102201,
       "month": 12,
       "half": 1,
-      "name": "Asahi Hai Futurity Stakes"
+      "name": "Asahi Hai Futurity Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "625": {
       "race_instance_id": 102401,
       "month": 12,
       "half": 2,
-      "name": "Hopeful Stakes"
+      "name": "Hopeful Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "626": {
       "race_instance_id": 203001,
       "month": 11,
       "half": 1,
-      "name": "Keio Hai Junior Stakes"
+      "name": "Keio Hai Junior Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "627": {
       "race_instance_id": 203201,
       "month": 11,
       "half": 1,
-      "name": "Daily Hai Junior Stakes"
+      "name": "Daily Hai Junior Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "628": {
       "race_instance_id": 304101,
       "month": 7,
       "half": 2,
-      "name": "Hakodate Junior Stakes"
+      "name": "Hakodate Junior Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "629": {
       "race_instance_id": 304901,
       "month": 8,
       "half": 2,
-      "name": "Niigata Junior Stakes"
+      "name": "Niigata Junior Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "630": {
       "race_instance_id": 305101,
       "month": 9,
       "half": 1,
-      "name": "Sapporo Junior Stakes"
+      "name": "Sapporo Junior Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "631": {
       "race_instance_id": 305201,
       "month": 9,
       "half": 1,
-      "name": "Kokura Junior Stakes"
+      "name": "Kokura Junior Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "632": {
       "race_instance_id": 305701,
       "month": 10,
       "half": 1,
-      "name": "Saudi Arabia Royal Cup"
+      "name": "Saudi Arabia Royal Cup",
+      "ground": 1,
+      "distance": 1600
     },
     "633": {
       "race_instance_id": 305901,
       "month": 10,
       "half": 2,
-      "name": "Artemis Stakes"
+      "name": "Artemis Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "634": {
       "race_instance_id": 306001,
       "month": 11,
       "half": 1,
-      "name": "Fantasy Stakes"
+      "name": "Fantasy Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "635": {
       "race_instance_id": 306401,
       "month": 11,
       "half": 2,
-      "name": "Tokyo Sports Hai Junior Stakes"
+      "name": "Tokyo Sports Hai Junior Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "636": {
       "race_instance_id": 306501,
       "month": 11,
       "half": 2,
-      "name": "Kyoto Junior Stakes"
+      "name": "Kyoto Junior Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "637": {
       "race_instance_id": 406801,
       "month": 7,
       "half": 2,
-      "name": "Chukyo Junior Stakes"
+      "name": "Chukyo Junior Stakes",
+      "ground": 1,
+      "distance": 1600
     },
     "638": {
       "race_instance_id": 407001,
       "month": 8,
       "half": 1,
-      "name": "Dahlia Sho"
+      "name": "Dahlia Sho",
+      "ground": 1,
+      "distance": 1400
     },
     "639": {
       "race_instance_id": 407401,
       "month": 8,
       "half": 1,
-      "name": "Phoenix Sho"
+      "name": "Phoenix Sho",
+      "ground": 1,
+      "distance": 1200
     },
     "640": {
       "race_instance_id": 407501,
       "month": 8,
       "half": 1,
-      "name": "Cosmos Sho"
+      "name": "Cosmos Sho",
+      "ground": 1,
+      "distance": 1800
     },
     "641": {
       "race_instance_id": 407701,
       "month": 8,
       "half": 2,
-      "name": "Clover Sho"
+      "name": "Clover Sho",
+      "ground": 1,
+      "distance": 1500
     },
     "643": {
       "race_instance_id": 408301,
       "month": 9,
       "half": 1,
-      "name": "Suzuran Sho"
+      "name": "Suzuran Sho",
+      "ground": 1,
+      "distance": 1200
     },
     "644": {
       "race_instance_id": 408501,
       "month": 9,
       "half": 1,
-      "name": "Nojigiku Stakes"
+      "name": "Nojigiku Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "645": {
       "race_instance_id": 408701,
       "month": 9,
       "half": 2,
-      "name": "Kikyo Stakes"
+      "name": "Kikyo Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "646": {
       "race_instance_id": 408801,
       "month": 9,
       "half": 2,
-      "name": "Fuyo Stakes"
+      "name": "Fuyo Stakes",
+      "ground": 1,
+      "distance": 2000
     },
     "647": {
       "race_instance_id": 408901,
       "month": 9,
       "half": 2,
-      "name": "Canna Stakes"
+      "name": "Canna Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "648": {
       "race_instance_id": 409301,
       "month": 10,
       "half": 1,
-      "name": "Momiji Stakes"
+      "name": "Momiji Stakes",
+      "ground": 1,
+      "distance": 1400
     },
     "649": {
       "race_instance_id": 409601,
       "month": 10,
       "half": 2,
-      "name": "Ivy Stakes"
+      "name": "Ivy Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "650": {
       "race_instance_id": 409901,
       "month": 10,
       "half": 2,
-      "name": "Hagi Stakes"
+      "name": "Hagi Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "651": {
       "race_instance_id": 410301,
       "month": 11,
       "half": 1,
-      "name": "Fukushima Junior Stakes"
+      "name": "Fukushima Junior Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "652": {
       "race_instance_id": 411401,
       "month": 12,
       "half": 2,
-      "name": "Christmas Rose Stakes"
+      "name": "Christmas Rose Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "653": {
       "race_instance_id": 900890,
       "month": 9,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "656": {
       "race_instance_id": 900892,
       "month": 12,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "660": {
       "race_instance_id": 900930,
       "month": 9,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1200
     },
     "661": {
       "race_instance_id": 900932,
       "month": 12,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1200
     },
     "662": {
       "race_instance_id": 900950,
       "month": 9,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "663": {
       "race_instance_id": 900952,
       "month": 12,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "666": {
       "race_instance_id": 901020,
       "month": 9,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "669": {
       "race_instance_id": 901040,
       "month": 9,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "670": {
       "race_instance_id": 901041,
       "month": 12,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "671": {
       "race_instance_id": 901070,
       "month": 9,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "673": {
       "race_instance_id": 901072,
       "month": 12,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "676": {
       "race_instance_id": 901110,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1200
     },
     "685": {
       "race_instance_id": 901210,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1800
     },
     "689": {
       "race_instance_id": 901240,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 2000
     },
     "806": {
       "race_instance_id": 902580,
       "month": 10,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "807": {
       "race_instance_id": 902581,
       "month": 11,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1300
     },
     "808": {
       "race_instance_id": 902590,
       "month": 6,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "809": {
       "race_instance_id": 902591,
       "month": 10,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "810": {
       "race_instance_id": 902593,
       "month": 11,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "812": {
       "race_instance_id": 902610,
       "month": 10,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "813": {
       "race_instance_id": 902612,
       "month": 11,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1400
     },
     "816": {
       "race_instance_id": 902621,
       "month": 10,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "817": {
       "race_instance_id": 902623,
       "month": 11,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "820": {
       "race_instance_id": 902640,
       "month": 10,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "821": {
       "race_instance_id": 902642,
       "month": 11,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "822": {
       "race_instance_id": 902643,
       "month": 11,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1600
     },
     "825": {
       "race_instance_id": 902660,
       "month": 10,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "826": {
       "race_instance_id": 902662,
       "month": 11,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "828": {
       "race_instance_id": 902680,
       "month": 10,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "829": {
       "race_instance_id": 902682,
       "month": 11,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "830": {
       "race_instance_id": 902683,
       "month": 11,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 2000
     },
     "831": {
       "race_instance_id": 902730,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 2,
+      "distance": 1300
     },
     "846": {
       "race_instance_id": 902790,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 2,
+      "distance": 1600
     },
     "851": {
       "race_instance_id": 902810,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 2000
     },
     "892": {
       "race_instance_id": 903530,
       "month": 8,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1000
     },
     "894": {
       "race_instance_id": 903540,
       "month": 8,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1200
     },
     "897": {
       "race_instance_id": 903550,
       "month": 8,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1200
     },
     "900": {
       "race_instance_id": 903570,
       "month": 8,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1400
     },
     "905": {
       "race_instance_id": 903590,
       "month": 8,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1600
     },
     "909": {
       "race_instance_id": 903610,
       "month": 8,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "911": {
       "race_instance_id": 903620,
       "month": 8,
       "half": 2,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 2,
+      "distance": 1800
     },
     "931": {
       "race_instance_id": 903720,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 2000
     },
     "946": {
       "race_instance_id": 904060,
       "month": 7,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1200
     },
     "951": {
       "race_instance_id": 904100,
       "month": 7,
       "half": 1,
-      "name": "Junior Maiden Race"
+      "name": "Junior Maiden Race",
+      "ground": 1,
+      "distance": 1800
     },
     "1022": {
       "race_instance_id": 110101,
       "month": 6,
       "half": 2,
-      "name": "Teio Sho"
+      "name": "Teio Sho",
+      "ground": 2,
+      "distance": 2000
     },
     "1023": {
       "race_instance_id": 110201,
       "month": 7,
       "half": 1,
-      "name": "Japan Dirt Derby"
+      "name": "Japan Dirt Derby",
+      "ground": 2,
+      "distance": 2000
     },
     "1024": {
       "race_instance_id": 110301,
       "month": 11,
       "half": 1,
-      "name": "JBC Ladies’ Classic"
+      "name": "JBC Ladies’ Classic",
+      "ground": 2,
+      "distance": 1800
     },
     "1025": {
       "race_instance_id": 110401,
       "month": 11,
       "half": 1,
-      "name": "JBC Sprint"
+      "name": "JBC Sprint",
+      "ground": 2,
+      "distance": 1200
     },
     "1026": {
       "race_instance_id": 110501,
       "month": 11,
       "half": 1,
-      "name": "JBC Classic"
+      "name": "JBC Classic",
+      "ground": 2,
+      "distance": 2000
     },
     "1027": {
       "race_instance_id": 110601,
       "month": 12,
       "half": 2,
-      "name": "Tokyo Daishoten"
+      "name": "Tokyo Daishoten",
+      "ground": 2,
+      "distance": 2000
     },
     "1031": {
       "race_instance_id": 450101,
       "month": 9,
       "half": 1,
-      "name": "Aster Sho"
+      "name": "Aster Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "1032": {
       "race_instance_id": 450201,
       "month": 9,
       "half": 2,
-      "name": "Saffron Sho"
+      "name": "Saffron Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "1033": {
       "race_instance_id": 450301,
       "month": 10,
       "half": 1,
-      "name": "Rindo Sho"
+      "name": "Rindo Sho",
+      "ground": 1,
+      "distance": 1400
     },
     "1034": {
       "race_instance_id": 450401,
       "month": 10,
       "half": 1,
-      "name": "Shigiku Sho"
+      "name": "Shigiku Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "1035": {
       "race_instance_id": 450501,
       "month": 10,
       "half": 1,
-      "name": "Platanus Sho"
+      "name": "Platanus Sho",
+      "ground": 2,
+      "distance": 1600
     },
     "1036": {
       "race_instance_id": 450601,
       "month": 10,
       "half": 2,
-      "name": "Nadeshiko Sho"
+      "name": "Nadeshiko Sho",
+      "ground": 2,
+      "distance": 1400
     },
     "1037": {
       "race_instance_id": 450701,
       "month": 11,
       "half": 1,
-      "name": "Hyakunichiso Tokubetsu"
+      "name": "Hyakunichiso Tokubetsu",
+      "ground": 1,
+      "distance": 2000
     },
     "1038": {
       "race_instance_id": 450801,
       "month": 11,
       "half": 1,
-      "name": "Kimmokusei Tokubetsu"
+      "name": "Kimmokusei Tokubetsu",
+      "ground": 1,
+      "distance": 1800
     },
     "1039": {
       "race_instance_id": 450901,
       "month": 11,
       "half": 1,
-      "name": "Oxalis Sho"
+      "name": "Oxalis Sho",
+      "ground": 2,
+      "distance": 1400
     },
     "1040": {
       "race_instance_id": 451001,
       "month": 11,
       "half": 1,
-      "name": "Kigiku Sho"
+      "name": "Kigiku Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "1041": {
       "race_instance_id": 451101,
       "month": 11,
       "half": 2,
-      "name": "Mochinoki Sho"
+      "name": "Mochinoki Sho",
+      "ground": 2,
+      "distance": 1800
     },
     "1042": {
       "race_instance_id": 451201,
       "month": 11,
       "half": 2,
-      "name": "Akamatsu Sho"
+      "name": "Akamatsu Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "1043": {
       "race_instance_id": 451301,
       "month": 11,
       "half": 2,
-      "name": "Shumeigiku Sho"
+      "name": "Shumeigiku Sho",
+      "ground": 1,
+      "distance": 1400
     },
     "1044": {
       "race_instance_id": 451401,
       "month": 11,
       "half": 2,
-      "name": "Cattleya Sho"
+      "name": "Cattleya Sho",
+      "ground": 2,
+      "distance": 1600
     },
     "1045": {
       "race_instance_id": 451501,
       "month": 11,
       "half": 2,
-      "name": "Begonia Sho"
+      "name": "Begonia Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "1046": {
       "race_instance_id": 451601,
       "month": 11,
       "half": 2,
-      "name": "Shiragiku Sho"
+      "name": "Shiragiku Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "1047": {
       "race_instance_id": 451701,
       "month": 11,
       "half": 2,
-      "name": "Habotan Sho"
+      "name": "Habotan Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "1048": {
       "race_instance_id": 451801,
       "month": 11,
       "half": 2,
-      "name": "Koyamaki Sho"
+      "name": "Koyamaki Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "1049": {
       "race_instance_id": 451901,
       "month": 12,
       "half": 1,
-      "name": "Manryo Sho"
+      "name": "Manryo Sho",
+      "ground": 1,
+      "distance": 1400
     },
     "1050": {
       "race_instance_id": 452001,
       "month": 12,
       "half": 1,
-      "name": "Kuromatsu Sho"
+      "name": "Kuromatsu Sho",
+      "ground": 1,
+      "distance": 1200
     },
     "1051": {
       "race_instance_id": 452101,
       "month": 12,
       "half": 1,
-      "name": "Erica Sho"
+      "name": "Erica Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "1052": {
       "race_instance_id": 452201,
       "month": 12,
       "half": 1,
-      "name": "Tsuwabuki Sho"
+      "name": "Tsuwabuki Sho",
+      "ground": 1,
+      "distance": 1400
     },
     "1053": {
       "race_instance_id": 452301,
       "month": 12,
       "half": 1,
-      "name": "Hiiragi Sho"
+      "name": "Hiiragi Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "1054": {
       "race_instance_id": 452401,
       "month": 12,
       "half": 1,
-      "name": "Sazanka Sho"
+      "name": "Sazanka Sho",
+      "ground": 1,
+      "distance": 1200
     },
     "1055": {
       "race_instance_id": 452501,
       "month": 12,
       "half": 1,
-      "name": "Kantsubaki Sho"
+      "name": "Kantsubaki Sho",
+      "ground": 2,
+      "distance": 1400
     },
     "1056": {
       "race_instance_id": 452601,
       "month": 12,
       "half": 2,
-      "name": "Senryo Sho"
+      "name": "Senryo Sho",
+      "ground": 1,
+      "distance": 1600
     },
     "1057": {
       "race_instance_id": 411801,
       "month": 2,
       "half": 2,
-      "name": "Kitakyushu Tankyori Stakes"
+      "name": "Kitakyushu Tankyori Stakes",
+      "ground": 1,
+      "distance": 1200
     },
     "1058": {
       "race_instance_id": 411901,
       "month": 4,
       "half": 1,
-      "name": "Azumakofuji Stakes"
+      "name": "Azumakofuji Stakes",
+      "ground": 2,
+      "distance": 1700
     },
     "1059": {
       "race_instance_id": 412001,
       "month": 6,
       "half": 1,
-      "name": "Sleipnir Stakes"
+      "name": "Sleipnir Stakes",
+      "ground": 2,
+      "distance": 2100
     },
     "1060": {
       "race_instance_id": 412101,
       "month": 6,
       "half": 2,
-      "name": "Sannomiya Stakes"
+      "name": "Sannomiya Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "1061": {
       "race_instance_id": 412201,
       "month": 8,
       "half": 1,
-      "name": "Kanetsu Stakes"
+      "name": "Kanetsu Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "1062": {
       "race_instance_id": 412301,
       "month": 9,
       "half": 2,
-      "name": "Nagatsuki Stakes"
+      "name": "Nagatsuki Stakes",
+      "ground": 2,
+      "distance": 1200
     },
     "1063": {
       "race_instance_id": 412401,
       "month": 10,
       "half": 1,
-      "name": "Uzumasa Stakes"
+      "name": "Uzumasa Stakes",
+      "ground": 2,
+      "distance": 1800
     },
     "1064": {
       "race_instance_id": 406601,
       "month": 7,
       "half": 1,
-      "name": "Meitetsu Hai"
+      "name": "Meitetsu Hai",
+      "ground": 2,
+      "distance": 1800
     },
     "1065": {
       "race_instance_id": 904181,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 2000
     },
     "1066": {
       "race_instance_id": 904182,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1600
     },
     "1067": {
       "race_instance_id": 904183,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 2000
     },
     "1068": {
       "race_instance_id": 904184,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 2000
     },
     "1069": {
       "race_instance_id": 904185,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 2000
     },
     "1070": {
       "race_instance_id": 904186,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1600
     },
     "1071": {
       "race_instance_id": 102501,
       "month": 6,
       "half": 2,
-      "name": "Takarazuka Kinen"
+      "name": "Takarazuka Kinen",
+      "ground": 1,
+      "distance": 2200
     },
     "1072": {
       "race_instance_id": 101201,
       "month": 6,
       "half": 2,
-      "name": "Takarazuka Kinen"
+      "name": "Takarazuka Kinen",
+      "ground": 1,
+      "distance": 2200
     },
     "1073": {
       "race_instance_id": 101501,
       "month": 10,
       "half": 2,
-      "name": "Kikuka Sho"
+      "name": "Kikuka Sho",
+      "ground": 1,
+      "distance": 3000
     },
     "1074": {
       "race_instance_id": 201001,
       "month": 3,
       "half": 2,
-      "name": "Spring Stakes"
+      "name": "Spring Stakes",
+      "ground": 1,
+      "distance": 1800
     },
     "1075": {
       "race_instance_id": 904187,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1600
     },
     "1076": {
       "race_instance_id": 102701,
       "month": 4,
       "half": 2,
-      "name": "Tenno Sho (Spring)"
+      "name": "Tenno Sho (Spring)",
+      "ground": 1,
+      "distance": 3200
     },
     "1077": {
       "race_instance_id": 904188,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1200
     },
     "1078": {
       "race_instance_id": 904189,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1800
     },
     "1079": {
       "race_instance_id": 100601,
       "month": 4,
       "half": 2,
-      "name": "Tenno Sho (Spring)"
+      "name": "Tenno Sho (Spring)",
+      "ground": 1,
+      "distance": 3200
     },
     "1080": {
       "race_instance_id": 101601,
       "month": 10,
       "half": 2,
-      "name": "Tenno Sho (Autumn)"
+      "name": "Tenno Sho (Autumn)",
+      "ground": 1,
+      "distance": 2000
     },
     "1081": {
       "race_instance_id": 101901,
       "month": 11,
       "half": 2,
-      "name": "Japan Cup"
+      "name": "Japan Cup",
+      "ground": 1,
+      "distance": 2400
     },
     "1082": {
       "race_instance_id": 102301,
       "month": 12,
       "half": 2,
-      "name": "Arima Kinen"
+      "name": "Arima Kinen",
+      "ground": 1,
+      "distance": 2500
     },
     "1083": {
       "race_instance_id": 100601,
       "month": 4,
       "half": 2,
-      "name": "Tenno Sho (Spring)"
+      "name": "Tenno Sho (Spring)",
+      "ground": 1,
+      "distance": 3200
     },
     "1084": {
       "race_instance_id": 101601,
       "month": 10,
       "half": 2,
-      "name": "Tenno Sho (Autumn)"
+      "name": "Tenno Sho (Autumn)",
+      "ground": 1,
+      "distance": 2000
     },
     "1085": {
       "race_instance_id": 101901,
       "month": 11,
       "half": 2,
-      "name": "Japan Cup"
+      "name": "Japan Cup",
+      "ground": 1,
+      "distance": 2400
     },
     "1086": {
       "race_instance_id": 102301,
       "month": 12,
       "half": 2,
-      "name": "Arima Kinen"
+      "name": "Arima Kinen",
+      "ground": 1,
+      "distance": 2500
     },
     "1087": {
       "race_instance_id": 101601,
       "month": 10,
       "half": 2,
-      "name": "Tenno Sho (Autumn)"
+      "name": "Tenno Sho (Autumn)",
+      "ground": 1,
+      "distance": 2000
     },
     "1088": {
       "race_instance_id": 101901,
       "month": 11,
       "half": 2,
-      "name": "Japan Cup"
+      "name": "Japan Cup",
+      "ground": 1,
+      "distance": 2400
     },
     "1089": {
       "race_instance_id": 102301,
       "month": 12,
       "half": 2,
-      "name": "Arima Kinen"
+      "name": "Arima Kinen",
+      "ground": 1,
+      "distance": 2500
     },
     "1090": {
       "race_instance_id": 904190,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1600
     },
     "1091": {
       "race_instance_id": 904191,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1600
     },
     "1092": {
       "race_instance_id": 904192,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1500
     },
     "1093": {
       "race_instance_id": 300601,
       "month": 1,
       "half": 1,
-      "name": "Keisei Hai"
+      "name": "Keisei Hai",
+      "ground": 1,
+      "distance": 2000
     },
     "1094": {
       "race_instance_id": 904193,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1600
     },
     "1095": {
       "race_instance_id": 102801,
       "month": 4,
       "half": 1,
-      "name": "Satsuki Sho"
+      "name": "Satsuki Sho",
+      "ground": 1,
+      "distance": 2000
     },
     "1096": {
       "race_instance_id": 904194,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1800
     },
     "1097": {
       "race_instance_id": 101601,
       "month": 10,
       "half": 2,
-      "name": "Tenno Sho (Autumn)"
+      "name": "Tenno Sho (Autumn)",
+      "ground": 1,
+      "distance": 2000
     },
     "1098": {
       "race_instance_id": 101601,
       "month": 10,
       "half": 2,
-      "name": "Tenno Sho (Autumn)"
+      "name": "Tenno Sho (Autumn)",
+      "ground": 1,
+      "distance": 2000
     },
     "1099": {
       "race_instance_id": 101601,
       "month": 10,
       "half": 2,
-      "name": "Tenno Sho (Autumn)"
+      "name": "Tenno Sho (Autumn)",
+      "ground": 1,
+      "distance": 2000
     },
     "1100": {
       "race_instance_id": 102301,
       "month": 12,
       "half": 2,
-      "name": "Arima Kinen"
+      "name": "Arima Kinen",
+      "ground": 1,
+      "distance": 2500
     },
     "1101": {
       "race_instance_id": 102301,
       "month": 12,
       "half": 2,
-      "name": "Arima Kinen"
+      "name": "Arima Kinen",
+      "ground": 1,
+      "distance": 2500
     },
     "1102": {
       "race_instance_id": 904195,
       "month": 6,
       "half": 2,
-      "name": "Junior Make Debut"
+      "name": "Junior Make Debut",
+      "ground": 1,
+      "distance": 1200
     },
     "2001": {
       "race_instance_id": 910001,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1200
     },
     "2002": {
       "race_instance_id": 910002,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1400
     },
     "2003": {
       "race_instance_id": 910003,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1200
     },
     "2004": {
       "race_instance_id": 910004,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1200
     },
     "2005": {
       "race_instance_id": 910005,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1400
     },
     "2006": {
       "race_instance_id": 910006,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1400
     },
     "2007": {
       "race_instance_id": 910007,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1400
     },
     "2008": {
       "race_instance_id": 910008,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1600
     },
     "2009": {
       "race_instance_id": 910009,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1800
     },
     "2010": {
       "race_instance_id": 910010,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1600
     },
     "2011": {
       "race_instance_id": 910011,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1600
     },
     "2012": {
       "race_instance_id": 910012,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1800
     },
     "2013": {
       "race_instance_id": 910013,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1600
     },
     "2014": {
       "race_instance_id": 910014,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1800
     },
     "2015": {
       "race_instance_id": 910015,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 1800
     },
     "2016": {
       "race_instance_id": 910016,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2000
     },
     "2017": {
       "race_instance_id": 910017,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2200
     },
     "2018": {
       "race_instance_id": 910018,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2000
     },
     "2019": {
       "race_instance_id": 910019,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2200
     },
     "2020": {
       "race_instance_id": 910020,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2400
     },
     "2021": {
       "race_instance_id": 910021,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2000
     },
     "2022": {
       "race_instance_id": 910022,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2000
     },
     "2023": {
       "race_instance_id": 910023,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2200
     },
     "2024": {
       "race_instance_id": 910024,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2400
     },
     "2025": {
       "race_instance_id": 910025,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2000
     },
     "2026": {
       "race_instance_id": 910026,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 3200
     },
     "2027": {
       "race_instance_id": 910027,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 3000
     },
     "2028": {
       "race_instance_id": 910028,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2500
     },
     "2029": {
       "race_instance_id": 910029,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 3600
     },
     "2030": {
       "race_instance_id": 910030,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 2500
     },
     "2031": {
       "race_instance_id": 910031,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 3400
     },
     "2032": {
       "race_instance_id": 910032,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 1,
+      "distance": 3000
     },
     "2033": {
       "race_instance_id": 910033,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 2,
+      "distance": 1400
     },
     "2034": {
       "race_instance_id": 910034,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 2,
+      "distance": 1400
     },
     "2035": {
       "race_instance_id": 910035,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 2,
+      "distance": 1200
     },
     "2036": {
       "race_instance_id": 910036,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 2,
+      "distance": 1400
     },
     "2037": {
       "race_instance_id": 910037,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 2,
+      "distance": 1600
     },
     "2038": {
       "race_instance_id": 910038,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 2,
+      "distance": 1800
     },
     "2039": {
       "race_instance_id": 910039,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 2,
+      "distance": 1800
     },
     "2040": {
       "race_instance_id": 910040,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 2,
+      "distance": 2100
     },
     "2041": {
       "race_instance_id": 910041,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Qualifier"
+      "name": "URA Finale Qualifier",
+      "ground": 2,
+      "distance": 1900
     },
     "2101": {
       "race_instance_id": 910101,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1200
     },
     "2102": {
       "race_instance_id": 910102,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1400
     },
     "2103": {
       "race_instance_id": 910103,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1200
     },
     "2104": {
       "race_instance_id": 910104,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1200
     },
     "2105": {
       "race_instance_id": 910105,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1400
     },
     "2106": {
       "race_instance_id": 910106,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1400
     },
     "2107": {
       "race_instance_id": 910107,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1400
     },
     "2108": {
       "race_instance_id": 910108,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1600
     },
     "2109": {
       "race_instance_id": 910109,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1800
     },
     "2110": {
       "race_instance_id": 910110,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1600
     },
     "2111": {
       "race_instance_id": 910111,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1600
     },
     "2112": {
       "race_instance_id": 910112,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1800
     },
     "2113": {
       "race_instance_id": 910113,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1600
     },
     "2114": {
       "race_instance_id": 910114,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1800
     },
     "2115": {
       "race_instance_id": 910115,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 1800
     },
     "2116": {
       "race_instance_id": 910116,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2000
     },
     "2117": {
       "race_instance_id": 910117,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2200
     },
     "2118": {
       "race_instance_id": 910118,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2000
     },
     "2119": {
       "race_instance_id": 910119,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2200
     },
     "2120": {
       "race_instance_id": 910120,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2400
     },
     "2121": {
       "race_instance_id": 910121,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2000
     },
     "2122": {
       "race_instance_id": 910122,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2000
     },
     "2123": {
       "race_instance_id": 910123,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2200
     },
     "2124": {
       "race_instance_id": 910124,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2400
     },
     "2125": {
       "race_instance_id": 910125,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2000
     },
     "2126": {
       "race_instance_id": 910126,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 3200
     },
     "2127": {
       "race_instance_id": 910127,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 3000
     },
     "2128": {
       "race_instance_id": 910128,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2500
     },
     "2129": {
       "race_instance_id": 910129,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 3600
     },
     "2130": {
       "race_instance_id": 910130,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 2500
     },
     "2131": {
       "race_instance_id": 910131,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 3400
     },
     "2132": {
       "race_instance_id": 910132,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 1,
+      "distance": 3000
     },
     "2133": {
       "race_instance_id": 910133,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 2,
+      "distance": 1400
     },
     "2134": {
       "race_instance_id": 910134,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 2,
+      "distance": 1400
     },
     "2135": {
       "race_instance_id": 910135,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 2,
+      "distance": 1200
     },
     "2136": {
       "race_instance_id": 910136,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 2,
+      "distance": 1400
     },
     "2137": {
       "race_instance_id": 910137,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 2,
+      "distance": 1600
     },
     "2138": {
       "race_instance_id": 910138,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 2,
+      "distance": 1800
     },
     "2139": {
       "race_instance_id": 910139,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 2,
+      "distance": 1800
     },
     "2140": {
       "race_instance_id": 910140,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 2,
+      "distance": 2100
     },
     "2141": {
       "race_instance_id": 910141,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Semifinal"
+      "name": "URA Finale Semifinal",
+      "ground": 2,
+      "distance": 1900
     },
     "2201": {
       "race_instance_id": 910201,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1200
     },
     "2202": {
       "race_instance_id": 910202,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1400
     },
     "2203": {
       "race_instance_id": 910203,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1200
     },
     "2204": {
       "race_instance_id": 910204,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1200
     },
     "2205": {
       "race_instance_id": 910205,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1400
     },
     "2206": {
       "race_instance_id": 910206,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1400
     },
     "2207": {
       "race_instance_id": 910207,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1400
     },
     "2208": {
       "race_instance_id": 910208,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1600
     },
     "2209": {
       "race_instance_id": 910209,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1800
     },
     "2210": {
       "race_instance_id": 910210,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1600
     },
     "2211": {
       "race_instance_id": 910211,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1600
     },
     "2212": {
       "race_instance_id": 910212,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1800
     },
     "2213": {
       "race_instance_id": 910213,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1600
     },
     "2214": {
       "race_instance_id": 910214,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1800
     },
     "2215": {
       "race_instance_id": 910215,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 1800
     },
     "2216": {
       "race_instance_id": 910216,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2000
     },
     "2217": {
       "race_instance_id": 910217,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2200
     },
     "2218": {
       "race_instance_id": 910218,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2000
     },
     "2219": {
       "race_instance_id": 910219,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2200
     },
     "2220": {
       "race_instance_id": 910220,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2400
     },
     "2221": {
       "race_instance_id": 910221,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2000
     },
     "2222": {
       "race_instance_id": 910222,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2000
     },
     "2223": {
       "race_instance_id": 910223,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2200
     },
     "2224": {
       "race_instance_id": 910224,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2400
     },
     "2225": {
       "race_instance_id": 910225,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2000
     },
     "2226": {
       "race_instance_id": 910226,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 3200
     },
     "2227": {
       "race_instance_id": 910227,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 3000
     },
     "2228": {
       "race_instance_id": 910228,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2500
     },
     "2229": {
       "race_instance_id": 910229,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 3600
     },
     "2230": {
       "race_instance_id": 910230,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 2500
     },
     "2231": {
       "race_instance_id": 910231,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 3400
     },
     "2232": {
       "race_instance_id": 910232,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 1,
+      "distance": 3000
     },
     "2233": {
       "race_instance_id": 910233,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 2,
+      "distance": 1400
     },
     "2234": {
       "race_instance_id": 910234,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 2,
+      "distance": 1400
     },
     "2235": {
       "race_instance_id": 910235,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 2,
+      "distance": 1200
     },
     "2236": {
       "race_instance_id": 910236,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 2,
+      "distance": 1400
     },
     "2237": {
       "race_instance_id": 910237,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 2,
+      "distance": 1600
     },
     "2238": {
       "race_instance_id": 910238,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 2,
+      "distance": 1800
     },
     "2239": {
       "race_instance_id": 910239,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 2,
+      "distance": 1800
     },
     "2240": {
       "race_instance_id": 910240,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 2,
+      "distance": 2100
     },
     "2241": {
       "race_instance_id": 910241,
       "month": 1,
       "half": 2,
-      "name": "URA Finale Finals"
+      "name": "URA Finale Finals",
+      "ground": 2,
+      "distance": 1900
     },
     "2301": {
       "race_instance_id": 920001,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1200
     },
     "2302": {
       "race_instance_id": 920002,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1400
     },
     "2303": {
       "race_instance_id": 920003,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1200
     },
     "2304": {
       "race_instance_id": 920004,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1200
     },
     "2305": {
       "race_instance_id": 920005,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1400
     },
     "2306": {
       "race_instance_id": 920006,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1400
     },
     "2307": {
       "race_instance_id": 920007,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1400
     },
     "2308": {
       "race_instance_id": 920008,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1600
     },
     "2309": {
       "race_instance_id": 920009,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1800
     },
     "2310": {
       "race_instance_id": 920010,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1600
     },
     "2311": {
       "race_instance_id": 920011,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1600
     },
     "2312": {
       "race_instance_id": 920012,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1800
     },
     "2313": {
       "race_instance_id": 920013,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1600
     },
     "2314": {
       "race_instance_id": 920014,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1800
     },
     "2315": {
       "race_instance_id": 920015,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 1800
     },
     "2316": {
       "race_instance_id": 920016,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2000
     },
     "2317": {
       "race_instance_id": 920017,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2200
     },
     "2318": {
       "race_instance_id": 920018,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2000
     },
     "2319": {
       "race_instance_id": 920019,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2200
     },
     "2320": {
       "race_instance_id": 920020,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2400
     },
     "2321": {
       "race_instance_id": 920021,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2000
     },
     "2322": {
       "race_instance_id": 920022,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2000
     },
     "2323": {
       "race_instance_id": 920023,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2200
     },
     "2324": {
       "race_instance_id": 920024,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2400
     },
     "2325": {
       "race_instance_id": 920025,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2000
     },
     "2326": {
       "race_instance_id": 920026,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 3200
     },
     "2327": {
       "race_instance_id": 920027,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 3000
     },
     "2328": {
       "race_instance_id": 920028,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2500
     },
     "2329": {
       "race_instance_id": 920029,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 3600
     },
     "2330": {
       "race_instance_id": 920030,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 2500
     },
     "2331": {
       "race_instance_id": 920031,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 3400
     },
     "2332": {
       "race_instance_id": 920032,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 1,
+      "distance": 3000
     },
     "2333": {
       "race_instance_id": 920033,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 2,
+      "distance": 1400
     },
     "2334": {
       "race_instance_id": 920034,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 2,
+      "distance": 1400
     },
     "2335": {
       "race_instance_id": 920035,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 2,
+      "distance": 1200
     },
     "2336": {
       "race_instance_id": 920036,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 2,
+      "distance": 1400
     },
     "2337": {
       "race_instance_id": 920037,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 2,
+      "distance": 1600
     },
     "2338": {
       "race_instance_id": 920038,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 2,
+      "distance": 1800
     },
     "2339": {
       "race_instance_id": 920039,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 2,
+      "distance": 1800
     },
     "2340": {
       "race_instance_id": 920040,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 2,
+      "distance": 2100
     },
     "2341": {
       "race_instance_id": 920041,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 1"
+      "name": "Twinkle Star Climax Race 1",
+      "ground": 2,
+      "distance": 1900
     },
     "2401": {
       "race_instance_id": 920042,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1200
     },
     "2402": {
       "race_instance_id": 920043,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1400
     },
     "2403": {
       "race_instance_id": 920044,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1200
     },
     "2404": {
       "race_instance_id": 920045,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1200
     },
     "2405": {
       "race_instance_id": 920046,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1400
     },
     "2406": {
       "race_instance_id": 920047,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1400
     },
     "2407": {
       "race_instance_id": 920048,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1400
     },
     "2408": {
       "race_instance_id": 920049,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1600
     },
     "2409": {
       "race_instance_id": 920050,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1800
     },
     "2410": {
       "race_instance_id": 920051,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1600
     },
     "2411": {
       "race_instance_id": 920052,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1600
     },
     "2412": {
       "race_instance_id": 920053,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1800
     },
     "2413": {
       "race_instance_id": 920054,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1600
     },
     "2414": {
       "race_instance_id": 920055,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1800
     },
     "2415": {
       "race_instance_id": 920056,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 1800
     },
     "2416": {
       "race_instance_id": 920057,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2000
     },
     "2417": {
       "race_instance_id": 920058,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2200
     },
     "2418": {
       "race_instance_id": 920059,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2000
     },
     "2419": {
       "race_instance_id": 920060,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2200
     },
     "2420": {
       "race_instance_id": 920061,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2400
     },
     "2421": {
       "race_instance_id": 920062,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2000
     },
     "2422": {
       "race_instance_id": 920063,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2000
     },
     "2423": {
       "race_instance_id": 920064,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2200
     },
     "2424": {
       "race_instance_id": 920065,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2400
     },
     "2425": {
       "race_instance_id": 920066,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2000
     },
     "2426": {
       "race_instance_id": 920067,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 3200
     },
     "2427": {
       "race_instance_id": 920068,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 3000
     },
     "2428": {
       "race_instance_id": 920069,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2500
     },
     "2429": {
       "race_instance_id": 920070,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 3600
     },
     "2430": {
       "race_instance_id": 920071,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 2500
     },
     "2431": {
       "race_instance_id": 920072,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 3400
     },
     "2432": {
       "race_instance_id": 920073,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 1,
+      "distance": 3000
     },
     "2433": {
       "race_instance_id": 920074,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 2,
+      "distance": 1400
     },
     "2434": {
       "race_instance_id": 920075,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 2,
+      "distance": 1400
     },
     "2435": {
       "race_instance_id": 920076,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 2,
+      "distance": 1200
     },
     "2436": {
       "race_instance_id": 920077,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 2,
+      "distance": 1400
     },
     "2437": {
       "race_instance_id": 920078,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 2,
+      "distance": 1600
     },
     "2438": {
       "race_instance_id": 920079,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 2,
+      "distance": 1800
     },
     "2439": {
       "race_instance_id": 920080,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 2,
+      "distance": 1800
     },
     "2440": {
       "race_instance_id": 920081,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 2,
+      "distance": 2100
     },
     "2441": {
       "race_instance_id": 920082,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 2"
+      "name": "Twinkle Star Climax Race 2",
+      "ground": 2,
+      "distance": 1900
     },
     "2501": {
       "race_instance_id": 920083,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1200
     },
     "2502": {
       "race_instance_id": 920084,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1400
     },
     "2503": {
       "race_instance_id": 920085,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1200
     },
     "2504": {
       "race_instance_id": 920086,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1200
     },
     "2505": {
       "race_instance_id": 920087,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1400
     },
     "2506": {
       "race_instance_id": 920088,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1400
     },
     "2507": {
       "race_instance_id": 920089,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1400
     },
     "2508": {
       "race_instance_id": 920090,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1600
     },
     "2509": {
       "race_instance_id": 920091,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1800
     },
     "2510": {
       "race_instance_id": 920092,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1600
     },
     "2511": {
       "race_instance_id": 920093,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1600
     },
     "2512": {
       "race_instance_id": 920094,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1800
     },
     "2513": {
       "race_instance_id": 920095,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1600
     },
     "2514": {
       "race_instance_id": 920096,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1800
     },
     "2515": {
       "race_instance_id": 920097,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 1800
     },
     "2516": {
       "race_instance_id": 920098,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2000
     },
     "2517": {
       "race_instance_id": 920099,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2200
     },
     "2518": {
       "race_instance_id": 920100,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2000
     },
     "2519": {
       "race_instance_id": 920101,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2200
     },
     "2520": {
       "race_instance_id": 920102,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2400
     },
     "2521": {
       "race_instance_id": 920103,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2000
     },
     "2522": {
       "race_instance_id": 920104,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2000
     },
     "2523": {
       "race_instance_id": 920105,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2200
     },
     "2524": {
       "race_instance_id": 920106,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2400
     },
     "2525": {
       "race_instance_id": 920107,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2000
     },
     "2526": {
       "race_instance_id": 920108,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 3200
     },
     "2527": {
       "race_instance_id": 920109,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 3000
     },
     "2528": {
       "race_instance_id": 920110,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2500
     },
     "2529": {
       "race_instance_id": 920111,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 3600
     },
     "2530": {
       "race_instance_id": 920112,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 2500
     },
     "2531": {
       "race_instance_id": 920113,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 3400
     },
     "2532": {
       "race_instance_id": 920114,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 1,
+      "distance": 3000
     },
     "2533": {
       "race_instance_id": 920115,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 2,
+      "distance": 1400
     },
     "2534": {
       "race_instance_id": 920116,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 2,
+      "distance": 1400
     },
     "2535": {
       "race_instance_id": 920117,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 2,
+      "distance": 1200
     },
     "2536": {
       "race_instance_id": 920118,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 2,
+      "distance": 1400
     },
     "2537": {
       "race_instance_id": 920119,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 2,
+      "distance": 1600
     },
     "2538": {
       "race_instance_id": 920120,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 2,
+      "distance": 1800
     },
     "2539": {
       "race_instance_id": 920121,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 2,
+      "distance": 1800
     },
     "2540": {
       "race_instance_id": 920122,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 2,
+      "distance": 2100
     },
     "2541": {
       "race_instance_id": 920123,
       "month": 1,
       "half": 2,
-      "name": "Twinkle Star Climax Race 3"
+      "name": "Twinkle Star Climax Race 3",
+      "ground": 2,
+      "distance": 1900
     }
   },
   "instance": {
