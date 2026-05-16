@@ -19,6 +19,10 @@ class EventManager:
 
     def choose(self, event):
         story_id = str(event.get("story_id", ""))
+        
+        if story_id == "400004002":
+            return 2
+            
         choices = ((event.get("event_contents_info") or {}).get("choice_array") or [])
         if not choices:
             return 0

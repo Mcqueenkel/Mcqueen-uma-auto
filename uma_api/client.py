@@ -334,6 +334,7 @@ class UmaClient:
         self.tp_info = {}
         self.coin_info = {}
         self.item_map = {}
+        self.current_scenario_id = 4
         self.session = requests.Session()
         self.update_headers()
         self.api_jitter = random.uniform(-0.02, 0.02)
@@ -515,13 +516,31 @@ class UmaClient:
         payload.update(self.common())
         
         if ep == 'single_mode_free/race_out':
-            click_x = int(random.gauss(9913872, 638182))
-            click_y = int(random.gauss(1462394, 341199))
-            click_ts = int(time.time())
+            import ctypes
+            try:
+                user32 = ctypes.windll.user32
+                user32.SetProcessDPIAware()
+                screen_h = user32.GetSystemMetrics(1)
+            except Exception:
+                screen_h = 864
+                
+            window_w = int(screen_h * 9 / 16)
+            scale_factor = 1080 / window_w
+            
+            ref_x = max(844, min(1150, int(random.gauss(991, 62))))
+            ref_y = max(55, min(255, int(random.gauss(144, 33))))
+            
+            physical_x = int(ref_x / scale_factor)
+            physical_y = int(ref_y / scale_factor)
+            
+            click_x = int(physical_x * scale_factor * 10000)
+            click_y = int(physical_y * scale_factor * 10000)
+            
+            click_ts = int(time.time() - random.uniform(3.0, 4.5))
             btn = {
                 "ViewerId": self.viewer_id,
                 "DeviceId": 4,
-                "ScenarioId": 4,
+                "ScenarioId": getattr(self, 'current_scenario_id', 4),
                 "ClickPosX": click_x,
                 "ClickPosY": click_y,
                 "ClickServerTime": click_ts
@@ -570,6 +589,8 @@ class UmaClient:
                 self.tp_info = data['tp_info']
             if data.get('coin_info'):
                 self.coin_info = data['coin_info']
+            if data.get('chara_info') and data['chara_info'].get('scenario_id'):
+                self.current_scenario_id = data['chara_info']['scenario_id']
             item_list = data.get('user_item') or data.get('user_item_array')
             if isinstance(item_list, list):
                 for item in item_list:
