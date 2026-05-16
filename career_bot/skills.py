@@ -471,29 +471,31 @@ class SkillBuyer:
         }
         self.attempt_events.append(event)
 
-        print(f"DEBUG: Sending gain_skills payload at turn {turn}: {json.dumps(payload)}")
         try:
-            if hasattr(client, "wait_complex_delay"):
-                client.wait_complex_delay()
             result = client.gain_skills(payload, turn)
             self.last_result = {"result": "ok", "turn": turn, "count": len(valid_candidates), "payload": payload}
             event["result"] = self.last_result
             self._failed_for_turn(turn).clear()
-            return result, len(valid_candidates)
+            return self._merge_state(state, result), len(valid_candidates)
         except Exception as exc:
             print(f"Skill Purchase Error at turn {turn}: {exc}")
             if any(code in str(exc) for code in ("201", "205", "208")):
                 self.recover_after_error = True
-                try:
-                    fresh_state = client.load_career()
-                    if fresh_state:
-                        state = fresh_state
-                except Exception:
-                    pass
             self._failed_for_turn(turn).update(int(item["skill_id"]) for item in valid_candidates)
             self.last_result = {"result": "failed", "turn": turn, "error": str(exc), "payload": payload}
             event["result"] = self.last_result
             return state, 0
+
+    def _merge_state(self, state, res):
+        if res and isinstance(res, dict) and "data" in res:
+            if not state: state = {}
+            if "data" not in state: state["data"] = {}
+            for k, v in res["data"].items():
+                if isinstance(v, dict) and isinstance(state["data"].get(k), dict):
+                    state["data"][k].update(v)
+                else:
+                    state["data"][k] = v
+        return state
 
 
     def _select_skill_id(self, group_id, priority, owned, rarity=0):

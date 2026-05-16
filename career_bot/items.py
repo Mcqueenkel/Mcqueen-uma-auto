@@ -1,3 +1,4 @@
+
 ITEM_NAMES = {
     1001: "Speed Notepad",
     1002: "Stamina Notepad",
@@ -283,23 +284,20 @@ class MantItemManager:
 
     def handle(self, client, state, preset, best_command=None, status=None, race_planner=None):
         current = state
+        self.recover_after_exchange_error = False
         current, bought = self.buy_shop_items(client, current, preset, race_planner)
-        if bought > 0 or self.recover_after_exchange_error:
-            current = self._reload_career(client, current, "buy", getattr(self, "last_buy_result", None))
+
+        self.recover_after_use_error = False
         current, used = self.use_items(client, current, preset, best_command, status, race_planner)
-        if used > 0 or self.recover_after_use_error:
-            current = self._reload_career(client, current, "use", getattr(self, "last_use_result", None))
+
         return current, bought, used
 
     def handle_pre_race(self, client, state, preset, payload, status=None, race_planner=None):
+        self.recover_after_exchange_error = False
         current, bought = self.buy_shop_items(client, state, preset, race_planner)
-        if bought > 0 or self.recover_after_exchange_error:
-            current = self._reload_career(client, current, "pre_race_buy")
 
+        self.recover_after_use_error = False
         current, instant_used = self.use_items(client, current, preset, None, status, race_planner)
-        if instant_used > 0 or self.recover_after_use_error:
-            current = self._reload_career(client, current, "pre_race_use")
-
         data = current.get("data") or {}
         free = data.get("free_data_set") or {}
         chara = data.get("chara_info") or {}
@@ -360,10 +358,9 @@ class MantItemManager:
             }
             self.use_attempt_events.append(event)
             try:
-                if hasattr(client, "wait_complex_delay"):
-                    client.wait_complex_delay()
                 self.last_pre_race_use_result = client.use_items(use_payload, turn)
-                current = self._reload_career(client, current, "pre_race_gear", getattr(self, "last_pre_race_use_result", None))
+                current = self._merge_state(current, self.last_pre_race_use_result)
+                self.last_pre_race_use_result = {"result": "ok", "turn": turn, "payload": use_payload}
                 event["result"] = self.last_pre_race_use_result
                 return current, instant_used + len(use_payload)
             except Exception as exc:
@@ -611,13 +608,11 @@ class MantItemManager:
         }
         self.buy_attempt_events.append(event)
         try:
-            if hasattr(client, "wait_complex_delay"):
-                client.wait_complex_delay()
             result = client.exchange_items(valid_payload, current_turn)
             self.last_buy_result = {"result": "ok", "turn": current_turn, "payload": valid_payload}
             event["result"] = self.last_buy_result
             self.failed_exchange_this_snapshot = set()
-            return result, len(valid_payload)
+            return self._merge_state(state, result), len(valid_payload)
         except Exception as e:
             print(f"Item Exchange Error at turn {current_turn}: {e}")
             if any(code in str(e) for code in ("201", "205", "208")):
@@ -838,16 +833,14 @@ class MantItemManager:
         }
         self.use_attempt_events.append(event)
         try:
-            if hasattr(client, "wait_complex_delay"):
-                client.wait_complex_delay()
-            state = client.use_items(payload, current_turn)
+            res = client.use_items(payload, current_turn)
             self.failed_use_this_turn = set()
             for name, _ in valid_targets:
                 if name in ONE_TIME_BUFF_ITEMS:
                     self.used_buffs.add(name)
             self.last_use_result = {"result": "ok", "turn": current_turn, "payload": payload}
             event["result"] = self.last_use_result
-            return state, len(payload)
+            return self._merge_state(state, res), len(payload)
         except Exception as exc:
             print(f"Item Use Error at turn {current_turn}: {exc}")
             if any(code in str(exc) for code in ("201", "205", "208")):
@@ -858,7 +851,7 @@ class MantItemManager:
             event["result"] = self.last_use_result
             return state, 0
 
-    def _reload_career(self, client, state, reason, res=None):
+    def _merge_state(self, state, res):
         if res and isinstance(res, dict) and "data" in res:
             if not state: state = {}
             if "data" not in state: state["data"] = {}
@@ -867,13 +860,7 @@ class MantItemManager:
                     state["data"][k].update(v)
                 else:
                     state["data"][k] = v
-            return state
-        try:
-            if hasattr(client, "load_career"):
-                return client.load_career()
-            return client.call("single_mode_free/load", {})
-        except Exception as e:
-            return state
+        return state
 
     def _is_instant_stat_item(self, name):
         slug = display_to_slug(name)

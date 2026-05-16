@@ -334,7 +334,7 @@ class UmaClient:
         self.tp_info = {}
         self.coin_info = {}
         self.item_map = {}
-        self.current_scenario_id = 4
+        self.current_scenario_id = None
         self.session = requests.Session()
         self.update_headers()
         self.api_jitter = random.uniform(-0.02, 0.02)
@@ -506,9 +506,11 @@ class UmaClient:
     def call(self, ep, args=None, retry_208=6, retry_205=3):
         if not hasattr(self, '_last_raw_call_ts'):
             self._last_raw_call_ts = 0
-        elapsed = time.time() - self._last_raw_call_ts
-        if elapsed < 0.14:
-            time.sleep(0.14 - elapsed)
+
+        el = time.time() - self._last_raw_call_ts
+        if el < 0.14:
+            time.sleep(0.14 - el)
+
         self._last_raw_call_ts = time.time()
 
         req_id = str(uuid.uuid4())[:8]
@@ -540,7 +542,7 @@ class UmaClient:
             btn = {
                 "ViewerId": self.viewer_id,
                 "DeviceId": 4,
-                "ScenarioId": getattr(self, 'current_scenario_id', 4),
+                "ScenarioId": self.current_scenario_id,
                 "ClickPosX": click_x,
                 "ClickPosY": click_y,
                 "ClickServerTime": click_ts
@@ -737,7 +739,7 @@ class UmaClient:
             'add_released_episode_data_array': [],
         })
 
-    def finish_career(self, current_turn=0, is_force_delete=False):
+    def finish_career(self, current_turn, is_force_delete=False):
         return self.call('single_mode_free/finish', {
             'is_force_delete': is_force_delete,
             'current_turn': current_turn
@@ -778,7 +780,7 @@ class UmaClient:
         return self.call('pre_single_mode/index', payload)
 
     def start_career(self, card_id, support_card_ids, friend_viewer_id, friend_card_id,
-                     parent_id_1, parent_id_2, scenario_id=4, deck_id=1, use_tp=30,
+                     parent_id_1, parent_id_2, scenario_id, deck_id=1, use_tp=30,
                      tp_info=None, current_money=0, succession_rank_point=0,
                      rental_viewer_id=0, rental_trained_chara_id=0,
                      difficulty_id=0, difficulty=0, is_boost=0,
@@ -828,7 +830,7 @@ class UmaClient:
             'current_vital': current_vital
         })
 
-    def check_event(self, event_id, chara_id=0, choice_number=0, current_turn=0):
+    def check_event(self, event_id, current_turn, chara_id=0, choice_number=0):
         payload = {
             'event_id': event_id,
             'chara_id': chara_id or 0,

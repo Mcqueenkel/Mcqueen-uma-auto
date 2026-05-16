@@ -1265,6 +1265,13 @@ const els = {
         }
         async function loadFriends(refresh = false) {
             if (!dashData || state.isFetchingFriends) return;
+            const isCareerActive = dashData.account && dashData.account.career && dashData.account.career.active;
+            if (isCareerActive) {
+                els.friendRefreshBtn.disabled = true;
+                els.friendStatus.classList.remove('error');
+                els.friendStatus.innerText = 'Active career, endpoint blocked';
+                return;
+            }
             state.isFetchingFriends = true;
             els.friendRefreshBtn.disabled = true;
             els.friendStatus.classList.remove('error');
@@ -1280,6 +1287,10 @@ const els = {
                 dashData.friends = data.friends || [];
                 appendSeenFriendIds(data.exclude_viewer_ids || []);
                 renderFriends();
+                if (data.source === 'Active Career (Skip)') {
+                    els.friendStatus.innerText = 'Active career, endpoint blocked';
+                    return;
+                }
                 const source = data.source === 'initial' ? 'initial' : 'refresh';
                 const visibleCount = ((dashData && dashData.visibleFriends) || []).length;
                 els.friendStatus.innerText = `${source} list: ${visibleCount}/${dashData.friends.length} cards`;
@@ -1288,7 +1299,8 @@ const els = {
                 els.friendStatus.classList.add('error');
             } finally {
                 state.isFetchingFriends = false;
-                els.friendRefreshBtn.disabled = false;
+                const stillActive = dashData.account && dashData.account.career && dashData.account.career.active;
+                els.friendRefreshBtn.disabled = !!stillActive;
             }
         }
         function attachFriendHandlers() {

@@ -43,32 +43,32 @@ class MantStrategy(ScenarioStrategy):
         chara = data.get("chara_info") or {}
         home = data.get("home_info") or {}
         if "single_mode_finish_common" in data:
-            return Decision("finish", {"current_turn": chara.get("turn", 78)}, "finished")
+            return Decision("finish", {"current_turn": chara["turn"]}, "finished")
         events = data.get("unchecked_event_array") or []
         if events:
             event = events[0] or {}
             choice = self._choice(event)
-            payload = {"event_id": event.get("event_id"), "chara_id": event.get("chara_id", 0), "choice_number": choice, "current_turn": chara.get("turn", 1)}
+            payload = {"event_id": event.get("event_id"), "chara_id": event.get("chara_id", 0), "choice_number": choice, "current_turn": chara["turn"]}
             if choice is None:
-                payload = {"event_id": event.get("event_id"), "_event": event, "_current_turn": chara.get("turn", 1)}
+                payload = {"event_id": event.get("event_id"), "_event": event, "_current_turn": chara["turn"]}
             return Decision("event", payload, "event")
         if chara.get("state") == 3:
-            return Decision("finish", {"current_turn": chara.get("turn", 78)}, "ready to finish")
+            return Decision("finish", {"current_turn": chara["turn"]}, "ready to finish")
         race = data.get("race_start_info")
         playing_state = (chara.get("playing_state") or 0)
         if playing_state == 3:
-            return Decision("race_progress", {"current_turn": chara.get("turn", 1), "phase": "start", "race_start_info": race, "chara_info": chara}, "resume race start")
+            return Decision("race_progress", {"current_turn": chara["turn"], "phase": "start", "race_start_info": race, "chara_info": chara}, "resume race start")
         if playing_state == 5:
-            return Decision("finish", {"current_turn": chara.get("turn", 78)}, "goal failed / career end")     
+            return Decision("finish", {"current_turn": chara["turn"]}, "goal failed / career end")     
         if race and race.get("program_id") and playing_state in (2, 4):
-            return Decision("race_progress", {"current_turn": chara.get("turn", 1), "phase": "start", "race_start_info": race, "chara_info": chara}, "race start")
+            return Decision("race_progress", {"current_turn": chara["turn"], "phase": "start", "race_start_info": race, "chara_info": chara}, "race start")
         if self.race_planner:
             forced_program_id = self.race_planner.forced_program(state)
             if forced_program_id:
-                return Decision("race", {"program_id": forced_program_id, "current_turn": chara.get("turn", 1), "_strategy": self}, self.race_planner.label(forced_program_id))
+                return Decision("race", {"program_id": forced_program_id, "current_turn": chara["turn"], "_strategy": self}, self.race_planner.label(forced_program_id))
             program_id = self.race_planner.choose(state, preset)
             if program_id:
-                return Decision("race", {"program_id": program_id, "current_turn": chara.get("turn", 1), "_strategy": self}, self.race_planner.label(program_id))
+                return Decision("race", {"program_id": program_id, "current_turn": chara["turn"], "_strategy": self}, self.race_planner.label(program_id))
         command = self._best_command(data, chara, preset)
         if command:
             command_type = command.get("command_type", 1)
@@ -83,7 +83,7 @@ class MantStrategy(ScenarioStrategy):
                 "command_id": command_id,
                 "command_group_id": command_group_id,
                 "select_id": command.get("select_id", 0),
-                "current_turn": chara.get("turn", 1),
+                "current_turn": chara["turn"],
                 "current_vital": chara.get("vital", 0),
             }, reason)
         return Decision("idle", {}, "no action")

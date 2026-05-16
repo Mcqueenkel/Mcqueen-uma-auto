@@ -230,13 +230,13 @@ class CareerRunner:
                         state = self._drain_events(client, strategy, state)
                     data = state.get("data") or {}
                     chara = data.get("chara_info") or {}
-                    self._mark(turn=chara.get("turn", 0))
+                    self._mark(turn=chara["turn"])
                     decision = strategy.next_decision(state, preset)
 
                     if self.report:
                         add_decision(self.report, state, decision)
                 
-                self._log(decision.action, chara.get("turn", 0), decision.reason)
+                self._log(decision.action, chara["turn"], decision.reason)
                 if decision.action == "idle":
                     self._mark(last_action=decision.reason)
                     break
@@ -253,7 +253,7 @@ class CareerRunner:
                             continue
                         raise
                 elif decision.action == "command":
-                    self._log("command_exec", decision.payload.get("current_turn", 0), f"{decision.payload.get('command_type')}:{decision.payload.get('command_id')}:{decision.payload.get('command_group_id')}")
+                    self._log("command_exec", decision.payload["current_turn"], f"{decision.payload.get('command_type')}:{decision.payload.get('command_id')}:{decision.payload.get('command_group_id')}")
                     self._record_action(decision, chara)
                     try:
                         state = client.exec_command(**decision.payload)
@@ -289,12 +289,12 @@ class CareerRunner:
 
                     data = state.get("data") or {}
                     if data.get("race_start_info"):
-                        self._log("race_out", decision.payload.get("current_turn", 78), "clearing active race")
+                        self._log("race_out", decision.payload["current_turn"], "clearing active race")
                         try:
-                            state = client.race_out(current_turn=decision.payload.get("current_turn", 78))
+                            state = client.race_out(current_turn=decision.payload["current_turn"])
                         except Exception as e:
                             if any(err in str(e) for err in ("102", "201", "StateRecoveryError")):
-                                self._log("race_out_reconciled", decision.payload.get("current_turn", 78), f"graceful exit: {e}")
+                                self._log("race_out_reconciled", decision.payload["current_turn"], f"graceful exit: {e}")
                             else:
                                 raise
                     state = self._drain_events(client, strategy, state, limit=50)
@@ -305,10 +305,10 @@ class CareerRunner:
                         state = self._buy_skills(client, state, preset, True)
 
                     try:
-                        state = client.finish_career(current_turn=decision.payload.get("current_turn", 78), is_force_delete=False)
+                        state = client.finish_career(current_turn=decision.payload["current_turn"], is_force_delete=False)
                     except Exception as e:
                         if any(err in str(e) for err in ("102", "201", "StateRecoveryError")):
-                            self._log("finish_reconciled", decision.payload.get("current_turn", 78), f"graceful exit: {e}")
+                            self._log("finish_reconciled", decision.payload["current_turn"], f"graceful exit: {e}")
                         else:
                             raise
                     self._mark(last_action="finish", finished=True)
@@ -322,11 +322,6 @@ class CareerRunner:
                     state = self._buy_skills(client, state, preset, False)
                 
                 self._advance(decision.action)
-                target_mean = 0.5
-                sigma = 0.25
-                mu = math.log(target_mean) - (sigma**2) / 2.0
-                roll = random.lognormvariate(mu, sigma)
-                time.sleep(max(0.1, min(1.5, roll)))
         except Exception as exc:
             import traceback
             trace_str = traceback.format_exc()
@@ -396,7 +391,7 @@ class CareerRunner:
     def _record_action(self, decision, chara=None):
         payload = decision.payload or {}
         action = decision.action
-        turn = int(payload.get("current_turn") or 0)
+        turn = int(payload["current_turn"])
         stats = self._turn_stats(chara or {})
         detail = self._format_turn_stats(stats) or str(decision.reason or "")
         facility = ""
@@ -765,8 +760,7 @@ class CareerRunner:
             event = events[0] or {}
             choice = strategy._choice(event)
             chara_turn = (data.get("chara_info") or {}).get("turn")
-            turn = chara_turn if chara_turn is not None else self.status.get("turn")
-            turn = turn if turn is not None else 1
+            turn = chara_turn if chara_turn is not None else self.status["turn"]
             payload = {"event_id": event.get("event_id"), "chara_id": event.get("chara_id", 0), "choice_number": choice, "current_turn": turn}
             if choice is None:
                 payload = {"event_id": event.get("event_id"), "_event": event, "_current_turn": turn}
@@ -873,18 +867,17 @@ class CareerRunner:
                     "payload": event.get("payload") or [],
                     "result": self._api_result(event.get("result") or {}),
                 })
-            if self.item_manager.recover_after_use_error or self.item_manager.use_attempt_events:
+            if self.item_manager.recover_after_use_error:
                 state = self._fresh_career_state(client, payload.get("_strategy"))
                 self._debug_turn(state, preset)
-                if self.item_manager.recover_after_use_error:
-                    return state
+                return state
             if used > 0:
                 with self.lock:
                     self.status["items_used"] += used
-                    self._log_locked("items_use", payload.get("current_turn") or 1, f"pre-race {used}")
+                    self._log_locked("items_use", payload["current_turn"], f"pre-race {used}")
 
         program_id = payload.get("program_id")
-        current_turn = payload.get("current_turn") or 1
+        current_turn = payload["current_turn"]
         strategy = payload.get("_strategy")
         try:
             entry = client.race_entry(program_id=program_id, current_turn=current_turn)
@@ -902,7 +895,6 @@ class CareerRunner:
                 entry = self._drain_events(client, strategy, entry)
         race_start_info = (entry.get("data") or {}).get("race_start_info") or {}
         is_short = 1
-
         res = client.race_start(is_short=is_short, current_turn=current_turn)
         self._log("race_start", current_turn, f"short {is_short}")
 
@@ -978,7 +970,7 @@ class CareerRunner:
         return out
 
     def _race_progress(self, client, payload):
-        current_turn = payload.get("current_turn") or 1
+        current_turn = payload["current_turn"]
         phase = payload.get("phase")
         chara = (payload.get("chara_info") or {})
         playing_state = chara.get("playing_state") or 0
@@ -1036,6 +1028,7 @@ class CareerRunner:
             raise
 
     def _buy_skills(self, client, state, preset, force):
+        self.skill_buyer.recover_after_error = False
         state, bought = self.skill_buyer.buy(client, state, preset, force)
         for event in self.skill_buyer.attempt_events:
             self._debug("skills_attempt", state, {
@@ -1046,7 +1039,7 @@ class CareerRunner:
                 "payload": event.get("payload") or [],
                 "result": self._api_result(event.get("result") or {}),
             })
-        if self.skill_buyer.attempt_events or self.skill_buyer.recover_after_error:
+        if self.skill_buyer.recover_after_error:
             try:
                 state = self._fresh_career_state(client)
                 self._debug_turn(state, preset)
@@ -1082,7 +1075,7 @@ class CareerRunner:
                 "payload": event.get("payload") or [],
                 "result": self._api_result(event.get("result") or {}),
             })
-        if self.item_manager.recover_after_exchange_error or self.item_manager.recover_after_use_error or self.item_manager.buy_attempt_events or self.item_manager.use_attempt_events:
+        if self.item_manager.recover_after_exchange_error or self.item_manager.recover_after_use_error:
             try:
                 state = self._fresh_career_state(client)
                 self._debug_turn(state, preset)
@@ -1118,9 +1111,9 @@ class CareerRunner:
 
     def _command_from_decision(self, state, decision):
         payload = decision.payload or {}
-        command_type = int(payload.get("command_type") or 0)
-        command_id = int(payload.get("command_id") or 0)
-        command_group_id = int(payload.get("command_group_id") or 0)
+        command_type = int(payload["command_type"])
+        command_id = int(payload["command_id"])
+        command_group_id = int(payload.get("command_group_id", 0))
         for cmd in ((state.get("data") or {}).get("home_info") or {}).get("command_info_array") or []:
             if int(cmd.get("command_type") or 0) != command_type:
                 continue

@@ -22,6 +22,7 @@ from career_bot import master_data
 from career_bot.presets import PresetStore
 from career_bot.runner import CareerRunner
 from uma_api.client import UmaClient
+from career_bot.delay import GateKeeper
 
 PROCESS_NAME = "UmamusumePrettyDerby.exe"
 APP_ID = "3224770"
@@ -241,144 +242,26 @@ def normalize_turn_delay(min_value, max_value, disabled=False):
     return left, right, bool(disabled)
 
 def set_turn_delay(min_value, max_value, disabled=False):
-    global turn_delay_min_sec, turn_delay_max_sec, turn_delay_restore_min_sec, turn_delay_restore_max_sec, turn_delay_disabled
+    import career_bot.delay as delay_module
     next_min, next_max, next_disabled = normalize_turn_delay(min_value, max_value, disabled)
     if not next_disabled:
-        turn_delay_restore_min_sec = next_min
-        turn_delay_restore_max_sec = next_max
-    turn_delay_min_sec = next_min
-    turn_delay_max_sec = next_max
-    turn_delay_disabled = next_disabled
+        delay_module.TURN_DELAY_RESTORE_MIN = next_min
+        delay_module.TURN_DELAY_RESTORE_MAX = next_max
+    delay_module.TURN_DELAY_MIN = next_min
+    delay_module.TURN_DELAY_MAX = next_max
+    delay_module.GLOBAL_DELAYS_DISABLED = next_disabled
     return get_turn_delay()
 
 def get_turn_delay():
+    import career_bot.delay as delay_module
     return {
         "success": True,
-        "min": turn_delay_min_sec,
-        "max": turn_delay_max_sec,
-        "restore_min": turn_delay_restore_min_sec,
-        "restore_max": turn_delay_restore_max_sec,
-        "disabled": turn_delay_disabled
+        "min": getattr(delay_module, "TURN_DELAY_MIN", 2.5),
+        "max": getattr(delay_module, "TURN_DELAY_MAX", 5.0),
+        "restore_min": getattr(delay_module, "TURN_DELAY_RESTORE_MIN", 2.5),
+        "restore_max": getattr(delay_module, "TURN_DELAY_RESTORE_MAX", 5.0),
+        "disabled": getattr(delay_module, "GLOBAL_DELAYS_DISABLED", False)
     }
-
-import hashlib
-import uuid
-
-_mac_seed = str(uuid.getnode()).encode('utf-8')
-_m_hash = int(hashlib.md5(_mac_seed).hexdigest()[:8], 16)
-_m_rng = random.Random(_m_hash)
-_T_M = [_m_rng.uniform(0.85, 1.15) for _ in range(7)]
-_S_M = [_m_rng.uniform(0.9, 1.1) for _ in range(7)]
-_C_P = random.uniform(2160, 2520)
-
-GLOBAL_SESSION_JITTER = random.uniform(-0.08, 0.08)
-
-def wait_for_game_turn_delay(delay_type="turn", endpoint=None):
-    if turn_delay_disabled:
-        return 0.0
-
-    import math
-    import random
-    import time
-    
-    cycle_time = time.time() % _C_P
-    fatigue = 1.0 + (math.sin((cycle_time / _C_P) * math.pi * 2) * 0.15)
-
-    if delay_type == "api":
-        target_mean = 0.6
-        sigma = 0.5
-        max_cap = 8.0
-        min_cap = 0.1
-
-        if endpoint:
-            if any(endpoint.endswith(ep) for ep in ["tool/pre_signup", "tool/start_session"]):
-                seconds = random.uniform(0.011, 0.021)
-                return seconds
-            elif any(endpoint.endswith(ep) for ep in ["race_entry", "read_info/index"]):
-                target_mean = 0.05 * _T_M[1]
-                sigma = 0.3 * _S_M[1]
-                min_cap = 0.025
-                max_cap = 0.1
-            elif any(endpoint.endswith(ep) for ep in ["check_event", "continue", "race_end", "race_out", "minigame_end", "mission/receive", "start_career"]):
-                target_mean = 1.5 * _T_M[2]
-                sigma = 0.55 * _S_M[2]
-                min_cap = 0.2
-                max_cap = 4.6
-            elif any(endpoint.endswith(ep) for ep in ["load/index", "home/index", "single_mode_free/load", "single_mode_free/start", "tool/signup", "user/recovery_trainer_point"]):
-                target_mean = 3.6 * _T_M[3]
-                sigma = 0.6 * _S_M[3]
-                min_cap = 0.7
-                max_cap = 18.0
-            elif any(endpoint.endswith(ep) for ep in ["exec_command", "race_start", "reserve_race", "finish_career", "finish", "single_mode_free/pre", "pre_single_mode/index"]):
-                target_mean = 4.0 * _T_M[4]
-                sigma = 0.65 * _S_M[4]
-                min_cap = 1.0
-                max_cap = 19.3
-            elif any(endpoint.endswith(ep) for ep in ["multi_item_use", "multi_item_exchange", "exchange/item", "support_card/enhance", "friend/add"]):
-                target_mean = 7.0 * _T_M[5]
-                sigma = 0.7 * _S_M[5]
-                min_cap = 3.1
-                max_cap = 17.0
-            elif any(endpoint.endswith(ep) for ep in ["gain_skills", "chara/nickname", "chara/talent", "item/use", "team/evaluation"]):
-                target_mean = 30.0 * _T_M[6]
-                sigma = 0.8 * _S_M[6]
-                min_cap = 6.0
-                max_cap = 75.0
-
-        target_mean *= fatigue
-        target_mean += (GLOBAL_SESSION_JITTER * (target_mean * 0.5))
-        target_mean = max(0.01, target_mean)
-        
-        mu = math.log(target_mean) - (sigma**2) / 2.0
-        roll = random.lognormvariate(mu, sigma)
-        seconds = min(max_cap, max(min_cap, roll))
-        return seconds
-        
-    elif delay_type == "complex":
-        range_span = turn_delay_max_sec - turn_delay_min_sec
-        target_mean = (((turn_delay_min_sec + turn_delay_max_sec) / 2.0) + (GLOBAL_SESSION_JITTER * range_span)) * _T_M[0]
-        target_mean = max(0.1, target_mean) * 2.0
-        sigma = 1.1 * _S_M[0]
-        mu = math.log(target_mean) - (sigma**2) / 2.0
-        roll = random.lognormvariate(mu, sigma)
-        seconds = min(45.0, max(turn_delay_min_sec * 0.2, roll))
-        return seconds
-    else:
-        range_span = turn_delay_max_sec - turn_delay_min_sec
-        target_mean = (((turn_delay_min_sec + turn_delay_max_sec) / 2.0) + (GLOBAL_SESSION_JITTER * range_span)) * _T_M[0]
-        target_mean = max(0.1, target_mean)
-        sigma = 0.75 * _S_M[0]
-        mu = math.log(target_mean) - (sigma**2) / 2.0
-        roll = random.lognormvariate(mu, sigma)
-        seconds = min(turn_delay_max_sec * 5.0, max(turn_delay_min_sec * 0.5, roll))
-        return seconds
-
-def attach_turn_delay(client):
-    if getattr(client, "_turn_delay_wrapped", False):
-        return client
-    
-    client._last_api_call_ts = time.time()
-
-    original_call = client.call
-    def wrapped_call(ep, args=None, **kwargs):
-        target_delay = wait_for_game_turn_delay(delay_type="api", endpoint=ep)
-        elapsed = time.time() - client._last_api_call_ts
-        if elapsed < target_delay:
-            time.sleep(target_delay - elapsed)
-        
-        print(f"Last Endpoint: {ep.split('/')[-1]} | Delay: {target_delay:.3f}s", flush=True)
-        
-        res = original_call(ep, args, **kwargs)
-        client._last_api_call_ts = time.time()
-        return res
-
-    client.call = wrapped_call
-    client.wait_turn_delay = lambda: time.sleep(wait_for_game_turn_delay(delay_type="turn"))
-    client.wait_complex_delay = lambda: time.sleep(wait_for_game_turn_delay(delay_type="complex"))
-    client._turn_delay_wrapped = True
-    return client
-
-
 
 def update_start_state(data):
     global active_start_state
@@ -782,7 +665,7 @@ class RunCareerRequest(BaseModel):
     friend_card_id: int = 0
     parent_id_1: int = 0
     parent_id_2: int = 0
-    scenario_id: int = 4
+    scenario_id: int = 0
     deck_id: int = 1
     use_tp: int = 30
     difficulty_id: int = 0
@@ -877,12 +760,17 @@ def start_career_from_request(req):
     global active_account, active_dashboard_data
     if not active_client:
         return {"success": False, "detail": "Not logged in"}
+
+    if active_account and active_account.get("career") and active_account["career"].get("active"):
+         return {"success": False, "detail": "Cannot start a new career while another is active"}
+
     if not req.friend_viewer_id or not req.friend_card_id:
         return {"success": False, "detail": "Friend support card is required"}
+    
     selection_error = validate_start_selection(req)
     if selection_error:
         return {"success": False, "detail": selection_error}
-        
+
     try:
         res = active_client.read_info()
         data = res.get('data', {})
@@ -979,6 +867,7 @@ def apply_career_result(result):
 @app.post("/api/login")
 async def login(req: LoginRequest):
     from uma_api.client import UmaClient, get_ticket
+    from career_bot.delay import GateKeeper
     global active_client, active_account, active_dashboard_data, active_start_state, active_parent_cards, active_parent_rank_points, pending_game_auth_config, raw_load_index_response, active_selection
     try:
         chara = None
@@ -1017,17 +906,17 @@ async def login(req: LoginRequest):
         if not has_fresh_auth_config(cfg):
             raise Exception('Fresh in-game auth capture required; switch to the target in-game account, restart capture, then login again')
 
-        c = attach_turn_delay(UmaClient(cfg, trace_enabled=False))
+        c = UmaClient(cfg, trace_enabled=False)
         res = c.login()
         if not res:
             raise HTTPException(status_code=401, detail="Game login failed")
-        active_client = c
+        active_client = GateKeeper(c)
 
         d = res.get('data', {})
         career_data = None
         if d.get('single_mode_chara_light') or d.get('single_mode_chara'):
             try:
-                career_res = c.load_career()
+                career_res = active_client.load_career()
                 career_data = career_res.get('data')
             except Exception:
                 pass
@@ -1253,6 +1142,8 @@ def manage_career_loop(req, preset, initial_result):
                 break
         else:
             consecutive_fails = 0
+            if active_account and "career" in active_account and active_account["career"]:
+                active_account["career"]["active"] = False
             
         if not req.dev_mode:
             break
@@ -1300,7 +1191,7 @@ async def run_career(req: RunCareerRequest):
     preset = preset_store.read_one("xguri parent")
     if not preset:
         return {"success": False, "detail": "xguri parent preset missing"}
-    req.scenario_id = int(preset.get("scenario_id") or 4)
+    
     try:
         account = active_account or {}
         career = account.get("career") or {}
@@ -1328,12 +1219,15 @@ async def run_career(req: RunCareerRequest):
             req.parent_id_1 = int(career_status.get("parent_id_1"))
             req.parent_id_2 = int(career_status.get("parent_id_2"))
             req.deck_id = int(career_status.get("deck_id"))
+            req.scenario_id = int(career_status.get("scenario_id") or preset.get("scenario_id", 4))
             
             chara_info = career_data.get('chara_info') or {}
             if active_dashboard_data:
                 active_dashboard_data["account"] = account
             result = career_result
         else:
+            if not req.scenario_id:
+                req.scenario_id = int(preset.get("scenario_id", 4))
             started = start_career_from_request(req)
             if not started.get("success"):
                 return started
@@ -1375,9 +1269,17 @@ async def set_burn_clocks(req: BurnClocksRequest):
 
 @app.post("/api/career/friends")
 async def get_friend_list(req: FriendListRequest):
-    global active_client, active_dashboard_data
+    global active_client, active_dashboard_data, active_account
     if not active_client:
         return {"success": False, "detail": "Not logged in"}
+
+    if active_account and active_account.get("career") and active_account["career"].get("active"):
+        return {
+            "success": True,
+            "friends": [],
+            "exclude_viewer_ids": [],
+            "source": "Active Career (Skip)"
+        }
 
     if not req.exclude_viewer_ids and active_dashboard_data is not None and "friends" in active_dashboard_data:
         return {
