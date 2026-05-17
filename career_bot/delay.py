@@ -58,7 +58,7 @@ def simulate_delay(endpoint, client=None):
     if endpoint not in _BASE_DELAYS:
         target_delay = 0.3 * _USER_SPEED_SHIFT
         mu = math.log(target_delay) - (_USER_SIGMA**2) / 2.0
-        dt = random.lognormvariate(mu, _USER_SIGMA)
+        dt = _dna_rng.lognormvariate(mu, _USER_SIGMA)
         dt = max(0.08, min(1.2, dt))
     else:
         real_min, real_max, real_avg = _BASE_DELAYS[endpoint]
@@ -67,11 +67,11 @@ def simulate_delay(endpoint, client=None):
         shifted_min = real_min * _USER_SPEED_SHIFT * ep_shift
         shifted_max = real_max * _USER_SPEED_SHIFT * ep_shift
         mu = math.log(target_delay) - (_USER_SIGMA**2) / 2.0
-        dt = random.lognormvariate(mu, _USER_SIGMA)
+        dt = _dna_rng.lognormvariate(mu, _USER_SIGMA)
         dt = max(shifted_min, min(shifted_max, dt))
 
-    if random.random() < _USER_DISTRACTION_CHANCE:
-        dt += random.uniform(_USER_DISTRACTION_MIN, _USER_DISTRACTION_MAX)
+    if _dna_rng.random() < _USER_DISTRACTION_CHANCE:
+        dt += _dna_rng.uniform(_USER_DISTRACTION_MIN, _USER_DISTRACTION_MAX)
 
     print(f"Endpoint: {endpoint} | Delay: {dt:.3f}s", flush=True)
 
@@ -90,15 +90,33 @@ def simulate_turn_delay():
         print(f"Endpoint: turn_delay | Delay: 0.000s", flush=True)
         return 0.0
     range_span = TURN_DELAY_MAX - TURN_DELAY_MIN
-    target_mean = (((TURN_DELAY_MIN + TURN_DELAY_MAX) / 2.0) + (random.uniform(-0.08, 0.08) * range_span)) * _USER_SPEED_SHIFT
+    target_mean = (((TURN_DELAY_MIN + TURN_DELAY_MAX) / 2.0) + (_dna_rng.uniform(-0.08, 0.08) * range_span)) * _USER_SPEED_SHIFT
     sigma = 0.75 * _USER_SIGMA
     mu = math.log(max(0.1, target_mean)) - (sigma**2) / 2.0
-    dt = random.lognormvariate(mu, sigma)
+    dt = _dna_rng.lognormvariate(mu, sigma)
     dt = min(TURN_DELAY_MAX * 5.0, max(TURN_DELAY_MIN * 0.5, dt))
     
     print(f"Endpoint: turn_delay | Delay: {dt:.3f}s", flush=True)
     time.sleep(dt)
+
+def dna_randint(min_val, max_val):
+    return _dna_rng.randint(min_val, max_val)
+
+def dna_sleep(min_val, max_val, mean=None, stddev=None):
+    if GLOBAL_DELAYS_DISABLED:
+        return 0.0
+    if mean is not None and stddev is not None:
+        dt = max(min_val, min(max_val, _dna_rng.gauss(mean, stddev)))
+    else:
+        dt = _dna_rng.uniform(min_val, max_val)
+    time.sleep(dt)
     return dt
+
+def dna_uniform(min_val, max_val):
+    return _dna_rng.uniform(min_val, max_val)
+
+def dna_gauss(mean, stddev):
+    return _dna_rng.gauss(mean, stddev)
 
 
 class GateKeeper:

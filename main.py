@@ -22,7 +22,7 @@ from career_bot import master_data
 from career_bot.presets import PresetStore
 from career_bot.runner import CareerRunner
 from uma_api.client import UmaClient
-from career_bot.delay import GateKeeper
+from career_bot.delay import GateKeeper, dna_sleep, dna_uniform
 
 PROCESS_NAME = "UmamusumePrettyDerby.exe"
 APP_ID = "3224770"
@@ -807,7 +807,7 @@ def start_career_from_request(req):
                         active_client.refresh_cached_account_state(res.get("data", {}))
                     except Exception:
                         pass
-                time.sleep(1)
+                dna_sleep(1.0, 1.0)
 
     if req.use_tp and current_tp < req.use_tp:
         return {"success": False, "detail": f"Not enough TP: {current_tp}/{req.use_tp}"}
@@ -816,7 +816,7 @@ def start_career_from_request(req):
 
     try:
         active_client.pre_single_mode([req.friend_viewer_id] if req.friend_viewer_id else [])
-        time.sleep(random.uniform(0.5, 1.5))
+        dna_sleep(0.5, 1.5)
     except Exception:
         pass
 
@@ -1133,7 +1133,7 @@ def manage_career_loop(req, preset, initial_result):
             if backend_loop_stop:
                 career_runner.stop()
                 return
-            time.sleep(1)
+            dna_sleep(1.0, 1.0)
             
         status = career_runner.snapshot()
         if status.get("last_error"):
@@ -1151,7 +1151,7 @@ def manage_career_loop(req, preset, initial_result):
         for _ in range(6):
             if backend_loop_stop:
                 return
-            time.sleep(1)
+            dna_sleep(1.0, 1.0)
             
         started_ok = False
         while not started_ok and not backend_loop_stop:
@@ -1164,7 +1164,7 @@ def manage_career_loop(req, preset, initial_result):
                     for _ in range(15):
                         if backend_loop_stop:
                             return
-                        time.sleep(1)
+                        dna_sleep(1.0, 1.0)
                     continue
                 current_result = started["result"]
                 account, chara_info = apply_career_result(current_result)
@@ -1178,7 +1178,7 @@ def manage_career_loop(req, preset, initial_result):
                 for _ in range(15):
                     if backend_loop_stop:
                         return
-                    time.sleep(1)
+                    dna_sleep(1.0, 1.0)
 
         if not started_ok:
             break
@@ -1240,7 +1240,7 @@ async def run_career(req: RunCareerRequest):
             backend_loop_stop = False
             backend_loop_thread = threading.Thread(target=manage_career_loop, args=(req, preset, result), daemon=True)
             backend_loop_thread.start()
-            time.sleep(0.5)
+            dna_sleep(0.5, 0.5)
         else:
             career_runner.start(active_client, preset, result, max(1, min(int(req.max_steps or 2500), 3000)), burn_clocks=req.burn_clocks, dev_mode=req.dev_mode)
             
@@ -1498,7 +1498,7 @@ def kill_listeners_on_port(port):
             subprocess.run(['taskkill', '/PID', str(pid), '/F'], capture_output=True, text=True, timeout=5)
         except Exception:
             pass
-    time.sleep(0.5)
+    dna_sleep(0.5, 0.5)
 
 def has_fresh_auth_config(cfg):
     app_ver = str(cfg.get('app_ver') or '').strip()
@@ -1562,7 +1562,7 @@ def refresh_auth_before_serving(timeout_sec=None):
             session = frida.attach(PROCESS_NAME)
             break
         except Exception:
-            time.sleep(1)
+            dna_sleep(1.0, 1.0)
     
     if not session:
         print(f'Error: {PROCESS_NAME} not found within timeout.', flush=True)
@@ -1577,10 +1577,10 @@ def refresh_auth_before_serving(timeout_sec=None):
             if done['ok']:
                 if has_fresh_auth_config(captured_data):
                     pending_game_auth_config = dict(captured_data)
-                    time.sleep(random.uniform(2, 4))
+                    dna_sleep(2.0, 4.0)
                     kill_process_by_name(PROCESS_NAME)
                     return True
-            time.sleep(0.5)
+            dna_sleep(0.5, 0.5)
     except Exception as e:
         print(f'Frida injection failed: {e}', flush=True)
     finally:

@@ -16,6 +16,7 @@ import socket
 import shutil
 from datetime import datetime
 from pathlib import Path
+from career_bot.delay import dna_sleep, dna_uniform, dna_gauss, dna_randint
 
 class StateRecoveryError(Exception):
     pass
@@ -337,7 +338,7 @@ class UmaClient:
         self.current_scenario_id = None
         self.session = requests.Session()
         self.update_headers()
-        self.api_jitter = random.uniform(-0.02, 0.02)
+        self.api_jitter = dna_uniform(-0.02, 0.02)
 
         self.on_api_log = None
         self.trace_file = None
@@ -509,7 +510,7 @@ class UmaClient:
 
         el = time.time() - self._last_raw_call_ts
         if el < 0.14:
-            time.sleep(0.14 - el)
+            dna_sleep(0.14 - el, 0.14 - el)
 
         self._last_raw_call_ts = time.time()
 
@@ -529,8 +530,8 @@ class UmaClient:
             window_w = int(screen_h * 9 / 16)
             scale_factor = 1080 / window_w
             
-            ref_x = max(844, min(1150, int(random.gauss(991, 62))))
-            ref_y = max(55, min(255, int(random.gauss(144, 33))))
+            ref_x = max(844, min(1150, int(dna_gauss(991, 62))))
+            ref_y = max(55, min(255, int(dna_gauss(144, 33))))
             
             physical_x = int(ref_x / scale_factor)
             physical_y = int(ref_y / scale_factor)
@@ -538,7 +539,7 @@ class UmaClient:
             click_x = int(physical_x * scale_factor * 10000)
             click_y = int(physical_y * scale_factor * 10000)
             
-            click_ts = int(time.time() - random.uniform(3.0, 4.5))
+            click_ts = int(time.time() - dna_uniform(3.0, 4.5))
             btn = {
                 "ViewerId": self.viewer_id,
                 "DeviceId": 4,
@@ -568,7 +569,7 @@ class UmaClient:
             except Exception as e:
                 if attempt < max_retries - 1:
                     wait_time = min(1.0 + (attempt * 2.5), 15.0)
-                    time.sleep(wait_time)
+                    dna_sleep(wait_time, wait_time)
                     continue
                 self.api_log("ERR", ep, {"error": str(e)}, req_id)
                 raise Exception(f'Network error on {ep}: {e}')
@@ -611,7 +612,7 @@ class UmaClient:
         if rc != 1:
             if rc == 205 and retry_205 > 0:
                 print(f"205 on {ep}, retrying... ({retry_205} left)")
-                time.sleep(max(0.14, min(0.19, random.gauss(0.166, 0.0083))))
+                dna_sleep(0.14, 0.19, 0.166, 0.0083)
                 return self.call(ep, args, retry_208=retry_208, retry_205=retry_205 - 1)
 
             if rc == 208 and retry_208 > 0:
@@ -620,7 +621,7 @@ class UmaClient:
 
                 if retry_208 < 6:
                     print(f"API error 208 (SERVER BUSY) on {ep}, sleeping and retrying... (attempts left: {retry_208-1})")
-                    time.sleep(max(0.14, min(0.30, random.gauss(0.22, 0.026))))
+                    dna_sleep(0.6, 1.4, 1.0, 0.1)
                 return self.call(ep, args, retry_208=retry_208 - 1)
             err_detail = format_api_error(ep, rc, res)
             err_msg = f'API error {rc} on {ep}: {err_detail}'
@@ -669,7 +670,7 @@ class UmaClient:
     def signup(self):
         self.regen_sid()
         self.call('tool/pre_signup')
-        time.sleep(0.83)
+        dna_sleep(0.83, 0.83)
         self.regen_sid()
         res = self.call('tool/signup', {
             'error_code': 0, 'error_message': '', 'attestation_type': 0, 
@@ -705,13 +706,13 @@ class UmaClient:
             except Exception as e:
                 err = str(e)
                 if '709' in err and attempt < max_retries:
-                    time.sleep(0.83)
+                    dna_sleep(0.83, 0.83)
                     continue
                 if '394' in err and attempt < max_retries:
-                    time.sleep(2.5)
+                    dna_sleep(2.5, 2.5)
                     continue
                 if '202' in err and attempt < max_retries:
-                    time.sleep(4.15)
+                    dna_sleep(4.15, 4.15)
                     continue
                 raise
 

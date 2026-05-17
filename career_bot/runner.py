@@ -17,6 +17,7 @@ from career_bot.items import MantItemManager, ITEM_NAMES, SHOP_ITEM_COSTS, DISPL
 
 
 from career_bot.report import new_report, add_event, add_api_call, add_decision, finish_report, write_report, set_error
+from career_bot.delay import dna_sleep, dna_gauss
 
 
 STRATEGIES = {
@@ -727,7 +728,7 @@ class CareerRunner:
                 err_str = str(exc)
                 errors.append(err_str)
                 if attempt < max_retries - 1:
-                    time.sleep(10)
+                    dna_sleep(10, 10)
         if hasattr(client, "hard_reset"):
             return client.hard_reset()
         raise RuntimeError("career recovery failed: " + " | ".join(errors[-2:]))
@@ -928,8 +929,8 @@ class CareerRunner:
                     if cont_data.get("unchecked_event_array"):
                         self._drain_events(client, strategy, cont_res)
                 
-                roll = random.gauss(0.166 + client.api_jitter, 0.05)
-                time.sleep(max(0.1, min(0.45, roll)))
+                roll = dna_gauss(0.166 + client.api_jitter, 0.05)
+                dna_sleep(0.1, 0.45, 0.166 + client.api_jitter, 0.05)
                 res = client.race_start(is_short=is_short, current_turn=current_turn)
                 rank = self._parse_race_rank(res)
                 self._log("race_rank_retry", current_turn, f"rank {rank} after clock")
