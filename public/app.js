@@ -1,14 +1,14 @@
 (() => {
-const state = { 
-    needs2fa: false, 
-    isLoading: false, 
-    account: null, 
-    isDeletingCareer: false, 
-    isFetchingFriends: false, 
-    isStartingCareer: false, 
-    presets: [], 
-    selectedPreset: "xguri parent", 
-    runnerTimer: 0, 
+const state = {
+    needs2fa: false,
+    isLoading: false,
+    account: null,
+    isDeletingCareer: false,
+    isFetchingFriends: false,
+    isStartingCareer: false,
+    presets: [],
+    selectedPreset: "",
+    runnerTimer: 0,
     isSavingPreset: false,
     raceData: [],
     selectedRaces: [],
@@ -68,7 +68,20 @@ const els = {
     racePopupClose: document.getElementById('race-slot-popup-close'),
     masterDataPath: document.getElementById('master-data-path'),
     masterDataSaveBtn: document.getElementById('master-data-save-btn'),
-    masterDataStatus: document.getElementById('master-data-status')
+    masterDataStatus: document.getElementById('master-data-status'),
+    presetSection: document.getElementById('preset-section'),
+    presetAddBtn: document.getElementById('preset-add-btn'),
+    presetDelBtn: document.getElementById('preset-del-btn'),
+    presetRunningStyle: document.getElementById('preset-running-style'),
+    presetSkillThreshold: document.getElementById('preset-skill-threshold'),
+    presetEditSkillsBtn: document.getElementById('preset-edit-skills-btn'),
+    skillModal: document.getElementById('skill-modal'),
+    skillSearch: document.getElementById('skill-search'),
+    skillList: document.getElementById('skill-list'),
+    skillTiersContainer: document.getElementById('skill-tiers-container'),
+    skillBlacklistContainer: document.getElementById('skill-blacklist-container'),
+    skillAddTierBtn: document.getElementById('skill-add-tier-btn'),
+    skillModalClose: document.getElementById('skill-modal-close')
 };
         const delaySettingsStorageKey = 'uma_turn_delay_settings';
         const burnClocksStorageKey = 'uma_burn_clocks';
@@ -628,7 +641,7 @@ const els = {
             if (!els.burnClocksBtn) return;
             const clocks = state.account ? Number(state.account.clocks || 0) : 0;
             const disabled = clocks <= 11;
-            
+
             if (disabled) {
                 state.burnClocks = false;
                 els.burnClocksBtn.disabled = true;
@@ -724,7 +737,7 @@ const els = {
         };
         let dashData = null;
         const selection = { deck: null, friend: null, trainee: null, veterans: [] };
-        
+
         async function syncSelectionToServer() {
             try {
                 const payload = {
@@ -1027,18 +1040,29 @@ const els = {
                 const raceRes = await fetch('/assets/data/uma_race_data.json');
                 const data = await raceRes.json();
                 state.raceData = Array.isArray(data.races) ? data.races : [];
-                
-                const presetRes = await apiJson('/api/presets');
-                if (presetRes.success) {
-                    const xguri = (presetRes.presets || []).find(p => p.name === "xguri parent");
-                    if (xguri && xguri.extra_race_list) {
-                        state.selectedRaces = xguri.extra_race_list.map(id => parseInt(id));
-                    }
-                }
+                syncSelectedPresetRaces();
                 renderRaces();
-            } catch (e) {
-                console.error("Failed to load race data", e);
-            }
+            } catch (e) {}
+        }
+
+        function getCurrentPreset() {
+            return (state.presets || []).find(p => p.name === state.selectedPreset);
+        }
+
+        function normalizePresetName(value) {
+            return String(value || '').trim().replace(/[^a-zA-Z0-9._ -]+/g, '').replace(/\s+/g, ' ').trim();
+        }
+
+        function presetNameExists(name) {
+            const normalized = normalizePresetName(name).toLowerCase();
+            return Boolean(normalized && (state.presets || []).some(p => p.name.toLowerCase() === normalized));
+        }
+
+        function syncSelectedPresetRaces() {
+            const current = getCurrentPreset();
+            state.selectedRaces = (current?.extra_race_list || [])
+                .map(id => parseInt(id, 10))
+                .filter(id => Number.isFinite(id));
         }
 
         function getYearSlots(yearIdx) {
@@ -1069,26 +1093,26 @@ const els = {
         function renderRaces() {
             if (!els.raceOptionsContent) return;
             els.raceOptionsContent.innerHTML = '';
-            
+
             const yearLabels = ['Junior Year', 'Classic Year', 'Senior Year'];
             yearLabels.forEach((label, yi) => {
                 const block = document.createElement('div');
                 block.className = 'race-year-block';
                 block.innerHTML = `<div class="race-year-title">${label}</div>`;
-                
+
                 const grid = document.createElement('div');
                 grid.className = 'race-time-grid';
-                
+
                 const slots = getYearSlots(yi);
                 slots.forEach((slot, si) => {
                     const cell = document.createElement('div');
                     cell.className = 'race-time-cell';
-                    
+
                     const slotIds = slot.races.flatMap(r => raceKeys(r));
                     const selectedInSlot = state.selectedRaces.filter(id => slotIds.includes(id));
                     const mainRaceId = selectedInSlot[0];
                     const selected = slot.races.find(r => raceKeys(r).includes(mainRaceId));
-                    
+
                     let html = `<div class="race-time-label">${slot.period}</div>`;
                     if (selected) {
                         html += `
@@ -1102,12 +1126,12 @@ const els = {
                     } else {
                         html += `<div class="race-time-plus">+</div>`;
                     }
-                    
+
                     cell.innerHTML = html;
                     cell.onclick = () => openSlotPopup(slot, yi);
                     grid.appendChild(cell);
                 });
-                
+
                 block.appendChild(grid);
                 els.raceOptionsContent.appendChild(block);
             });
@@ -1117,21 +1141,21 @@ const els = {
             const yearLabels = ['Junior Year', 'Classic Year', 'Senior Year'];
             els.racePopupTitle.textContent = `${yearLabels[yearIdx]} - ${slot.period}`;
             els.racePopupBody.innerHTML = '';
-            
+
             if (slot.races.length === 0) {
                 els.racePopupBody.innerHTML = '<div class="race-slot-popup-empty">No races available</div>';
             } else {
                 const list = document.createElement('div');
                 list.className = 'race-slot-popup-list';
-                
+
                 const slotIds = slot.races.flatMap(r => raceKeys(r));
-                
+
                 slot.races.forEach(race => {
                     const myIds = raceKeys(race);
                     const selectedInSlot = state.selectedRaces.filter(id => slotIds.includes(id));
                     const selIndex = selectedInSlot.findIndex(id => myIds.includes(id));
                     const isSelected = selIndex !== -1;
-                    
+
                     let badgeHtml = '<div class="race-slot-popup-check">✓</div>';
                     if (isSelected && state.scenarioType === "Mant" && selectedInSlot.length > 0) {
                         if (selIndex === 0) {
@@ -1140,7 +1164,7 @@ const els = {
                             badgeHtml = `<div class="race-slot-popup-check overwrite-race" style="font-size: 0.7rem; font-weight: bold; width: auto; padding: 0 8px; border-radius: 12px; background: rgba(255,255,255,0.1);">RIVAL OVERWRITE ${selIndex}</div>`;
                         }
                     }
-                    
+
                     const item = document.createElement('div');
                     item.className = `race-slot-popup-item ${isSelected ? 'on' : ''}`;
                     item.innerHTML = `
@@ -1161,7 +1185,7 @@ const els = {
                     `;
                     item.onclick = async () => {
                         const isMant = state.scenarioType === "Mant";
-                        
+
                         if (isSelected) {
                             state.selectedRaces = state.selectedRaces.filter(id => !myIds.includes(id));
                         } else {
@@ -1170,7 +1194,7 @@ const els = {
                             }
                             state.selectedRaces.push(parseInt(race.id));
                         }
-                        
+
                         openSlotPopup(slot, yearIdx);
                         renderRaces();
                         await autoSaveRaces();
@@ -1184,16 +1208,17 @@ const els = {
 
         async function autoSaveRaces() {
             try {
+                const current = getCurrentPreset();
+                if (current) current.extra_race_list = [...state.selectedRaces];
                 await apiJson('/api/presets/save_races', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
+                        preset_name: state.selectedPreset,
                         races: state.selectedRaces
                     })
                 });
-            } catch (e) {
-                console.error("Auto-save failed:", e);
-            }
+            } catch (e) {}
         }
 
         function getTurnFromDate(dateStr) {
@@ -1212,12 +1237,529 @@ const els = {
             els.racePopupOverlay?.addEventListener('click', (e) => {
                 if (e.target === els.racePopupOverlay) els.racePopupOverlay.style.display = 'none';
             });
-            
+
             makeSectionToggle('race-toggle', 'race-chevron', 'race-body', false);
         }
 
+        let skillDataCache = null;
+        let activeEditTier = null;
+        let activeSkillFilter = null;
+        let activeColorFilter = null;
+
+        const SKILL_FILTERS = [
+            { id: 101, label: 'Front' },
+            { id: 102, label: 'Pace' },
+            { id: 103, label: 'Late' },
+            { id: 104, label: 'End' },
+            { id: 201, label: 'Short' },
+            { id: 202, label: 'Mile' },
+            { id: 203, label: 'Medium' },
+            { id: 204, label: 'Long' },
+            { id: 502, label: 'Dirt' },
+            { id: 'turf', label: 'Turf' }
+        ];
+
+        const COLOR_FILTERS = [
+            { id: 'green', label: 'Green', color: '#4ade80', iconPrefixes: ['1001', '1002', '1003', '1004', '1005', '1006'] },
+            { id: 'blue', label: 'Blue', color: '#60a5fa', iconPrefixes: ['2002'] },
+            { id: 'yellow', label: 'Yellow', color: '#fbbf24', iconPrefixes: ['2001', '2004', '2005', '2006', '2009'] },
+            { id: 'red', label: 'Red', color: '#f87171', iconPrefixes: ['3001', '3002', '3004', '3005', '3007'] }
+        ];
+
+        async function loadSkillData() {
+            if (skillDataCache) return skillDataCache;
+            try {
+                const res = await apiJson('/api/skills');
+                if (res.success && res.skills) {
+                    const uniqueMap = new Map();
+                    Object.entries(res.skills).forEach(([id, s]) => {
+                        if (!uniqueMap.has(s.name)) {
+                            uniqueMap.set(s.name, { id, ...s, tags: new Set(s.tags || []) });
+                        } else {
+                            const existing = uniqueMap.get(s.name);
+                            if (s.rarity > existing.rarity) existing.rarity = s.rarity;
+                            (s.tags || []).forEach(t => existing.tags.add(t));
+                        }
+                    });
+                    skillDataCache = Array.from(uniqueMap.values()).map(s => ({ ...s, tags: Array.from(s.tags) }));
+                    skillDataCache.sort((a, b) => a.name.localeCompare(b.name));
+                    return skillDataCache;
+                }
+            } catch (e) {}
+            return [];
+        }
+
+        function renderSkillFilters() {
+            const container = document.getElementById('skill-filters');
+            if (!container) return;
+            
+            let html = '<div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px;">';
+            for (const filter of SKILL_FILTERS) {
+                const isActive = activeSkillFilter === filter.id;
+                const bg = isActive ? 'rgba(var(--accent-primary-rgb), 0.2)' : 'rgba(255,255,255,0.05)';
+                const border = isActive ? 'var(--accent-primary)' : 'transparent';
+                const color = isActive ? 'var(--text-main)' : '#a1a1aa';
+                html += `<div class="skill-filter-chip affinity-filter" data-id="${filter.id}" style="padding: 0.35rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; cursor: pointer; background: ${bg}; border: 1px solid ${border}; color: ${color}; font-weight: bold; transition: all 0.1s;">${filter.label}</div>`;
+            }
+            html += '</div><div style="display: flex; flex-wrap: wrap; gap: 4px;">';
+            
+            for (const filter of COLOR_FILTERS) {
+                const isActive = activeColorFilter === filter.id;
+                const bg = isActive ? `${filter.color}33` : 'rgba(255,255,255,0.05)';
+                const border = isActive ? filter.color : 'transparent';
+                const color = isActive ? 'var(--text-main)' : filter.color;
+                html += `<div class="skill-filter-chip color-filter" data-color="${filter.id}" style="padding: 0.35rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; cursor: pointer; background: ${bg}; border: 1px solid ${border}; color: ${color}; font-weight: bold; transition: all 0.1s;">${filter.label}</div>`;
+            }
+            html += '</div>';
+            
+            container.innerHTML = html;
+            
+            container.querySelectorAll('.affinity-filter').forEach(el => {
+                el.addEventListener('click', () => {
+                    let tagId = el.getAttribute('data-id');
+                    if (tagId !== 'turf') tagId = Number(tagId);
+                    
+                    if (activeSkillFilter === tagId) activeSkillFilter = null;
+                    else activeSkillFilter = tagId;
+                    
+                    renderSkillFilters();
+                    renderSkillList();
+                });
+            });
+
+            container.querySelectorAll('.color-filter').forEach(el => {
+                el.addEventListener('click', () => {
+                    const colorId = el.getAttribute('data-color');
+                    
+                    if (activeColorFilter === colorId) activeColorFilter = null;
+                    else activeColorFilter = colorId;
+                    
+                    renderSkillFilters();
+                    renderSkillList();
+                });
+            });
+        }
+
+        function renderSkillList() {
+            const query = (els.skillSearch?.value || '').toLowerCase();
+            const skills = skillDataCache || [];
+            
+            let count = 0;
+            let html = '';
+            for (const s of skills) {
+                if (query && !s.name.toLowerCase().includes(query)) continue;
+                
+                if (activeSkillFilter !== null) {
+                    const skillTags = s.tags || [];
+                    if (activeSkillFilter === 'turf') {
+                        if (skillTags.includes(502)) continue;
+                    } else {
+                        if (!skillTags.includes(activeSkillFilter)) continue;
+                    }
+                }
+                
+                if (activeColorFilter !== null) {
+                    const iconId = String(s.icon_id || '');
+                    const colorFilter = COLOR_FILTERS.find(filter => filter.id === activeColorFilter);
+                    const skillColor = colorFilter && colorFilter.iconPrefixes.some(prefix => iconId.startsWith(prefix)) ? activeColorFilter : 'none';
+                    
+                    if (skillColor !== activeColorFilter) continue;
+                }
+                
+                count++;
+                
+                html += `<div class="skill-list-item" data-name="${escapeAttr(s.name)}" style="padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.1s;">
+                    <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-main); font-size: 0.85rem;">${escapeHtml(s.name)}</span>
+                </div>`;
+            }
+            
+            if (els.skillList) {
+                if (count === 0) {
+                    els.skillList.innerHTML = `<div style="padding: 1rem; color: #a1a1aa; font-size: 0.85rem;">No skills found.</div>`;
+                } else {
+                    els.skillList.innerHTML = html;
+                    els.skillList.querySelectorAll('.skill-list-item').forEach(el => {
+                        el.addEventListener('click', () => {
+                            const name = el.getAttribute('data-name');
+                            addSkillToFocusedArea(name);
+                        });
+                        el.addEventListener('mouseenter', () => el.style.background = 'rgba(255,255,255,0.1)');
+                        el.addEventListener('mouseleave', () => el.style.background = 'rgba(255,255,255,0.03)');
+                    });
+                }
+            }
+        }
+
+        function renderSkillEditorRightSide() {
+            const current = getCurrentPreset();
+            if (!current) {
+                if (els.skillTiersContainer) els.skillTiersContainer.innerHTML = '';
+                if (els.skillBlacklistContainer) els.skillBlacklistContainer.innerHTML = '';
+                return;
+            }
+
+            let tiersHtml = '';
+            const storedTiers = current.learn_skill_list || [];
+            const tiers = storedTiers.length > 0 ? storedTiers : [[]];
+            tiers.forEach((tier, i) => {
+                const isActive = activeEditTier === i;
+                const itemsHtml = tier.map(s =>
+                    `<div class="skill-tag">
+                        ${escapeHtml(s)} <span class="skill-tag-del" data-tier="${i}" data-skill="${escapeAttr(s)}">&times;</span>
+                    </div>`
+                ).join('');
+
+                tiersHtml += `
+                <div class="skill-tier-dropzone ${isActive ? 'is-active' : ''}" data-tier="${i}">
+                    <div class="skill-tier-header">
+                        <span class="skill-tier-label">TIER ${i+1}</span>
+                        <button class="btn btn-sm btn-danger-soft skill-editor-action tier-del-btn" data-tier="${i}">DEL</button>
+                    </div>
+                    <div class="skill-tag-list">
+                        ${itemsHtml}
+                    </div>
+                </div>`;
+            });
+            if (els.skillTiersContainer) els.skillTiersContainer.innerHTML = tiersHtml;
+
+            if (els.skillBlacklistContainer) {
+                const isBlActive = activeEditTier === null;
+                els.skillBlacklistContainer.classList.toggle('is-active', isBlActive);
+
+                const blacklist = current.learn_skill_blacklist || [];
+                els.skillBlacklistContainer.innerHTML = blacklist.map(s =>
+                    `<div class="skill-tag blacklist">
+                        ${escapeHtml(s)} <span class="skill-tag-del" data-blacklist="true" data-skill="${escapeAttr(s)}">&times;</span>
+                    </div>`
+                ).join('');
+            }
+
+            els.skillTiersContainer?.querySelectorAll('.skill-tier-dropzone').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('tier-del-btn') || e.target.classList.contains('skill-tag-del')) return;
+                    activeEditTier = parseInt(el.getAttribute('data-tier'));
+                    renderSkillEditorRightSide();
+                });
+            });
+            if (els.skillBlacklistContainer) {
+                els.skillBlacklistContainer.onclick = (e) => {
+                    if (e.target.classList.contains('skill-tag-del')) return;
+                    activeEditTier = null;
+                    renderSkillEditorRightSide();
+                };
+            }
+
+            els.skillTiersContainer?.querySelectorAll('.tier-del-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const idx = parseInt(btn.getAttribute('data-tier'));
+                    current.learn_skill_list = current.learn_skill_list || [];
+                    current.learn_skill_list.splice(idx, 1);
+                    if (activeEditTier === idx) activeEditTier = null;
+                    else if (activeEditTier > idx) activeEditTier--;
+                    await savePresetConfig();
+                    renderSkillEditorRightSide();
+                });
+            });
+
+            document.querySelectorAll('.skill-tag-del').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const skillName = btn.getAttribute('data-skill');
+                    if (btn.hasAttribute('data-blacklist')) {
+                        current.learn_skill_blacklist = current.learn_skill_blacklist.filter(s => s !== skillName);
+                    } else {
+                        const tierIdx = parseInt(btn.getAttribute('data-tier'));
+                        current.learn_skill_list[tierIdx] = current.learn_skill_list[tierIdx].filter(s => s !== skillName);
+                    }
+                    await savePresetConfig();
+                    renderSkillEditorRightSide();
+                });
+            });
+        }
+
+        async function addSkillToFocusedArea(name) {
+            const current = getCurrentPreset();
+            if (!current) return;
+
+            if (activeEditTier === null) {
+                if (!current.learn_skill_blacklist) current.learn_skill_blacklist = [];
+                if (!current.learn_skill_blacklist.includes(name)) {
+                    current.learn_skill_blacklist.push(name);
+                }
+            } else {
+                if (!current.learn_skill_list) current.learn_skill_list = [];
+                if (!current.learn_skill_list[activeEditTier]) current.learn_skill_list[activeEditTier] = [];
+                if (!current.learn_skill_list[activeEditTier].includes(name)) {
+                    current.learn_skill_list[activeEditTier].push(name);
+                }
+            }
+            await savePresetConfig();
+            renderSkillEditorRightSide();
+        }
+
+        function initSkillEditor() {
+            if (!state.selectedPreset) return;
+            activeEditTier = 0;
+
+            els.skillModal.style.display = 'flex';
+            if (els.skillSearch) els.skillSearch.value = '';
+            activeSkillFilter = null;
+            activeColorFilter = null;
+
+            loadSkillData().then(() => {
+                renderSkillFilters();
+                renderSkillList();
+            });
+            renderSkillEditorRightSide();
+        }
+
+        async function savePresetConfig() {
+            if (!state.selectedPreset || !state.presets) return;
+            const current = getCurrentPreset();
+            if (!current) return;
+
+            current.learn_skill_threshold = parseInt(els.presetSkillThreshold.value) || 888;
+            current.running_style = parseInt(els.presetRunningStyle?.value) || 1;
+
+            try {
+                await apiJson('/api/presets', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ preset: current })
+                });
+            } catch (e) {}
+        }
+
+        function populatePresetUI() {
+            if (!state.selectedPreset || !state.presets) return;
+            const current = getCurrentPreset();
+            if (!current) return;
+
+            els.presetSkillThreshold.value = current.learn_skill_threshold || 888;
+            if (els.presetRunningStyle) els.presetRunningStyle.value = current.running_style || 1;
+        }
+
+        function bindPresetHandlers() {
+            if (els.presetSelect) {
+                els.presetSelect.addEventListener('change', async (e) => {
+                    state.selectedPreset = e.target.value;
+                    localStorage.setItem('uma_selected_preset', state.selectedPreset);
+                    syncSelectedPresetRaces();
+                    populatePresetUI();
+                    renderRaces();
+                });
+            }
+
+            const saveHandler = () => savePresetConfig();
+            els.presetSkillThreshold?.addEventListener('change', saveHandler);
+            els.presetRunningStyle?.addEventListener('change', saveHandler);
+
+            els.presetEditSkillsBtn?.addEventListener('click', () => {
+                if (!state.selectedPreset) return;
+                activeEditTier = 0;
+
+                els.skillModal.style.display = 'flex';
+                if (els.skillSearch) els.skillSearch.value = '';
+                activeSkillFilter = null;
+
+                loadSkillData().then(() => {
+                    renderSkillFilters();
+                    renderSkillList();
+                });
+                renderSkillEditorRightSide();
+            });
+            els.skillModalClose?.addEventListener('click', () => { els.skillModal.style.display = 'none'; });
+
+            els.skillSearch?.addEventListener('input', renderSkillList);
+
+            els.skillAddTierBtn?.addEventListener('click', async () => {
+                const current = getCurrentPreset();
+                if (!current) return;
+                if (!current.learn_skill_list) current.learn_skill_list = [];
+                current.learn_skill_list.push([]);
+                activeEditTier = current.learn_skill_list.length - 1;
+                await savePresetConfig();
+                renderSkillEditorRightSide();
+            });
+
+            document.getElementById('skill-select-all-btn')?.addEventListener('click', async () => {
+                const current = getCurrentPreset();
+                if (!current) return;
+                const visibleNodes = els.skillList?.querySelectorAll('.skill-list-item') || [];
+                let changed = false;
+
+                visibleNodes.forEach(node => {
+                    const name = node.getAttribute('data-name');
+                    if (activeEditTier === null) {
+                        if (!current.learn_skill_blacklist) current.learn_skill_blacklist = [];
+                        if (!current.learn_skill_blacklist.includes(name)) {
+                            current.learn_skill_blacklist.push(name);
+                            changed = true;
+                        }
+                    } else {
+                        if (!current.learn_skill_list) current.learn_skill_list = [];
+                        if (!current.learn_skill_list[activeEditTier]) current.learn_skill_list[activeEditTier] = [];
+                        if (!current.learn_skill_list[activeEditTier].includes(name)) {
+                            current.learn_skill_list[activeEditTier].push(name);
+                            changed = true;
+                        }
+                    }
+                });
+                if (changed) {
+                    await savePresetConfig();
+                    renderSkillEditorRightSide();
+                }
+            });
+
+            document.getElementById('skill-deselect-all-btn')?.addEventListener('click', async () => {
+                const current = getCurrentPreset();
+                if (!current) return;
+                const visibleNodes = els.skillList?.querySelectorAll('.skill-list-item') || [];
+                let changed = false;
+
+                const namesToRemove = Array.from(visibleNodes).map(node => node.getAttribute('data-name'));
+
+                if (activeEditTier === null) {
+                    if (current.learn_skill_blacklist) {
+                        const originalLen = current.learn_skill_blacklist.length;
+                        current.learn_skill_blacklist = current.learn_skill_blacklist.filter(s => !namesToRemove.includes(s));
+                        if (current.learn_skill_blacklist.length !== originalLen) changed = true;
+                    }
+                } else {
+                    if (current.learn_skill_list && current.learn_skill_list[activeEditTier]) {
+                        const originalLen = current.learn_skill_list[activeEditTier].length;
+                        current.learn_skill_list[activeEditTier] = current.learn_skill_list[activeEditTier].filter(s => !namesToRemove.includes(s));
+                        if (current.learn_skill_list[activeEditTier].length !== originalLen) changed = true;
+                    }
+                }
+
+                if (changed) {
+                    await savePresetConfig();
+                    renderSkillEditorRightSide();
+                }
+            });
+
+            document.getElementById('skill-blacklist-all-btn')?.addEventListener('click', async () => {
+                const current = getCurrentPreset();
+                if (!current) return;
+                const visibleNodes = els.skillList?.querySelectorAll('.skill-list-item') || [];
+                let changed = false;
+
+                if (!current.learn_skill_blacklist) current.learn_skill_blacklist = [];
+                visibleNodes.forEach(node => {
+                    const name = node.getAttribute('data-name');
+                    if (!current.learn_skill_blacklist.includes(name)) {
+                        current.learn_skill_blacklist.push(name);
+                        changed = true;
+                    }
+                });
+
+                if (changed) {
+                    await savePresetConfig();
+                    renderSkillEditorRightSide();
+                }
+            });
+            document.getElementById('skill-clear-blacklist-btn')?.addEventListener('click', async () => {
+                const current = getCurrentPreset();
+                if (!current) return;
+                if (current.learn_skill_blacklist && current.learn_skill_blacklist.length > 0) {
+                    current.learn_skill_blacklist = [];
+                    await savePresetConfig();
+                    renderSkillEditorRightSide();
+                }
+            });
+
+            els.presetAddBtn?.addEventListener('click', async () => {
+                const newName = prompt("Enter new preset name:");
+                if (!newName || !newName.trim()) return;
+                const normalizedName = normalizePresetName(newName);
+                if (!normalizedName) {
+                    alert("Preset name cannot be empty.");
+                    return;
+                }
+                if (presetNameExists(normalizedName)) {
+                    alert("A preset with that name already exists.");
+                    return;
+                }
+
+                const newPreset = {
+                    name: normalizedName,
+                    running_style: 1,
+                    learn_skill_list: [],
+                    learn_skill_blacklist: [],
+                    extra_race_list: [],
+                    learn_skill_threshold: 888
+                };
+
+                try {
+                    const res = await apiJson('/api/presets', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ preset: newPreset })
+                    });
+                    if (!res.success || !res.preset?.name) {
+                        alert(res.detail || "Failed to save new preset.");
+                        return;
+                    }
+                    state.selectedPreset = res.preset.name;
+                    localStorage.setItem('uma_selected_preset', state.selectedPreset);
+                    await loadPresets();
+                    if (els.presetSelect) els.presetSelect.value = state.selectedPreset;
+                    syncSelectedPresetRaces();
+                    populatePresetUI();
+                    renderRaces();
+                } catch (e) { alert("Failed to save new preset."); }
+            });
+
+            els.presetDelBtn?.addEventListener('click', async () => {
+                if (!state.selectedPreset) return;
+                const deletedName = state.selectedPreset;
+                if (!confirm(`Are you sure you want to delete preset '${deletedName}'?`)) return;
+
+                try {
+                    const res = await apiJson('/api/presets/delete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: deletedName })
+                    });
+                    if (!res.success) {
+                        alert(res.detail || "Failed to delete preset.");
+                        return;
+                    }
+                    await loadPresets();
+                } catch (e) { alert("Failed to delete preset."); }
+            });
+        }
+
         async function loadPresets() {
-            state.selectedPreset = "xguri parent";
+            try {
+                const res = await apiJson('/api/presets');
+                if (res.success && res.presets && res.presets.length > 0) {
+                    state.presets = res.presets;
+                    if (els.presetSelect) {
+                        els.presetSelect.innerHTML = state.presets.map(p => `<option value="${escapeAttr(p.name)}">${escapeHtml(p.name)}</option>`).join('');
+                    }
+                    const saved = localStorage.getItem('uma_selected_preset');
+                    if (saved && state.presets.some(p => p.name === saved)) {
+                        state.selectedPreset = saved;
+                    } else {
+                        state.selectedPreset = state.presets[0].name;
+                    }
+                    localStorage.setItem('uma_selected_preset', state.selectedPreset);
+                    if (els.presetSelect) els.presetSelect.value = state.selectedPreset;
+                    populatePresetUI();
+                } else {
+                    state.presets = [];
+                    state.selectedPreset = "";
+                    localStorage.removeItem('uma_selected_preset');
+                    if (els.presetSelect) els.presetSelect.innerHTML = "";
+                    populatePresetUI();
+                }
+            } catch(e) {
+                state.presets = [];
+                state.selectedPreset = "";
+                localStorage.removeItem('uma_selected_preset');
+                populatePresetUI();
+            }
             syncStartButton();
             await loadRaceData();
         }
@@ -1229,8 +1771,8 @@ const els = {
             if (dashData) dashData.visibleFriends = visibleFriends;
 
             if (state.pendingFriendSelection) {
-                const f = visibleFriends.find(v => 
-                    String(v.viewer_id) === state.pendingFriendSelection.viewer_id && 
+                const f = visibleFriends.find(v =>
+                    String(v.viewer_id) === state.pendingFriendSelection.viewer_id &&
                     String(v.support_card_id) === state.pendingFriendSelection.support_card_id
                 );
                 if (f) {
@@ -1776,7 +2318,7 @@ const els = {
             if (dashData.parents) {
                 const p1 = activeCareer.parent_id_1;
                 const p2 = activeCareer.parent_id_2;
-                
+
                 if (p1 || p2) {
                     dashData.parents.forEach((p, idx) => {
                         const pId = Number(p.instance_id);
@@ -1850,7 +2392,7 @@ const els = {
             resetSelection();
             if (data.selection) applyServerSelection(data.selection);
             autoLoadCareerSelection();
-            
+
             await loadPresets();
             if (!dashData.friends.length) {
                 loadFriends(false);
@@ -1860,8 +2402,9 @@ const els = {
             bindSparkTooltips();
             attachSelectionHandlers();
             bindRaceHandlers();
+            bindPresetHandlers();
             renderTeamPanel();
-            
+
             startRunnerPolling();
             await waitForDomPaint(2);
             setLoadingScreen(false);

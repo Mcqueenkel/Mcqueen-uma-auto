@@ -33,7 +33,7 @@
 
             <div class="navbar-main">
                 <div id="account-strip" class="account-strip"></div>
-                
+
                 <div id="turn-delay-control" class="turn-delay-control">
                     <div class="delay-group">
                         <span class="turn-delay-label">DELAY(S)</span>
@@ -106,6 +106,34 @@
                                 <span class="team-item-empty">select a parent</span>
                             </div>
                         </div>
+
+                        <section class="dashboard-section" id="preset-section">
+                            <h2 class="dashboard-section-title">PRESET CONFIGURATION</h2>
+                            <div class="master-data-panel">
+                                <label class="form-label" for="preset-select">ACTIVE PRESET</label>
+                                <div class="preset-control-row preset-control-row-actions">
+                                    <select id="preset-select" class="form-input master-data-input preset-input"></select>
+                                    <button id="preset-add-btn" class="btn btn-sm preset-action-btn" type="button">NEW</button>
+                                    <button id="preset-del-btn" class="btn btn-sm btn-danger preset-action-btn" type="button">DEL</button>
+                                </div>
+                                <div class="preset-control-row preset-control-grid">
+                                    <div class="preset-field">
+                                        <label class="form-label" for="preset-running-style">RUNNING STYLE</label>
+                                        <select id="preset-running-style" class="form-input master-data-input preset-input">
+                                            <option value="1">Front Runner</option>
+                                            <option value="2">Pace Chaser</option>
+                                            <option value="3">Late Surger</option>
+                                            <option value="4">End Closer</option>
+                                        </select>
+                                    </div>
+                                    <div class="preset-field">
+                                        <label class="form-label" for="preset-skill-threshold">MIN SKILL PT</label>
+                                        <input id="preset-skill-threshold" class="form-input master-data-input preset-input" type="number">
+                                    </div>
+                                </div>
+                                <button id="preset-edit-skills-btn" class="btn btn-sm preset-wide-btn" type="button">CONFIGURE SKILLS (PRIORITIES & BLACKLIST)</button>
+                            </div>
+                        </section>
 
                         <section class="dashboard-section" id="master-data-section">
                             <h2 class="dashboard-section-title">MASTER DATA</h2>
@@ -216,8 +244,48 @@
                 </div>
             </div>
         </div>
+
+        <div id="skill-modal" class="skill-editor-modal">
+            <div class="skill-editor-topbar">
+                <div class="skill-editor-title">SKILL CONFIGURATION</div>
+                <button id="skill-modal-close" class="btn btn-sm skill-editor-action">DONE</button>
+            </div>
+
+            <div class="skill-editor-body">
+                <div class="skill-editor-panel skill-editor-panel-left">
+                    <div class="skill-editor-panel-head">
+                        <div class="skill-editor-section-title">TIERS & BLACKLIST</div>
+                        <button id="skill-add-tier-btn" class="btn btn-sm skill-editor-action">+ TIER</button>
+                    </div>
+
+                    <div class="skill-editor-scroll skill-editor-left-scroll">
+                        <div id="skill-tiers-container" class="skill-tier-stack"></div>
+
+                        <div class="skill-blacklist-header">
+                            <div class="skill-editor-section-title danger">BLACKLIST</div>
+                            <button id="skill-clear-blacklist-btn" class="btn btn-sm btn-danger-soft skill-editor-action">CLEAR</button>
+                        </div>
+                        <div id="skill-blacklist-container" class="skill-blacklist-zone"></div>
+                    </div>
+                </div>
+
+                <div class="skill-editor-panel skill-editor-panel-right">
+                    <div class="skill-editor-panel-head stack">
+                        <div class="skill-editor-controls">
+                            <input type="text" id="skill-search" class="form-input skill-editor-search" placeholder="Search skills...">
+                            <button id="skill-select-all-btn" class="btn btn-sm skill-editor-action">ADD ALL VISIBLE</button>
+                            <button id="skill-blacklist-all-btn" class="btn btn-sm btn-danger-soft skill-editor-action">BLACKLIST ALL VISIBLE</button>
+                            <button id="skill-deselect-all-btn" class="btn btn-sm btn-danger-soft skill-editor-action">REMOVE ALL VISIBLE</button>
+                        </div>
+                        <div id="skill-filters" class="skill-filter-row"></div>
+                    </div>
+
+                    <div id="skill-list" class="skill-editor-scroll skill-list-grid"></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="app.js?v=2"></script>
+    <script src="app.js?v=11"></script>
 </body>
 </html>
 

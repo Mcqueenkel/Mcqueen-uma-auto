@@ -5,7 +5,12 @@
     "group_id": 1007,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10081": {
     "name": "Xceleration",
@@ -13,7 +18,12 @@
     "group_id": 1008,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10091": {
     "name": "Red Ace",
@@ -21,7 +31,13 @@
     "group_id": 1009,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10111": {
     "name": "Focused Mind",
@@ -29,7 +45,12 @@
     "group_id": 1011,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10141": {
     "name": "Corazón ☆ Ardiente",
@@ -37,7 +58,13 @@
     "group_id": 1014,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10181": {
     "name": "Empress's Pride",
@@ -45,7 +72,12 @@
     "group_id": 1018,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10241": {
     "name": "1st Place Kiss☆",
@@ -53,7 +85,13 @@
     "group_id": 1024,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10271": {
     "name": "Feel the Burn!",
@@ -61,7 +99,12 @@
     "group_id": 1027,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "10321": {
     "name": "Introduction to Physiology",
@@ -69,7 +112,13 @@
     "group_id": 1032,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "10351": {
     "name": "V Is for Victory!",
@@ -77,7 +126,12 @@
     "group_id": 1035,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10411": {
     "name": "Class Rep + Speed = Bakushin",
@@ -85,7 +139,12 @@
     "group_id": 1041,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10451": {
     "name": "Clear Heart",
@@ -93,7 +152,12 @@
     "group_id": 1045,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "10521": {
     "name": "Super-Duper Stoked",
@@ -101,7 +165,12 @@
     "group_id": 1052,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "10561": {
     "name": "Luck Be with Me!",
@@ -109,7 +178,13 @@
     "group_id": 1056,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10601": {
     "name": "I Can Win Sometimes, Right?",
@@ -117,7 +192,12 @@
     "group_id": 1060,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10611": {
     "name": "Call Me King",
@@ -125,7 +205,12 @@
     "group_id": 1061,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "10621": {
     "name": "Ready, Go!",
@@ -133,7 +218,13 @@
     "group_id": 1062,
     "grade_value": 240,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "100011": {
     "name": "Shooting Star",
@@ -141,7 +232,13 @@
     "group_id": 10001,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100021": {
     "name": "The View from the Lead Is Mine!",
@@ -149,7 +246,12 @@
     "group_id": 10002,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100031": {
     "name": "Sky-High Teio Step",
@@ -157,7 +259,12 @@
     "group_id": 10003,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100041": {
     "name": "Red Shift/LP1211-M",
@@ -165,7 +272,12 @@
     "group_id": 10004,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "100051": {
     "name": "Lights of Vaudeville",
@@ -173,7 +285,12 @@
     "group_id": 10005,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100061": {
     "name": "Triumphant Pulse",
@@ -181,7 +298,12 @@
     "group_id": 10006,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100071": {
     "name": "Anchors Aweigh!",
@@ -189,7 +311,12 @@
     "group_id": 10007,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100081": {
     "name": "Cut and Drive!",
@@ -197,7 +324,12 @@
     "group_id": 10008,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100091": {
     "name": "Resplendent Red Ace",
@@ -205,7 +337,13 @@
     "group_id": 10009,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100101": {
     "name": "Shooting for Victory!",
@@ -213,7 +351,12 @@
     "group_id": 10010,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "100111": {
     "name": "Where There's a Will, There's a Way",
@@ -221,7 +364,12 @@
     "group_id": 10011,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100121": {
     "name": "You and Me! One-on-One!",
@@ -229,7 +377,12 @@
     "group_id": 10012,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100131": {
     "name": "The Duty of Dignity Calls",
@@ -237,7 +390,12 @@
     "group_id": 10013,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100141": {
     "name": "Victoria por plancha ☆",
@@ -245,7 +403,13 @@
     "group_id": 10014,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100151": {
     "name": "This Dance Is for Vittoria!",
@@ -253,7 +417,12 @@
     "group_id": 10015,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100161": {
     "name": "Shadow Break",
@@ -261,7 +430,12 @@
     "group_id": 10016,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100171": {
     "name": "Behold Thine Emperor's Divine Might",
@@ -269,7 +443,12 @@
     "group_id": 10017,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      406
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100181": {
     "name": "Blazing Pride",
@@ -277,7 +456,12 @@
     "group_id": 10018,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100191": {
     "name": "OMG! (ﾟ∀ﾟ)  The Final Sprint! ☆",
@@ -285,7 +469,13 @@
     "group_id": 10019,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100201": {
     "name": "Angling and Scheming",
@@ -293,7 +483,12 @@
     "group_id": 10020,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "100211": {
     "name": "White Lightning Comin' Through!",
@@ -301,7 +496,13 @@
     "group_id": 10021,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100221": {
     "name": "Fairy Tale",
@@ -309,7 +510,12 @@
     "group_id": 10022,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100231": {
     "name": "∴win Q.E.D.",
@@ -317,7 +523,12 @@
     "group_id": 10023,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100241": {
     "name": "Flashy☆Landing",
@@ -325,7 +536,13 @@
     "group_id": 10024,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100251": {
     "name": "Chasing After You",
@@ -333,7 +550,12 @@
     "group_id": 10025,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100261": {
     "name": "G00 1st. F∞;",
@@ -341,7 +563,12 @@
     "group_id": 10026,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100271": {
     "name": "Let's Pump Some Iron!",
@@ -349,7 +576,12 @@
     "group_id": 10027,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "100281": {
     "name": "YUMMY☆SPEED!",
@@ -357,7 +589,13 @@
     "group_id": 10028,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100301": {
     "name": "Blue Rose Closer",
@@ -365,7 +603,12 @@
     "group_id": 10030,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100311": {
     "name": "All Charged! It's Go Time!",
@@ -373,7 +616,12 @@
     "group_id": 10031,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100321": {
     "name": "U=ma2",
@@ -381,7 +629,13 @@
     "group_id": 10032,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "100331": {
     "name": "Shooting Star of Dioskouroi",
@@ -389,7 +643,12 @@
     "group_id": 10033,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100351": {
     "name": "Our Ticket to Win!",
@@ -397,7 +656,12 @@
     "group_id": 10035,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100371": {
     "name": "Schwarzes Schwert",
@@ -405,7 +669,12 @@
     "group_id": 10037,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100381": {
     "name": "#LookatCurren",
@@ -413,7 +682,13 @@
     "group_id": 10038,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100391": {
     "name": "A Princess Must Seize Victory!",
@@ -421,7 +696,12 @@
     "group_id": 10039,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100401": {
     "name": "KEEP IT REAL.",
@@ -429,7 +709,12 @@
     "group_id": 10040,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "100411": {
     "name": "Genius x Bakushin = Victory",
@@ -437,7 +722,12 @@
     "group_id": 10041,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100451": {
     "name": "Pure Heart",
@@ -445,7 +735,12 @@
     "group_id": 10045,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "100461": {
     "name": "SPARKLY☆STARDOM",
@@ -453,7 +748,13 @@
     "group_id": 10046,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100481": {
     "name": "Pop & Polish",
@@ -461,7 +762,12 @@
     "group_id": 10048,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100501": {
     "name": "Nemesis",
@@ -469,7 +775,12 @@
     "group_id": 10050,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100511": {
     "name": "Budding Blossom",
@@ -477,7 +788,12 @@
     "group_id": 10051,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "100521": {
     "name": "Super-Duper Climax",
@@ -485,7 +801,12 @@
     "group_id": 10052,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "100561": {
     "name": "I See Victory in My Future!",
@@ -493,7 +814,13 @@
     "group_id": 10056,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100581": {
     "name": "I Never Goof Up!",
@@ -501,7 +828,13 @@
     "group_id": 10058,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100591": {
     "name": "Moving Past, and Beyond",
@@ -509,7 +842,12 @@
     "group_id": 10059,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "100601": {
     "name": "Just a Little Farther!",
@@ -517,7 +855,12 @@
     "group_id": 10060,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100611": {
     "name": "Prideful King",
@@ -525,7 +868,12 @@
     "group_id": 10061,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100621": {
     "name": "Go, Go, Mun!",
@@ -533,7 +881,13 @@
     "group_id": 10062,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "100641": {
     "name": "Keep Pushing Ahead",
@@ -541,7 +895,13 @@
     "group_id": 10064,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "100671": {
     "name": "Eternal Encompassing Shine",
@@ -549,7 +909,12 @@
     "group_id": 10067,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100681": {
     "name": "Victory Cheer!",
@@ -557,7 +922,13 @@
     "group_id": 10068,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100691": {
     "name": "Ambition to Surpass the Sakura",
@@ -565,7 +936,12 @@
     "group_id": 10069,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100711": {
     "name": "A Lifelong Dream, A Moment's Flight",
@@ -573,7 +949,12 @@
     "group_id": 10071,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100721": {
     "name": "Peerless Dance of Flowering Flames",
@@ -581,7 +962,12 @@
     "group_id": 10072,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "100741": {
     "name": "Lovely Spring Breeze",
@@ -589,7 +975,12 @@
     "group_id": 10074,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110011": {
     "name": "Dazzl'n ♪ Diver",
@@ -597,7 +988,12 @@
     "group_id": 11001,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "110031": {
     "name": "Certain Victory",
@@ -605,7 +1001,12 @@
     "group_id": 11003,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110041": {
     "name": "A Kiss for Courage",
@@ -613,7 +1014,12 @@
     "group_id": 11004,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110051": {
     "name": "Ravissant",
@@ -621,7 +1027,12 @@
     "group_id": 11005,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110061": {
     "name": "Festive Miracle",
@@ -629,7 +1040,14 @@
     "group_id": 11006,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110111": {
     "name": "Superior Heal",
@@ -637,7 +1055,12 @@
     "group_id": 11011,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "110131": {
     "name": "Legacy of the Strong",
@@ -645,7 +1068,12 @@
     "group_id": 11013,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110141": {
     "name": "Condor's Fury",
@@ -653,7 +1081,12 @@
     "group_id": 11014,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "110151": {
     "name": "Barcarole of Blessings",
@@ -661,7 +1094,12 @@
     "group_id": 11015,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110171": {
     "name": "Arrows Whistle, Shadows Disperse",
@@ -669,7 +1107,12 @@
     "group_id": 11017,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110181": {
     "name": "Eternal Moments",
@@ -677,7 +1120,12 @@
     "group_id": 11018,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110201": {
     "name": "Break It Down!",
@@ -685,7 +1133,13 @@
     "group_id": 11020,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110231": {
     "name": "Presents from X",
@@ -693,7 +1147,12 @@
     "group_id": 11023,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110241": {
     "name": "Flowery☆Maneuver",
@@ -701,7 +1160,13 @@
     "group_id": 11024,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110261": {
     "name": "Operation Cacao",
@@ -709,7 +1174,13 @@
     "group_id": 11026,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110301": {
     "name": "Every Rose Has Its Fangs",
@@ -717,7 +1188,12 @@
     "group_id": 11030,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20023,
+    "skill_category": 5
   },
   "110371": {
     "name": "Guten Appetit ♪",
@@ -725,7 +1201,12 @@
     "group_id": 11037,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110401": {
     "name": "Dancing in the Leaves",
@@ -733,7 +1214,13 @@
     "group_id": 11040,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110451": {
     "name": "Give Mummy a Hug ♡",
@@ -741,7 +1228,13 @@
     "group_id": 11045,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110521": {
     "name": "114th Time's the Charm",
@@ -749,7 +1242,12 @@
     "group_id": 11052,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110561": {
     "name": "Bountiful Harvest",
@@ -757,7 +1255,12 @@
     "group_id": 11056,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110601": {
     "name": "Go☆Go☆Goal!",
@@ -765,7 +1268,12 @@
     "group_id": 11060,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20013,
+    "skill_category": 5
   },
   "110611": {
     "name": "Louder! Tracen Cheer!",
@@ -773,7 +1281,12 @@
     "group_id": 11061,
     "grade_value": 340,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20043,
+    "skill_category": 5
   },
   "200011": {
     "name": "Right-Handed ◎",
@@ -781,7 +1294,12 @@
     "group_id": 20001,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200012": {
     "name": "Right-Handed ○",
@@ -789,7 +1307,12 @@
     "group_id": 20001,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200013": {
     "name": "Right-Handed ×",
@@ -797,7 +1320,12 @@
     "group_id": 20001,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "200014": {
     "name": "Right-Handed Demon",
@@ -805,7 +1333,13 @@
     "group_id": 20001,
     "grade_value": 461,
     "need_skill_point": 130,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 10012,
+    "skill_category": 0
   },
   "200021": {
     "name": "Left-Handed ◎",
@@ -813,7 +1347,12 @@
     "group_id": 20002,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200022": {
     "name": "Left-Handed ○",
@@ -821,7 +1360,12 @@
     "group_id": 20002,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200023": {
     "name": "Left-Handed ×",
@@ -829,7 +1373,12 @@
     "group_id": 20002,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "200031": {
     "name": "Tokyo Racecourse ◎",
@@ -837,7 +1386,12 @@
     "group_id": 20003,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200032": {
     "name": "Tokyo Racecourse ○",
@@ -845,7 +1399,12 @@
     "group_id": 20003,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200033": {
     "name": "Tokyo Racecourse ×",
@@ -853,7 +1412,12 @@
     "group_id": 20003,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200041": {
     "name": "Nakayama Racecourse ◎",
@@ -861,7 +1425,12 @@
     "group_id": 20004,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200042": {
     "name": "Nakayama Racecourse ○",
@@ -869,7 +1438,12 @@
     "group_id": 20004,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200043": {
     "name": "Nakayama Racecourse ×",
@@ -877,7 +1451,12 @@
     "group_id": 20004,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200051": {
     "name": "Hanshin Racecourse ◎",
@@ -885,7 +1464,12 @@
     "group_id": 20005,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200052": {
     "name": "Hanshin Racecourse ○",
@@ -893,7 +1477,12 @@
     "group_id": 20005,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200053": {
     "name": "Hanshin Racecourse ×",
@@ -901,7 +1490,12 @@
     "group_id": 20005,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200061": {
     "name": "Kyoto Racecourse ◎",
@@ -909,7 +1503,12 @@
     "group_id": 20006,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200062": {
     "name": "Kyoto Racecourse ○",
@@ -917,7 +1516,12 @@
     "group_id": 20006,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200063": {
     "name": "Kyoto Racecourse ×",
@@ -925,7 +1529,12 @@
     "group_id": 20006,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200064": {
     "name": "Yodo Invicta",
@@ -933,7 +1542,13 @@
     "group_id": 20006,
     "grade_value": 461,
     "need_skill_point": 130,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402,
+      405
+    ],
+    "icon_id": 10022,
+    "skill_category": 0
   },
   "200071": {
     "name": "Chukyo Racecourse ◎",
@@ -941,7 +1556,12 @@
     "group_id": 20007,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200072": {
     "name": "Chukyo Racecourse ○",
@@ -949,7 +1569,12 @@
     "group_id": 20007,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200073": {
     "name": "Chukyo Racecourse ×",
@@ -957,7 +1582,12 @@
     "group_id": 20007,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200081": {
     "name": "Sapporo Racecourse ◎",
@@ -965,7 +1595,12 @@
     "group_id": 20008,
     "grade_value": 174,
     "need_skill_point": 90,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200082": {
     "name": "Sapporo Racecourse ○",
@@ -973,7 +1608,12 @@
     "group_id": 20008,
     "grade_value": 129,
     "need_skill_point": 70,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200083": {
     "name": "Sapporo Racecourse ×",
@@ -981,7 +1621,12 @@
     "group_id": 20008,
     "grade_value": -129,
     "need_skill_point": 40,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200091": {
     "name": "Hakodate Racecourse ◎",
@@ -989,7 +1634,12 @@
     "group_id": 20009,
     "grade_value": 174,
     "need_skill_point": 90,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200092": {
     "name": "Hakodate Racecourse ○",
@@ -997,7 +1647,12 @@
     "group_id": 20009,
     "grade_value": 129,
     "need_skill_point": 70,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200093": {
     "name": "Hakodate Racecourse ×",
@@ -1005,7 +1660,12 @@
     "group_id": 20009,
     "grade_value": -129,
     "need_skill_point": 40,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200101": {
     "name": "Fukushima Racecourse ◎",
@@ -1013,7 +1673,12 @@
     "group_id": 20010,
     "grade_value": 174,
     "need_skill_point": 90,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200102": {
     "name": "Fukushima Racecourse ○",
@@ -1021,7 +1686,12 @@
     "group_id": 20010,
     "grade_value": 129,
     "need_skill_point": 70,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200103": {
     "name": "Fukushima Racecourse ×",
@@ -1029,7 +1699,12 @@
     "group_id": 20010,
     "grade_value": -129,
     "need_skill_point": 40,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200111": {
     "name": "Niigata Racecourse ◎",
@@ -1037,7 +1712,12 @@
     "group_id": 20011,
     "grade_value": 174,
     "need_skill_point": 90,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200112": {
     "name": "Niigata Racecourse ○",
@@ -1045,7 +1725,12 @@
     "group_id": 20011,
     "grade_value": 129,
     "need_skill_point": 70,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200113": {
     "name": "Niigata Racecourse ×",
@@ -1053,7 +1738,12 @@
     "group_id": 20011,
     "grade_value": -129,
     "need_skill_point": 40,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200121": {
     "name": "Kokura Racecourse ◎",
@@ -1061,7 +1751,12 @@
     "group_id": 20012,
     "grade_value": 174,
     "need_skill_point": 90,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200122": {
     "name": "Kokura Racecourse ○",
@@ -1069,7 +1764,12 @@
     "group_id": 20012,
     "grade_value": 129,
     "need_skill_point": 70,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200123": {
     "name": "Kokura Racecourse ×",
@@ -1077,7 +1777,12 @@
     "group_id": 20012,
     "grade_value": -129,
     "need_skill_point": 40,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200131": {
     "name": "Standard Distance ◎",
@@ -1085,7 +1790,12 @@
     "group_id": 20013,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200132": {
     "name": "Standard Distance ○",
@@ -1093,7 +1803,12 @@
     "group_id": 20013,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200133": {
     "name": "Standard Distance ×",
@@ -1101,7 +1816,12 @@
     "group_id": 20013,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200141": {
     "name": "Non-Standard Distance ◎",
@@ -1109,7 +1829,12 @@
     "group_id": 20014,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200142": {
     "name": "Non-Standard Distance ○",
@@ -1117,7 +1842,12 @@
     "group_id": 20014,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200143": {
     "name": "Non-Standard Distance ×",
@@ -1125,7 +1855,12 @@
     "group_id": 20014,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200151": {
     "name": "Firm Conditions ◎",
@@ -1133,7 +1868,12 @@
     "group_id": 20015,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 10031,
+    "skill_category": 0
   },
   "200152": {
     "name": "Firm Conditions ○",
@@ -1141,7 +1881,12 @@
     "group_id": 20015,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      403
+    ],
+    "icon_id": 10031,
+    "skill_category": 0
   },
   "200153": {
     "name": "Firm Conditions ×",
@@ -1149,7 +1894,12 @@
     "group_id": 20015,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 10034,
+    "skill_category": 0
   },
   "200154": {
     "name": "Firm Course Menace",
@@ -1157,7 +1907,13 @@
     "group_id": 20015,
     "grade_value": 461,
     "need_skill_point": 130,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 10032,
+    "skill_category": 0
   },
   "200161": {
     "name": "Wet Conditions ◎",
@@ -1165,7 +1921,12 @@
     "group_id": 20016,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 10031,
+    "skill_category": 0
   },
   "200162": {
     "name": "Wet Conditions ○",
@@ -1173,7 +1934,12 @@
     "group_id": 20016,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      403
+    ],
+    "icon_id": 10031,
+    "skill_category": 0
   },
   "200163": {
     "name": "Wet Conditions ×",
@@ -1181,7 +1947,12 @@
     "group_id": 20016,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 10034,
+    "skill_category": 0
   },
   "200171": {
     "name": "Spring Runner ◎",
@@ -1189,7 +1960,12 @@
     "group_id": 20017,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200172": {
     "name": "Spring Runner ○",
@@ -1197,7 +1973,12 @@
     "group_id": 20017,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200173": {
     "name": "Spring Runner ×",
@@ -1205,7 +1986,12 @@
     "group_id": 20017,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "200174": {
     "name": "Spring Spectacle",
@@ -1213,7 +1999,13 @@
     "group_id": 20017,
     "grade_value": 461,
     "need_skill_point": 130,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 10012,
+    "skill_category": 0
   },
   "200181": {
     "name": "Summer Runner ◎",
@@ -1221,7 +2013,12 @@
     "group_id": 20018,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200182": {
     "name": "Summer Runner ○",
@@ -1229,7 +2026,12 @@
     "group_id": 20018,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200183": {
     "name": "Summer Runner ×",
@@ -1237,7 +2039,12 @@
     "group_id": 20018,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "200191": {
     "name": "Fall Runner ◎",
@@ -1245,7 +2052,12 @@
     "group_id": 20019,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200192": {
     "name": "Fall Runner ○",
@@ -1253,7 +2065,12 @@
     "group_id": 20019,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200193": {
     "name": "Fall Runner ×",
@@ -1261,7 +2078,12 @@
     "group_id": 20019,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "200194": {
     "name": "Fall Frenzy",
@@ -1269,7 +2091,13 @@
     "group_id": 20019,
     "grade_value": 461,
     "need_skill_point": 130,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 10012,
+    "skill_category": 0
   },
   "200201": {
     "name": "Winter Runner ◎",
@@ -1277,7 +2105,12 @@
     "group_id": 20020,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200202": {
     "name": "Winter Runner ○",
@@ -1285,7 +2118,12 @@
     "group_id": 20020,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200203": {
     "name": "Winter Runner ×",
@@ -1293,7 +2131,12 @@
     "group_id": 20020,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "200211": {
     "name": "Sunny Days ◎",
@@ -1301,7 +2144,12 @@
     "group_id": 20021,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200212": {
     "name": "Sunny Days ○",
@@ -1309,7 +2157,12 @@
     "group_id": 20021,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200221": {
     "name": "Cloudy Days ◎",
@@ -1317,7 +2170,12 @@
     "group_id": 20022,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200222": {
     "name": "Cloudy Days ○",
@@ -1325,7 +2183,12 @@
     "group_id": 20022,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200231": {
     "name": "Rainy Days ◎",
@@ -1333,7 +2196,12 @@
     "group_id": 20023,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200232": {
     "name": "Rainy Days ○",
@@ -1341,7 +2209,12 @@
     "group_id": 20023,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200233": {
     "name": "Rainy Days ×",
@@ -1349,7 +2222,12 @@
     "group_id": 20023,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      404
+    ],
+    "icon_id": 10044,
+    "skill_category": 0
   },
   "200241": {
     "name": "Snowy Days ◎",
@@ -1357,7 +2235,12 @@
     "group_id": 20024,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200242": {
     "name": "Snowy Days ○",
@@ -1365,7 +2248,12 @@
     "group_id": 20024,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200251": {
     "name": "Inner Post Proficiency ◎",
@@ -1373,7 +2261,12 @@
     "group_id": 20025,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "200252": {
     "name": "Inner Post Proficiency ○",
@@ -1381,7 +2274,12 @@
     "group_id": 20025,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "200253": {
     "name": "Inner Post Averseness",
@@ -1389,7 +2287,12 @@
     "group_id": 20025,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      405
+    ],
+    "icon_id": 10054,
+    "skill_category": 0
   },
   "200261": {
     "name": "Outer Post Proficiency ◎",
@@ -1397,7 +2300,12 @@
     "group_id": 20026,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200262": {
     "name": "Outer Post Proficiency ○",
@@ -1405,7 +2313,12 @@
     "group_id": 20026,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200263": {
     "name": "Outer Post Averseness",
@@ -1413,7 +2326,12 @@
     "group_id": 20026,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "200271": {
     "name": "Maverick ◎",
@@ -1421,7 +2339,12 @@
     "group_id": 20027,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200272": {
     "name": "Maverick ○",
@@ -1429,7 +2352,12 @@
     "group_id": 20027,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200281": {
     "name": "Competitive Spirit ◎",
@@ -1437,7 +2365,12 @@
     "group_id": 20028,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 10031,
+    "skill_category": 0
   },
   "200282": {
     "name": "Competitive Spirit ○",
@@ -1445,7 +2378,12 @@
     "group_id": 20028,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      403
+    ],
+    "icon_id": 10031,
+    "skill_category": 0
   },
   "200283": {
     "name": "Wallflower",
@@ -1453,7 +2391,12 @@
     "group_id": 20028,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 10034,
+    "skill_category": 0
   },
   "200291": {
     "name": "Target in Sight ◎",
@@ -1461,7 +2404,12 @@
     "group_id": 20029,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200292": {
     "name": "Target in Sight ○",
@@ -1469,7 +2417,12 @@
     "group_id": 20029,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      404
+    ],
+    "icon_id": 10041,
+    "skill_category": 0
   },
   "200301": {
     "name": "Long Shot ◎",
@@ -1477,7 +2430,12 @@
     "group_id": 20030,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200302": {
     "name": "Long Shot ○",
@@ -1485,7 +2443,12 @@
     "group_id": 20030,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "200311": {
     "name": "G1 Averseness",
@@ -1493,7 +2456,12 @@
     "group_id": 20031,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "200321": {
     "name": "Paddock Fright",
@@ -1501,7 +2469,12 @@
     "group_id": 20032,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200331": {
     "name": "Professor of Curvature",
@@ -1509,7 +2482,12 @@
     "group_id": 20033,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "200332": {
     "name": "Corner Adept ○",
@@ -1517,7 +2495,12 @@
     "group_id": 20033,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "200333": {
     "name": "Corner Adept ×",
@@ -1525,7 +2508,12 @@
     "group_id": 20033,
     "grade_value": -262,
     "need_skill_point": 100,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20014,
+    "skill_category": 4
   },
   "200341": {
     "name": "Corner Connoisseur",
@@ -1533,7 +2521,12 @@
     "group_id": 20034,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 4
   },
   "200342": {
     "name": "Corner Acceleration ○",
@@ -1541,7 +2534,12 @@
     "group_id": 20034,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 4
   },
   "200343": {
     "name": "Corner Acceleration ×",
@@ -1549,7 +2547,12 @@
     "group_id": 20034,
     "grade_value": -262,
     "need_skill_point": 100,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20044,
+    "skill_category": 4
   },
   "200351": {
     "name": "Swinging Maestro",
@@ -1557,7 +2560,12 @@
     "group_id": 20035,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "200352": {
     "name": "Corner Recovery ○",
@@ -1565,7 +2573,12 @@
     "group_id": 20035,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "200353": {
     "name": "Corner Recovery ×",
@@ -1573,7 +2586,12 @@
     "group_id": 20035,
     "grade_value": -262,
     "need_skill_point": 100,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20024,
+    "skill_category": 4
   },
   "200361": {
     "name": "Beeline Burst",
@@ -1581,7 +2599,12 @@
     "group_id": 20036,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "200362": {
     "name": "Straightaway Adept",
@@ -1589,7 +2612,12 @@
     "group_id": 20036,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "200371": {
     "name": "Rushing Gale!",
@@ -1597,7 +2625,12 @@
     "group_id": 20037,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 4
   },
   "200372": {
     "name": "Straightaway Acceleration",
@@ -1605,7 +2638,12 @@
     "group_id": 20037,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 4
   },
   "200381": {
     "name": "Breath of Fresh Air",
@@ -1613,7 +2651,12 @@
     "group_id": 20038,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "200382": {
     "name": "Straightaway Recovery",
@@ -1621,7 +2664,12 @@
     "group_id": 20038,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "200391": {
     "name": "Ramp Revulsion",
@@ -1629,7 +2677,12 @@
     "group_id": 20039,
     "grade_value": -262,
     "need_skill_point": 100,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20024,
+    "skill_category": 4
   },
   "200401": {
     "name": "Packphobia",
@@ -1637,7 +2690,12 @@
     "group_id": 20040,
     "grade_value": -262,
     "need_skill_point": 100,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20024,
+    "skill_category": 4
   },
   "200411": {
     "name": "Defeatist",
@@ -1645,7 +2703,12 @@
     "group_id": 20041,
     "grade_value": -262,
     "need_skill_point": 100,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20014,
+    "skill_category": 3
   },
   "200421": {
     "name": "Reckless",
@@ -1653,7 +2716,12 @@
     "group_id": 20042,
     "grade_value": -262,
     "need_skill_point": 100,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20014,
+    "skill_category": 3
   },
   "200431": {
     "name": "Concentration",
@@ -1661,7 +2729,13 @@
     "group_id": 20043,
     "grade_value": 394,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      301,
+      407
+    ],
+    "icon_id": 20062,
+    "skill_category": 1
   },
   "200432": {
     "name": "Focus",
@@ -1669,7 +2743,13 @@
     "group_id": 20043,
     "grade_value": 129,
     "need_skill_point": 140,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      301,
+      407
+    ],
+    "icon_id": 20061,
+    "skill_category": 1
   },
   "200433": {
     "name": "Gatekept",
@@ -1677,7 +2757,13 @@
     "group_id": 20043,
     "grade_value": -174,
     "need_skill_point": 70,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      301,
+      407
+    ],
+    "icon_id": 20064,
+    "skill_category": 1
   },
   "200441": {
     "name": "Iron Will",
@@ -1685,7 +2771,14 @@
     "group_id": 20044,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      301,
+      302,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "200442": {
     "name": "Lay Low",
@@ -1693,7 +2786,14 @@
     "group_id": 20044,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      301,
+      302,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "200451": {
     "name": "Center Stage",
@@ -1701,7 +2801,13 @@
     "group_id": 20045,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      301,
+      403
+    ],
+    "icon_id": 20052,
+    "skill_category": 1
   },
   "200452": {
     "name": "Prudent Positioning",
@@ -1709,7 +2815,13 @@
     "group_id": 20045,
     "grade_value": 129,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      301,
+      403
+    ],
+    "icon_id": 20051,
+    "skill_category": 1
   },
   "200461": {
     "name": "It's On!",
@@ -1717,7 +2829,13 @@
     "group_id": 20046,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "200462": {
     "name": "Ramp Up",
@@ -1725,7 +2843,13 @@
     "group_id": 20046,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "200471": {
     "name": "Indomitable",
@@ -1733,7 +2857,13 @@
     "group_id": 20047,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      302,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 2
   },
   "200472": {
     "name": "Pace Strategy",
@@ -1741,7 +2871,13 @@
     "group_id": 20047,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 2
   },
   "200481": {
     "name": "Unruffled",
@@ -1749,7 +2885,13 @@
     "group_id": 20048,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      302,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 2
   },
   "200482": {
     "name": "Calm in a Crowd",
@@ -1757,7 +2899,13 @@
     "group_id": 20048,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 2
   },
   "200491": {
     "name": "No Stopping Me!",
@@ -1765,7 +2913,13 @@
     "group_id": 20049,
     "grade_value": 394,
     "need_skill_point": 150,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      303,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 3
   },
   "200492": {
     "name": "Nimble Navigator",
@@ -1773,7 +2927,13 @@
     "group_id": 20049,
     "grade_value": 174,
     "need_skill_point": 150,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 3
   },
   "200501": {
     "name": "Lane Legerdemain",
@@ -1781,7 +2941,13 @@
     "group_id": 20050,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      303,
+      403
+    ],
+    "icon_id": 20052,
+    "skill_category": 3
   },
   "200502": {
     "name": "Go with the Flow",
@@ -1789,7 +2955,13 @@
     "group_id": 20050,
     "grade_value": 129,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      403
+    ],
+    "icon_id": 20051,
+    "skill_category": 3
   },
   "200511": {
     "name": "In Body and Mind",
@@ -1797,7 +2969,13 @@
     "group_id": 20051,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      303,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "200512": {
     "name": "Homestretch Haste",
@@ -1805,7 +2983,13 @@
     "group_id": 20051,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "200521": {
     "name": "Running Idle",
@@ -1813,7 +2997,12 @@
     "group_id": 20052,
     "grade_value": -262,
     "need_skill_point": 100,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20024,
+    "skill_category": 4
   },
   "200531": {
     "name": "Taking the Lead",
@@ -1821,7 +3010,14 @@
     "group_id": 20053,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      301,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 1
   },
   "200532": {
     "name": "Early Lead",
@@ -1829,7 +3025,14 @@
     "group_id": 20053,
     "grade_value": 217,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      301,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 1
   },
   "200541": {
     "name": "Escape Artist",
@@ -1837,7 +3040,14 @@
     "group_id": 20054,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "200542": {
     "name": "Fast-Paced",
@@ -1845,7 +3055,14 @@
     "group_id": 20054,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "200551": {
     "name": "Unrestrained",
@@ -1853,7 +3070,14 @@
     "group_id": 20055,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      303,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 3
   },
   "200552": {
     "name": "Final Push",
@@ -1861,7 +3085,14 @@
     "group_id": 20055,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      303,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 3
   },
   "200561": {
     "name": "Calm and Collected",
@@ -1869,7 +3100,14 @@
     "group_id": 20056,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      301,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 1
   },
   "200562": {
     "name": "Stamina to Spare",
@@ -1877,7 +3115,14 @@
     "group_id": 20056,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      301,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 1
   },
   "200571": {
     "name": "Race Planner",
@@ -1885,7 +3130,14 @@
     "group_id": 20057,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      302,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 2
   },
   "200572": {
     "name": "Preferred Position",
@@ -1893,7 +3145,14 @@
     "group_id": 20057,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      302,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 2
   },
   "200581": {
     "name": "Speed Star",
@@ -1901,7 +3160,14 @@
     "group_id": 20058,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      303,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "200582": {
     "name": "Prepared to Pass",
@@ -1909,7 +3175,14 @@
     "group_id": 20058,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      303,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "200591": {
     "name": "Fast & Furious",
@@ -1917,7 +3190,14 @@
     "group_id": 20059,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "200592": {
     "name": "Position Pilfer",
@@ -1925,7 +3205,14 @@
     "group_id": 20059,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "200601": {
     "name": "On Your Left!",
@@ -1933,7 +3220,14 @@
     "group_id": 20060,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      303,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 3
   },
   "200602": {
     "name": "Slick Surge",
@@ -1941,7 +3235,14 @@
     "group_id": 20060,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      303,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 3
   },
   "200611": {
     "name": "Rising Dragon",
@@ -1949,7 +3250,14 @@
     "group_id": 20061,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      303,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "200612": {
     "name": "Outer Swell",
@@ -1957,7 +3265,14 @@
     "group_id": 20061,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      303,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "200621": {
     "name": "Sleeping Lion",
@@ -1965,7 +3280,14 @@
     "group_id": 20062,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      302,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 2
   },
   "200622": {
     "name": "Standing By",
@@ -1973,7 +3295,14 @@
     "group_id": 20062,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      302,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 2
   },
   "200631": {
     "name": "Sturm und Drang",
@@ -1981,7 +3310,14 @@
     "group_id": 20063,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      303,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "200632": {
     "name": "Masterful Gambit",
@@ -1989,7 +3325,14 @@
     "group_id": 20063,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      303,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "200641": {
     "name": "Encroaching Shadow",
@@ -1997,7 +3340,14 @@
     "group_id": 20064,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      303,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 3
   },
   "200642": {
     "name": "Straightaway Spurt",
@@ -2005,7 +3355,14 @@
     "group_id": 20064,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      303,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 3
   },
   "200651": {
     "name": "Turbo Sprint",
@@ -2013,7 +3370,13 @@
     "group_id": 20065,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 4
   },
   "200652": {
     "name": "Sprinting Gear",
@@ -2021,7 +3384,13 @@
     "group_id": 20065,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 4
   },
   "200662": {
     "name": "Wait-and-See",
@@ -2029,7 +3398,15 @@
     "group_id": 20066,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      302,
+      402,
+      403
+    ],
+    "icon_id": 20021,
+    "skill_category": 2
   },
   "200671": {
     "name": "Blinding Flash",
@@ -2037,7 +3414,15 @@
     "group_id": 20067,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      303,
+      401,
+      403
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "200672": {
     "name": "Gap Closer",
@@ -2045,7 +3430,15 @@
     "group_id": 20067,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      303,
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "200681": {
     "name": "Mile Maven",
@@ -2053,7 +3446,14 @@
     "group_id": 20068,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      301,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 1
   },
   "200682": {
     "name": "Productive Plan",
@@ -2061,7 +3461,14 @@
     "group_id": 20068,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      301,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 1
   },
   "200691": {
     "name": "Keen Eye",
@@ -2069,7 +3476,15 @@
     "group_id": 20069,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      301,
+      402,
+      406
+    ],
+    "icon_id": 20022,
+    "skill_category": 1
   },
   "200692": {
     "name": "Watchful Eye",
@@ -2077,7 +3492,15 @@
     "group_id": 20069,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      301,
+      402,
+      406
+    ],
+    "icon_id": 20021,
+    "skill_category": 1
   },
   "200701": {
     "name": "Furious Feat",
@@ -2085,7 +3508,14 @@
     "group_id": 20070,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      303,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 3
   },
   "200702": {
     "name": "Updrafters",
@@ -2093,7 +3523,14 @@
     "group_id": 20070,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      303,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 3
   },
   "200711": {
     "name": "Trackblazer",
@@ -2101,7 +3538,14 @@
     "group_id": 20071,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      302,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 2
   },
   "200712": {
     "name": "Rosy Outlook",
@@ -2109,7 +3553,14 @@
     "group_id": 20071,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      302,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 2
   },
   "200721": {
     "name": "Killer Tunes",
@@ -2117,7 +3568,14 @@
     "group_id": 20072,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "200722": {
     "name": "Up-Tempo",
@@ -2125,7 +3583,14 @@
     "group_id": 20072,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "200731": {
     "name": "Unyielding",
@@ -2133,7 +3598,15 @@
     "group_id": 20073,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      303,
+      401,
+      403
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "200732": {
     "name": "Steadfast",
@@ -2141,7 +3614,15 @@
     "group_id": 20073,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      303,
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "200741": {
     "name": "Cooldown",
@@ -2149,7 +3630,13 @@
     "group_id": 20074,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "200742": {
     "name": "Deep Breaths",
@@ -2157,7 +3644,13 @@
     "group_id": 20074,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "200751": {
     "name": "Innate Experience",
@@ -2165,7 +3658,14 @@
     "group_id": 20075,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      303,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "200752": {
     "name": "Inside Scoop",
@@ -2173,7 +3673,14 @@
     "group_id": 20075,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      303,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "200761": {
     "name": "Adrenaline Rush",
@@ -2181,7 +3688,13 @@
     "group_id": 20076,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "200762": {
     "name": "Extra Tank",
@@ -2189,7 +3702,13 @@
     "group_id": 20076,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "200771": {
     "name": "Trick (Front)",
@@ -2197,7 +3716,13 @@
     "group_id": 20077,
     "grade_value": 217,
     "need_skill_point": 140,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 2
   },
   "200772": {
     "name": "Tantalizing Trick",
@@ -2205,7 +3730,13 @@
     "group_id": 20077,
     "grade_value": 508,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      302,
+      406
+    ],
+    "icon_id": 30052,
+    "skill_category": 2
   },
   "200781": {
     "name": "Trick (Rear)",
@@ -2213,7 +3744,13 @@
     "group_id": 20078,
     "grade_value": 217,
     "need_skill_point": 140,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 2
   },
   "200791": {
     "name": "Frenzied Front Runners",
@@ -2221,7 +3758,12 @@
     "group_id": 20079,
     "grade_value": 174,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      406
+    ],
+    "icon_id": 30041,
+    "skill_category": 4
   },
   "200801": {
     "name": "Frenzied Pace Chasers",
@@ -2229,7 +3771,12 @@
     "group_id": 20080,
     "grade_value": 174,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      406
+    ],
+    "icon_id": 30041,
+    "skill_category": 4
   },
   "200811": {
     "name": "Frenzied Late Surgers",
@@ -2237,7 +3784,12 @@
     "group_id": 20081,
     "grade_value": 174,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      406
+    ],
+    "icon_id": 30041,
+    "skill_category": 4
   },
   "200821": {
     "name": "Frenzied End Closers",
@@ -2245,7 +3797,12 @@
     "group_id": 20082,
     "grade_value": 174,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      406
+    ],
+    "icon_id": 30041,
+    "skill_category": 4
   },
   "200831": {
     "name": "Subdued Front Runners",
@@ -2253,7 +3810,13 @@
     "group_id": 20083,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      301,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 1
   },
   "200841": {
     "name": "Flustered Front Runners",
@@ -2261,7 +3824,13 @@
     "group_id": 20084,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 2
   },
   "200851": {
     "name": "Hesitant Front Runners",
@@ -2269,7 +3838,13 @@
     "group_id": 20085,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      406
+    ],
+    "icon_id": 30011,
+    "skill_category": 3
   },
   "200861": {
     "name": "Subdued Pace Chasers",
@@ -2277,7 +3852,13 @@
     "group_id": 20086,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      301,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 1
   },
   "200871": {
     "name": "Flustered Pace Chasers",
@@ -2285,7 +3866,13 @@
     "group_id": 20087,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 2
   },
   "200881": {
     "name": "Hesitant Pace Chasers",
@@ -2293,7 +3880,13 @@
     "group_id": 20088,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      406
+    ],
+    "icon_id": 30011,
+    "skill_category": 3
   },
   "200891": {
     "name": "Subdued Late Surgers",
@@ -2301,7 +3894,13 @@
     "group_id": 20089,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      301,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 1
   },
   "200901": {
     "name": "Flustered Late Surgers",
@@ -2309,7 +3908,13 @@
     "group_id": 20090,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 2
   },
   "200911": {
     "name": "Hesitant Late Surgers",
@@ -2317,7 +3922,13 @@
     "group_id": 20091,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      406
+    ],
+    "icon_id": 30011,
+    "skill_category": 3
   },
   "200921": {
     "name": "Subdued End Closers",
@@ -2325,7 +3936,13 @@
     "group_id": 20092,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      301,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 1
   },
   "200931": {
     "name": "Flustered End Closers",
@@ -2333,7 +3950,13 @@
     "group_id": 20093,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 2
   },
   "200941": {
     "name": "Hesitant End Closers",
@@ -2341,7 +3964,13 @@
     "group_id": 20094,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      406
+    ],
+    "icon_id": 30011,
+    "skill_category": 3
   },
   "200951": {
     "name": "Oi Racecourse ◎",
@@ -2349,7 +3978,12 @@
     "group_id": 20095,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200952": {
     "name": "Oi Racecourse ○",
@@ -2357,7 +3991,12 @@
     "group_id": 20095,
     "grade_value": 129,
     "need_skill_point": 90,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "200953": {
     "name": "Oi Racecourse ×",
@@ -2365,7 +4004,12 @@
     "group_id": 20095,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10024,
+    "skill_category": 0
   },
   "200961": {
     "name": "Sprint Straightaways ◎",
@@ -2373,7 +4017,13 @@
     "group_id": 20096,
     "grade_value": 262,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "200962": {
     "name": "Sprint Straightaways ○",
@@ -2381,7 +4031,13 @@
     "group_id": 20096,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "200971": {
     "name": "Sprint Corners ◎",
@@ -2389,7 +4045,13 @@
     "group_id": 20097,
     "grade_value": 262,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "200972": {
     "name": "Sprint Corners ○",
@@ -2397,7 +4059,13 @@
     "group_id": 20097,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "200981": {
     "name": "Staggering Lead",
@@ -2405,7 +4073,14 @@
     "group_id": 20098,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "200982": {
     "name": "Huge Lead",
@@ -2413,7 +4088,14 @@
     "group_id": 20098,
     "grade_value": 262,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "200991": {
     "name": "Plan X",
@@ -2421,7 +4103,14 @@
     "group_id": 20099,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      302,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 2
   },
   "200992": {
     "name": "Countermeasure",
@@ -2429,7 +4118,14 @@
     "group_id": 20099,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      302,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 2
   },
   "201001": {
     "name": "Perfect Prep!",
@@ -2437,7 +4133,14 @@
     "group_id": 20100,
     "grade_value": 394,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      302,
+      403
+    ],
+    "icon_id": 20052,
+    "skill_category": 2
   },
   "201002": {
     "name": "Meticulous Measures",
@@ -2445,7 +4148,14 @@
     "group_id": 20100,
     "grade_value": 174,
     "need_skill_point": 140,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      302,
+      403
+    ],
+    "icon_id": 20051,
+    "skill_category": 2
   },
   "201011": {
     "name": "Adored by All",
@@ -2453,7 +4163,14 @@
     "group_id": 20101,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      301,
+      406
+    ],
+    "icon_id": 30012,
+    "skill_category": 1
   },
   "201012": {
     "name": "Intimidate",
@@ -2461,7 +4178,14 @@
     "group_id": 20101,
     "grade_value": 262,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      301,
+      406
+    ],
+    "icon_id": 30011,
+    "skill_category": 1
   },
   "201021": {
     "name": "You've Got No Shot",
@@ -2469,7 +4193,14 @@
     "group_id": 20102,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      301,
+      406
+    ],
+    "icon_id": 30052,
+    "skill_category": 1
   },
   "201022": {
     "name": "Stop Right There!",
@@ -2477,7 +4208,14 @@
     "group_id": 20102,
     "grade_value": 262,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      301,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 1
   },
   "201031": {
     "name": "Mile Straightaways ◎",
@@ -2485,7 +4223,13 @@
     "group_id": 20103,
     "grade_value": 262,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201032": {
     "name": "Mile Straightaways ○",
@@ -2493,7 +4237,13 @@
     "group_id": 20103,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201041": {
     "name": "Mile Corners ◎",
@@ -2501,7 +4251,13 @@
     "group_id": 20104,
     "grade_value": 262,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201042": {
     "name": "Mile Corners ○",
@@ -2509,7 +4265,13 @@
     "group_id": 20104,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201051": {
     "name": "Changing Gears",
@@ -2517,7 +4279,14 @@
     "group_id": 20105,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "201052": {
     "name": "Shifting Gears",
@@ -2525,7 +4294,14 @@
     "group_id": 20105,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "201061": {
     "name": "Step on the Gas!",
@@ -2533,7 +4309,14 @@
     "group_id": 20106,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      302,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 2
   },
   "201062": {
     "name": "Acceleration",
@@ -2541,7 +4324,14 @@
     "group_id": 20106,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      302,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 2
   },
   "201071": {
     "name": "Big-Sisterly",
@@ -2549,7 +4339,13 @@
     "group_id": 20107,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "201072": {
     "name": "Unyielding Spirit",
@@ -2557,7 +4353,13 @@
     "group_id": 20107,
     "grade_value": 217,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201081": {
     "name": "Greed for Speed",
@@ -2565,7 +4367,14 @@
     "group_id": 20108,
     "grade_value": 461,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      302,
+      406
+    ],
+    "icon_id": 30012,
+    "skill_category": 2
   },
   "201082": {
     "name": "Speed Eater",
@@ -2573,7 +4382,14 @@
     "group_id": 20108,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      302,
+      406
+    ],
+    "icon_id": 30011,
+    "skill_category": 2
   },
   "201091": {
     "name": "Battle Formation",
@@ -2581,7 +4397,14 @@
     "group_id": 20109,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      301,
+      406
+    ],
+    "icon_id": 30022,
+    "skill_category": 1
   },
   "201092": {
     "name": "Opening Gambit",
@@ -2589,7 +4412,14 @@
     "group_id": 20109,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      301,
+      406
+    ],
+    "icon_id": 30021,
+    "skill_category": 1
   },
   "201101": {
     "name": "Medium Straightaways ◎",
@@ -2597,7 +4427,13 @@
     "group_id": 20110,
     "grade_value": 262,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201102": {
     "name": "Medium Straightaways ○",
@@ -2605,7 +4441,13 @@
     "group_id": 20110,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201103": {
     "name": "Flash Forward",
@@ -2613,7 +4455,13 @@
     "group_id": 20110,
     "grade_value": 508,
     "need_skill_point": 150,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "201111": {
     "name": "Medium Corners ◎",
@@ -2621,7 +4469,13 @@
     "group_id": 20111,
     "grade_value": 262,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201112": {
     "name": "Medium Corners ○",
@@ -2629,7 +4483,13 @@
     "group_id": 20111,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201121": {
     "name": "Clairvoyance",
@@ -2637,7 +4497,14 @@
     "group_id": 20112,
     "grade_value": 334,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      301,
+      405
+    ],
+    "icon_id": 20092,
+    "skill_category": 1
   },
   "201122": {
     "name": "Hawkeye",
@@ -2645,7 +4512,14 @@
     "group_id": 20112,
     "grade_value": 129,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      301,
+      405
+    ],
+    "icon_id": 20091,
+    "skill_category": 1
   },
   "201131": {
     "name": "Lightning Step",
@@ -2653,7 +4527,14 @@
     "group_id": 20113,
     "grade_value": 394,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      302,
+      403
+    ],
+    "icon_id": 20052,
+    "skill_category": 2
   },
   "201132": {
     "name": "Thunderbolt Step",
@@ -2661,7 +4542,14 @@
     "group_id": 20113,
     "grade_value": 174,
     "need_skill_point": 140,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      302,
+      403
+    ],
+    "icon_id": 20051,
+    "skill_category": 2
   },
   "201141": {
     "name": "Miraculous Step",
@@ -2669,7 +4557,13 @@
     "group_id": 20114,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "201142": {
     "name": "Soft Step",
@@ -2677,7 +4571,13 @@
     "group_id": 20114,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "201151": {
     "name": "Dominator",
@@ -2685,7 +4585,14 @@
     "group_id": 20115,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      303,
+      406
+    ],
+    "icon_id": 30012,
+    "skill_category": 3
   },
   "201152": {
     "name": "Tether",
@@ -2693,7 +4600,14 @@
     "group_id": 20115,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      303,
+      406
+    ],
+    "icon_id": 30011,
+    "skill_category": 3
   },
   "201161": {
     "name": "Mystifying Murmur",
@@ -2701,7 +4615,14 @@
     "group_id": 20116,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      302,
+      406
+    ],
+    "icon_id": 30052,
+    "skill_category": 2
   },
   "201162": {
     "name": "Murmur",
@@ -2709,7 +4630,14 @@
     "group_id": 20116,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      302,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 2
   },
   "201171": {
     "name": "Long Straightaways ◎",
@@ -2717,7 +4645,13 @@
     "group_id": 20117,
     "grade_value": 262,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201172": {
     "name": "Long Straightaways ○",
@@ -2725,7 +4659,13 @@
     "group_id": 20117,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201173": {
     "name": "Blast Forward",
@@ -2733,7 +4673,13 @@
     "group_id": 20117,
     "grade_value": 508,
     "need_skill_point": 150,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "201181": {
     "name": "Long Corners ◎",
@@ -2741,7 +4687,13 @@
     "group_id": 20118,
     "grade_value": 262,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201182": {
     "name": "Long Corners ○",
@@ -2749,7 +4701,13 @@
     "group_id": 20118,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201191": {
     "name": "Vanguard Spirit",
@@ -2757,7 +4715,14 @@
     "group_id": 20119,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "201192": {
     "name": "Keeping the Lead",
@@ -2765,7 +4730,14 @@
     "group_id": 20119,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "201201": {
     "name": "VIP Pass",
@@ -2773,7 +4745,13 @@
     "group_id": 20120,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "201202": {
     "name": "Passing Pro",
@@ -2781,7 +4759,13 @@
     "group_id": 20120,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "201211": {
     "name": "Overwhelming Pressure",
@@ -2789,7 +4773,14 @@
     "group_id": 20121,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      303,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "201212": {
     "name": "Pressure",
@@ -2797,7 +4788,14 @@
     "group_id": 20121,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      303,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "201221": {
     "name": "Stamina Siphon",
@@ -2805,7 +4803,14 @@
     "group_id": 20122,
     "grade_value": 461,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      302,
+      406
+    ],
+    "icon_id": 30052,
+    "skill_category": 2
   },
   "201222": {
     "name": "Stamina Eater",
@@ -2813,7 +4818,14 @@
     "group_id": 20122,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      302,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 2
   },
   "201231": {
     "name": "Illusionist",
@@ -2821,7 +4833,14 @@
     "group_id": 20123,
     "grade_value": 334,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      303,
+      406
+    ],
+    "icon_id": 30072,
+    "skill_category": 3
   },
   "201232": {
     "name": "Smoke Screen",
@@ -2829,7 +4848,14 @@
     "group_id": 20123,
     "grade_value": 129,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      303,
+      406
+    ],
+    "icon_id": 30071,
+    "skill_category": 3
   },
   "201241": {
     "name": "Front Runner Straightaways ◎",
@@ -2837,7 +4863,13 @@
     "group_id": 20124,
     "grade_value": 262,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201242": {
     "name": "Front Runner Straightaways ○",
@@ -2845,7 +4877,13 @@
     "group_id": 20124,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201251": {
     "name": "Front Runner Corners ◎",
@@ -2853,7 +4891,13 @@
     "group_id": 20125,
     "grade_value": 262,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201252": {
     "name": "Front Runner Corners ○",
@@ -2861,7 +4905,13 @@
     "group_id": 20125,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201261": {
     "name": "Sixth Sense",
@@ -2869,7 +4919,14 @@
     "group_id": 20126,
     "grade_value": 334,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      301,
+      403
+    ],
+    "icon_id": 20052,
+    "skill_category": 1
   },
   "201262": {
     "name": "Dodging Danger",
@@ -2877,7 +4934,14 @@
     "group_id": 20126,
     "grade_value": 129,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      301,
+      403
+    ],
+    "icon_id": 20051,
+    "skill_category": 1
   },
   "201271": {
     "name": "Top Runner",
@@ -2885,7 +4949,15 @@
     "group_id": 20127,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      301,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "201272": {
     "name": "Leader's Pride",
@@ -2893,7 +4965,15 @@
     "group_id": 20127,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      301,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201281": {
     "name": "Restless",
@@ -2901,7 +4981,13 @@
     "group_id": 20128,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "201282": {
     "name": "Moxie",
@@ -2909,7 +4995,13 @@
     "group_id": 20128,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "201291": {
     "name": "Reignition",
@@ -2917,7 +5009,14 @@
     "group_id": 20129,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      302,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 2
   },
   "201292": {
     "name": "Second Wind",
@@ -2925,7 +5024,14 @@
     "group_id": 20129,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      302,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 2
   },
   "201302": {
     "name": "Restart",
@@ -2933,7 +5039,14 @@
     "group_id": 20130,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      301,
+      406
+    ],
+    "icon_id": 30021,
+    "skill_category": 1
   },
   "201311": {
     "name": "Pace Chaser Straightaways ◎",
@@ -2941,7 +5054,13 @@
     "group_id": 20131,
     "grade_value": 262,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201312": {
     "name": "Pace Chaser Straightaways ○",
@@ -2949,7 +5068,13 @@
     "group_id": 20131,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201321": {
     "name": "Pace Chaser Corners ◎",
@@ -2957,7 +5082,13 @@
     "group_id": 20132,
     "grade_value": 262,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201322": {
     "name": "Pace Chaser Corners ○",
@@ -2965,7 +5096,13 @@
     "group_id": 20132,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201331": {
     "name": "Technician",
@@ -2973,7 +5110,13 @@
     "group_id": 20133,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 4
   },
   "201332": {
     "name": "Shrewd Step",
@@ -2981,7 +5124,13 @@
     "group_id": 20133,
     "grade_value": 217,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 4
   },
   "201341": {
     "name": "Determined Descent",
@@ -2989,7 +5138,13 @@
     "group_id": 20134,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 4
   },
   "201342": {
     "name": "Straight Descent",
@@ -2997,7 +5152,13 @@
     "group_id": 20134,
     "grade_value": 217,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 4
   },
   "201351": {
     "name": "Gourmand",
@@ -3005,7 +5166,14 @@
     "group_id": 20135,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      302,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 2
   },
   "201352": {
     "name": "Hydrate",
@@ -3013,7 +5181,14 @@
     "group_id": 20135,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      302,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 2
   },
   "201361": {
     "name": "Shatterproof",
@@ -3021,7 +5196,14 @@
     "group_id": 20136,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      302,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 2
   },
   "201362": {
     "name": "Tactical Tweak",
@@ -3029,7 +5211,14 @@
     "group_id": 20136,
     "grade_value": 217,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      302,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 2
   },
   "201371": {
     "name": "Dazzling Disorientation",
@@ -3037,7 +5226,14 @@
     "group_id": 20137,
     "grade_value": 334,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      303,
+      402
+    ],
+    "icon_id": 30072,
+    "skill_category": 3
   },
   "201372": {
     "name": "Disorient",
@@ -3045,7 +5241,14 @@
     "group_id": 20137,
     "grade_value": 85,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      303,
+      402
+    ],
+    "icon_id": 30071,
+    "skill_category": 3
   },
   "201381": {
     "name": "Late Surger Straightaways ◎",
@@ -3053,7 +5256,13 @@
     "group_id": 20138,
     "grade_value": 262,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201382": {
     "name": "Late Surger Straightaways ○",
@@ -3061,7 +5270,13 @@
     "group_id": 20138,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201391": {
     "name": "Late Surger Corners ◎",
@@ -3069,7 +5284,13 @@
     "group_id": 20139,
     "grade_value": 262,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201392": {
     "name": "Late Surger Corners ○",
@@ -3077,7 +5298,13 @@
     "group_id": 20139,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201401": {
     "name": "Hard Worker",
@@ -3085,7 +5312,13 @@
     "group_id": 20140,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 4
   },
   "201402": {
     "name": "Fighter",
@@ -3093,7 +5326,13 @@
     "group_id": 20140,
     "grade_value": 217,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 4
   },
   "201411": {
     "name": "15,000,000 CC",
@@ -3101,7 +5340,13 @@
     "group_id": 20141,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "201412": {
     "name": "1,500,000 CC",
@@ -3109,7 +5354,13 @@
     "group_id": 20141,
     "grade_value": 217,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201421": {
     "name": "Relax",
@@ -3117,7 +5368,14 @@
     "group_id": 20142,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      303,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 3
   },
   "201422": {
     "name": "A Small Breather",
@@ -3125,7 +5383,14 @@
     "group_id": 20142,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      303,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 3
   },
   "201431": {
     "name": "The Bigger Picture",
@@ -3133,7 +5398,14 @@
     "group_id": 20143,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      302,
+      405
+    ],
+    "icon_id": 20092,
+    "skill_category": 2
   },
   "201432": {
     "name": "Studious",
@@ -3141,7 +5413,14 @@
     "group_id": 20143,
     "grade_value": 85,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      302,
+      405
+    ],
+    "icon_id": 20091,
+    "skill_category": 2
   },
   "201441": {
     "name": "All-Seeing Eyes",
@@ -3149,7 +5428,14 @@
     "group_id": 20144,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      303,
+      406
+    ],
+    "icon_id": 30052,
+    "skill_category": 3
   },
   "201442": {
     "name": "Sharp Gaze",
@@ -3157,7 +5443,14 @@
     "group_id": 20144,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      303,
+      406
+    ],
+    "icon_id": 30051,
+    "skill_category": 3
   },
   "201451": {
     "name": "End Closer Straightaways ◎",
@@ -3165,7 +5458,13 @@
     "group_id": 20145,
     "grade_value": 262,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201452": {
     "name": "End Closer Straightaways ○",
@@ -3173,7 +5472,13 @@
     "group_id": 20145,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201461": {
     "name": "End Closer Corners ◎",
@@ -3181,7 +5486,13 @@
     "group_id": 20146,
     "grade_value": 262,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201462": {
     "name": "End Closer Corners ○",
@@ -3189,7 +5500,13 @@
     "group_id": 20146,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201471": {
     "name": "The Coast Is Clear!",
@@ -3197,7 +5514,13 @@
     "group_id": 20147,
     "grade_value": 334,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      405
+    ],
+    "icon_id": 20092,
+    "skill_category": 4
   },
   "201472": {
     "name": "I Can See Right Through You",
@@ -3205,7 +5528,13 @@
     "group_id": 20147,
     "grade_value": 85,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      405
+    ],
+    "icon_id": 20091,
+    "skill_category": 4
   },
   "201481": {
     "name": "Go-Home Specialist",
@@ -3213,7 +5542,13 @@
     "group_id": 20148,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "201482": {
     "name": "After-School Stroll",
@@ -3221,7 +5556,13 @@
     "group_id": 20148,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "201491": {
     "name": "Serenity",
@@ -3229,7 +5570,13 @@
     "group_id": 20149,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "201492": {
     "name": "Levelheaded",
@@ -3237,7 +5584,13 @@
     "group_id": 20149,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "201501": {
     "name": "Crusader",
@@ -3245,7 +5598,14 @@
     "group_id": 20150,
     "grade_value": 334,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      303,
+      405
+    ],
+    "icon_id": 20092,
+    "skill_category": 3
   },
   "201502": {
     "name": "Strategist",
@@ -3253,7 +5613,14 @@
     "group_id": 20150,
     "grade_value": 85,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      303,
+      405
+    ],
+    "icon_id": 20091,
+    "skill_category": 3
   },
   "201511": {
     "name": "Petrifying Gaze",
@@ -3261,7 +5628,14 @@
     "group_id": 20151,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      303,
+      406
+    ],
+    "icon_id": 30012,
+    "skill_category": 3
   },
   "201512": {
     "name": "Intense Gaze",
@@ -3269,7 +5643,14 @@
     "group_id": 20151,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      303,
+      406
+    ],
+    "icon_id": 30011,
+    "skill_category": 3
   },
   "201521": {
     "name": "Front Runner Savvy ◎",
@@ -3277,7 +5658,13 @@
     "group_id": 20152,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101,
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "201522": {
     "name": "Front Runner Savvy ○",
@@ -3285,7 +5672,13 @@
     "group_id": 20152,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      101,
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "201531": {
     "name": "Pace Chaser Savvy ◎",
@@ -3293,7 +5686,13 @@
     "group_id": 20153,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "201532": {
     "name": "Pace Chaser Savvy ○",
@@ -3301,7 +5700,13 @@
     "group_id": 20153,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "201541": {
     "name": "Late Surger Savvy ◎",
@@ -3309,7 +5714,13 @@
     "group_id": 20154,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "201542": {
     "name": "Late Surger Savvy ○",
@@ -3317,7 +5728,13 @@
     "group_id": 20154,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "201551": {
     "name": "End Closer Savvy ◎",
@@ -3325,7 +5742,13 @@
     "group_id": 20155,
     "grade_value": 217,
     "need_skill_point": 130,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "201552": {
     "name": "End Closer Savvy ○",
@@ -3333,7 +5756,13 @@
     "group_id": 20155,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      405
+    ],
+    "icon_id": 10051,
+    "skill_category": 0
   },
   "201561": {
     "name": "Super Lucky Seven",
@@ -3341,7 +5770,12 @@
     "group_id": 20156,
     "grade_value": 334,
     "need_skill_point": 110,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10062,
+    "skill_category": 0
   },
   "201562": {
     "name": "Lucky Seven",
@@ -3349,7 +5783,12 @@
     "group_id": 20156,
     "grade_value": 174,
     "need_skill_point": 110,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10061,
+    "skill_category": 0
   },
   "201571": {
     "name": "Triple 7s",
@@ -3357,7 +5796,12 @@
     "group_id": 20157,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 4
   },
   "201581": {
     "name": "Highlander",
@@ -3365,7 +5809,12 @@
     "group_id": 20158,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 4
   },
   "201591": {
     "name": "Uma Stan",
@@ -3373,7 +5822,12 @@
     "group_id": 20159,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201592": {
     "name": "Superstan",
@@ -3381,7 +5835,12 @@
     "group_id": 20159,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "201601": {
     "name": "Groundwork",
@@ -3389,7 +5848,13 @@
     "group_id": 20160,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      301,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 1
   },
   "201611": {
     "name": "Tail Held High",
@@ -3397,7 +5862,13 @@
     "group_id": 20161,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "201612": {
     "name": "Tail Nine",
@@ -3405,7 +5876,13 @@
     "group_id": 20161,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "201621": {
     "name": "Shake It Out",
@@ -3413,7 +5890,13 @@
     "group_id": 20162,
     "grade_value": 217,
     "need_skill_point": 100,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 3
   },
   "201631": {
     "name": "Sympathy",
@@ -3421,7 +5904,12 @@
     "group_id": 20163,
     "grade_value": 129,
     "need_skill_point": 70,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "201641": {
     "name": "Lone Wolf",
@@ -3429,7 +5917,12 @@
     "group_id": 20164,
     "grade_value": 129,
     "need_skill_point": 70,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "201651": {
     "name": "Slipstream",
@@ -3437,7 +5930,12 @@
     "group_id": 20165,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201661": {
     "name": "Playtime's Over!",
@@ -3445,7 +5943,12 @@
     "group_id": 20166,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "201662": {
     "name": "See Ya Later!",
@@ -3453,7 +5956,12 @@
     "group_id": 20166,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "201671": {
     "name": "Trending in the Charts!",
@@ -3461,7 +5969,14 @@
     "group_id": 20167,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      302,
+      401,
+      502
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "201672": {
     "name": "Top Pick",
@@ -3469,7 +5984,14 @@
     "group_id": 20167,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      401,
+      502
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "201681": {
     "name": "Lead the Charge!",
@@ -3477,7 +5999,14 @@
     "group_id": 20168,
     "grade_value": 394,
     "need_skill_point": 140,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      303,
+      403,
+      502
+    ],
+    "icon_id": 20052,
+    "skill_category": 3
   },
   "201682": {
     "name": "Forward, March!",
@@ -3485,7 +6014,14 @@
     "group_id": 20168,
     "grade_value": 174,
     "need_skill_point": 140,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      403,
+      502
+    ],
+    "icon_id": 20051,
+    "skill_category": 3
   },
   "201691": {
     "name": "Lie in Wait",
@@ -3493,7 +6029,14 @@
     "group_id": 20169,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      301,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 1
   },
   "201692": {
     "name": "Be Still",
@@ -3501,7 +6044,14 @@
     "group_id": 20169,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      301,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 1
   },
   "201701": {
     "name": "Come What May",
@@ -3509,7 +6059,14 @@
     "group_id": 20170,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      303,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "201702": {
     "name": "All I've Got",
@@ -3517,7 +6074,14 @@
     "group_id": 20170,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      303,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "201801": {
     "name": "♡ 3D Nail Art",
@@ -3525,7 +6089,12 @@
     "group_id": 20180,
     "grade_value": -129,
     "need_skill_point": 50,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "201901": {
     "name": "Neck and Neck",
@@ -3533,7 +6102,14 @@
     "group_id": 20190,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      102,
+      303,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 3
   },
   "201902": {
     "name": "Head-On",
@@ -3541,7 +6117,14 @@
     "group_id": 20190,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      102,
+      303,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 3
   },
   "202002": {
     "name": "Familiar Ground",
@@ -3549,7 +6132,14 @@
     "group_id": 20200,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      402,
+      502
+    ],
+    "icon_id": 20021,
+    "skill_category": 2
   },
   "202011": {
     "name": "Headliner",
@@ -3557,7 +6147,14 @@
     "group_id": 20201,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "202012": {
     "name": "Feature Act",
@@ -3565,7 +6162,14 @@
     "group_id": 20201,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "202021": {
     "name": "Daring Strike",
@@ -3573,7 +6177,14 @@
     "group_id": 20202,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      104,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "202022": {
     "name": "Early Start",
@@ -3581,7 +6192,14 @@
     "group_id": 20202,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      104,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "202031": {
     "name": "Nothing Ventured",
@@ -3589,7 +6207,12 @@
     "group_id": 20203,
     "grade_value": 334,
     "need_skill_point": 120,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "202032": {
     "name": "Risky Business",
@@ -3597,7 +6220,12 @@
     "group_id": 20203,
     "grade_value": 129,
     "need_skill_point": 120,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "202041": {
     "name": "In High Spirits",
@@ -3605,7 +6233,14 @@
     "group_id": 20204,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      201,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "202042": {
     "name": "Light as a Feather",
@@ -3613,7 +6248,14 @@
     "group_id": 20204,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      201,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "202051": {
     "name": "Runaway",
@@ -3621,7 +6263,12 @@
     "group_id": 20205,
     "grade_value": 370,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      101
+    ],
+    "icon_id": 40012,
+    "skill_category": 0
   },
   "202061": {
     "name": "Best in Japan",
@@ -3629,7 +6276,14 @@
     "group_id": 20206,
     "grade_value": 508,
     "need_skill_point": 360,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      303,
+      401
+    ],
+    "icon_id": 2010010,
+    "skill_category": 3
   },
   "202071": {
     "name": "Of Calm Mind",
@@ -3637,7 +6291,14 @@
     "group_id": 20207,
     "grade_value": 508,
     "need_skill_point": 170,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      204,
+      302,
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 2
   },
   "202072": {
     "name": "Free-Spirited",
@@ -3645,7 +6306,14 @@
     "group_id": 20207,
     "grade_value": 217,
     "need_skill_point": 170,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      204,
+      302,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 2
   },
   "202081": {
     "name": "From the Brink",
@@ -3653,7 +6321,14 @@
     "group_id": 20208,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      303,
+      403
+    ],
+    "icon_id": 20042,
+    "skill_category": 3
   },
   "202082": {
     "name": "Take the Chance",
@@ -3661,7 +6336,14 @@
     "group_id": 20208,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      303,
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 3
   },
   "202091": {
     "name": "Burning Soul",
@@ -3669,7 +6351,15 @@
     "group_id": 20209,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      302,
+      401,
+      402
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "202092": {
     "name": "Fighting Spirit",
@@ -3677,7 +6367,15 @@
     "group_id": 20209,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      302,
+      401,
+      402
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "202101": {
     "name": "Elated",
@@ -3685,7 +6383,14 @@
     "group_id": 20210,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      302,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "202102": {
     "name": "Eager",
@@ -3693,7 +6398,14 @@
     "group_id": 20210,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      302,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "202111": {
     "name": "Full of Vigor",
@@ -3701,7 +6413,14 @@
     "group_id": 20211,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      202,
+      303,
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "202112": {
     "name": "Pumped",
@@ -3709,7 +6428,14 @@
     "group_id": 20211,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      202,
+      303,
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 3
   },
   "202121": {
     "name": "Dauntless",
@@ -3717,7 +6443,14 @@
     "group_id": 20212,
     "grade_value": 508,
     "need_skill_point": 180,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      103,
+      401,
+      403
+    ],
+    "icon_id": 20012,
+    "skill_category": 4
   },
   "202122": {
     "name": "Fearless",
@@ -3725,7 +6458,14 @@
     "group_id": 20212,
     "grade_value": 217,
     "need_skill_point": 180,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      103,
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 4
   },
   "202131": {
     "name": "Wild Wind",
@@ -3733,7 +6473,15 @@
     "group_id": 20213,
     "grade_value": 508,
     "need_skill_point": 160,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      203,
+      302,
+      401,
+      406
+    ],
+    "icon_id": 20012,
+    "skill_category": 2
   },
   "202132": {
     "name": "With All My Soul",
@@ -3741,7 +6489,15 @@
     "group_id": 20213,
     "grade_value": 217,
     "need_skill_point": 160,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      203,
+      302,
+      401,
+      406
+    ],
+    "icon_id": 20011,
+    "skill_category": 2
   },
   "210011": {
     "name": "Burning Spirit SPD",
@@ -3749,7 +6505,14 @@
     "group_id": 21001,
     "grade_value": 633,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      302,
+      401,
+      802
+    ],
+    "icon_id": 20102,
+    "skill_category": 2
   },
   "210012": {
     "name": "Ignited Spirit SPD",
@@ -3757,7 +6520,14 @@
     "group_id": 21001,
     "grade_value": 263,
     "need_skill_point": 200,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      401,
+      802
+    ],
+    "icon_id": 20101,
+    "skill_category": 2
   },
   "210021": {
     "name": "Burning Spirit STA",
@@ -3765,7 +6535,14 @@
     "group_id": 21002,
     "grade_value": 633,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      302,
+      402,
+      802
+    ],
+    "icon_id": 20112,
+    "skill_category": 2
   },
   "210022": {
     "name": "Ignited Spirit STA",
@@ -3773,7 +6550,14 @@
     "group_id": 21002,
     "grade_value": 263,
     "need_skill_point": 200,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      302,
+      402,
+      802
+    ],
+    "icon_id": 20111,
+    "skill_category": 2
   },
   "210031": {
     "name": "Burning Spirit PWR",
@@ -3781,7 +6565,14 @@
     "group_id": 21003,
     "grade_value": 633,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      303,
+      403,
+      802
+    ],
+    "icon_id": 20122,
+    "skill_category": 3
   },
   "210032": {
     "name": "Ignited Spirit PWR",
@@ -3789,7 +6580,14 @@
     "group_id": 21003,
     "grade_value": 263,
     "need_skill_point": 200,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      403,
+      802
+    ],
+    "icon_id": 20121,
+    "skill_category": 3
   },
   "210041": {
     "name": "Burning Spirit GUTS",
@@ -3797,7 +6595,15 @@
     "group_id": 21004,
     "grade_value": 633,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      303,
+      401,
+      403,
+      802
+    ],
+    "icon_id": 20102,
+    "skill_category": 3
   },
   "210042": {
     "name": "Ignited Spirit GUTS",
@@ -3805,7 +6611,15 @@
     "group_id": 21004,
     "grade_value": 263,
     "need_skill_point": 200,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      303,
+      401,
+      403,
+      802
+    ],
+    "icon_id": 20101,
+    "skill_category": 3
   },
   "210051": {
     "name": "Burning Spirit WIT",
@@ -3813,7 +6627,15 @@
     "group_id": 21005,
     "grade_value": 633,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      301,
+      403,
+      405,
+      802
+    ],
+    "icon_id": 20132,
+    "skill_category": 1
   },
   "210052": {
     "name": "Ignited Spirit WIT",
@@ -3821,7 +6643,15 @@
     "group_id": 21005,
     "grade_value": 263,
     "need_skill_point": 200,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      301,
+      403,
+      405,
+      802
+    ],
+    "icon_id": 20131,
+    "skill_category": 1
   },
   "210061": {
     "name": "Radiant Star",
@@ -3829,7 +6659,15 @@
     "group_id": 21006,
     "grade_value": 633,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402,
+      403,
+      804
+    ],
+    "icon_id": 20142,
+    "skill_category": 4
   },
   "210062": {
     "name": "Glittering Star",
@@ -3837,7 +6675,15 @@
     "group_id": 21006,
     "grade_value": 263,
     "need_skill_point": 200,
-    "disable_singlemode": 0
+    "disable_singlemode": 0,
+    "tags": [
+      401,
+      402,
+      403,
+      804
+    ],
+    "icon_id": 20141,
+    "skill_category": 4
   },
   "300011": {
     "name": "Unquenched Thirst",
@@ -3845,7 +6691,12 @@
     "group_id": 30001,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "300021": {
     "name": "Unchanging",
@@ -3853,7 +6704,12 @@
     "group_id": 30002,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10012,
+    "skill_category": 0
   },
   "300031": {
     "name": "Towards the Scenery I Seek",
@@ -3861,7 +6717,12 @@
     "group_id": 30003,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "300041": {
     "name": "Creeping Anxiety",
@@ -3869,7 +6730,12 @@
     "group_id": 30004,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      406
+    ],
+    "icon_id": 10014,
+    "skill_category": 0
   },
   "300051": {
     "name": "Blatant Fear",
@@ -3877,7 +6743,12 @@
     "group_id": 30005,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      406
+    ],
+    "icon_id": 20015,
+    "skill_category": 4
   },
   "300061": {
     "name": "Dream Run",
@@ -3885,7 +6756,12 @@
     "group_id": 30006,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20012,
+    "skill_category": 3
   },
   "300071": {
     "name": "Show Me What Lies Beyond!",
@@ -3893,7 +6769,12 @@
     "group_id": 30007,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "300081": {
     "name": "Hoiya! Have a Good Run!",
@@ -3901,7 +6782,12 @@
     "group_id": 30008,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10021,
+    "skill_category": 0
   },
   "300091": {
     "name": "As a Friend and Rival",
@@ -3909,7 +6795,12 @@
     "group_id": 30009,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 10031,
+    "skill_category": 0
   },
   "300101": {
     "name": "Cheers of a Fellow Dreamer",
@@ -3917,7 +6808,12 @@
     "group_id": 30010,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20022,
+    "skill_category": 4
   },
   "300111": {
     "name": "Chin Up, Derby Umamusume!",
@@ -3925,7 +6821,12 @@
     "group_id": 30011,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 10011,
+    "skill_category": 0
   },
   "300121": {
     "name": "For the Team",
@@ -3933,7 +6834,12 @@
     "group_id": 30012,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 10022,
+    "skill_category": 0
   },
   "900011": {
     "name": "Shooting Star",
@@ -3941,7 +6847,13 @@
     "group_id": 90001,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900021": {
     "name": "The View from the Lead Is Mine!",
@@ -3949,7 +6861,12 @@
     "group_id": 90002,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900031": {
     "name": "Sky-High Teio Step",
@@ -3957,7 +6874,12 @@
     "group_id": 90003,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900041": {
     "name": "Red Shift/LP1211-M",
@@ -3965,7 +6887,12 @@
     "group_id": 90004,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 5
   },
   "900051": {
     "name": "Lights of Vaudeville",
@@ -3973,7 +6900,12 @@
     "group_id": 90005,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900061": {
     "name": "Triumphant Pulse",
@@ -3981,7 +6913,12 @@
     "group_id": 90006,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900071": {
     "name": "Anchors Aweigh!",
@@ -3989,7 +6926,12 @@
     "group_id": 90007,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900081": {
     "name": "Cut and Drive!",
@@ -3997,7 +6939,12 @@
     "group_id": 90008,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900091": {
     "name": "Resplendent Red Ace",
@@ -4005,7 +6952,13 @@
     "group_id": 90009,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900101": {
     "name": "Shooting for Victory!",
@@ -4013,7 +6966,12 @@
     "group_id": 90010,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 5
   },
   "900111": {
     "name": "Where There's a Will, There's a Way",
@@ -4021,7 +6979,12 @@
     "group_id": 90011,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900121": {
     "name": "You and Me! One-on-One!",
@@ -4029,7 +6992,12 @@
     "group_id": 90012,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900131": {
     "name": "The Duty of Dignity Calls",
@@ -4037,7 +7005,12 @@
     "group_id": 90013,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900141": {
     "name": "Victoria por plancha ☆",
@@ -4045,7 +7018,13 @@
     "group_id": 90014,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900151": {
     "name": "This Dance Is for Vittoria!",
@@ -4053,7 +7032,12 @@
     "group_id": 90015,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900161": {
     "name": "Shadow Break",
@@ -4061,7 +7045,12 @@
     "group_id": 90016,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900171": {
     "name": "Behold Thine Emperor's Divine Might",
@@ -4069,7 +7058,12 @@
     "group_id": 90017,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      406
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900181": {
     "name": "Blazing Pride",
@@ -4077,7 +7071,12 @@
     "group_id": 90018,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900191": {
     "name": "OMG! (ﾟ∀ﾟ)  The Final Sprint! ☆",
@@ -4085,7 +7084,13 @@
     "group_id": 90019,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900201": {
     "name": "Angling and Scheming",
@@ -4093,7 +7098,12 @@
     "group_id": 90020,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 5
   },
   "900211": {
     "name": "White Lightning Comin' Through!",
@@ -4101,7 +7111,13 @@
     "group_id": 90021,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900221": {
     "name": "Fairy Tale",
@@ -4109,7 +7125,12 @@
     "group_id": 90022,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900231": {
     "name": "∴win Q.E.D.",
@@ -4117,7 +7138,12 @@
     "group_id": 90023,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900241": {
     "name": "Flashy☆Landing",
@@ -4125,7 +7151,13 @@
     "group_id": 90024,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900251": {
     "name": "Chasing After You",
@@ -4133,7 +7165,12 @@
     "group_id": 90025,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900261": {
     "name": "G00 1st. F∞;",
@@ -4141,7 +7178,12 @@
     "group_id": 90026,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900271": {
     "name": "Let's Pump Some Iron!",
@@ -4149,7 +7191,12 @@
     "group_id": 90027,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 5
   },
   "900281": {
     "name": "YUMMY☆SPEED!",
@@ -4157,7 +7204,13 @@
     "group_id": 90028,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900301": {
     "name": "Blue Rose Closer",
@@ -4165,7 +7218,12 @@
     "group_id": 90030,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900311": {
     "name": "All Charged! It's Go Time!",
@@ -4173,7 +7231,12 @@
     "group_id": 90031,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900321": {
     "name": "U=ma2",
@@ -4181,7 +7244,13 @@
     "group_id": 90032,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 5
   },
   "900331": {
     "name": "Shooting Star of Dioskouroi",
@@ -4189,7 +7258,12 @@
     "group_id": 90033,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900351": {
     "name": "Our Ticket to Win!",
@@ -4197,7 +7271,12 @@
     "group_id": 90035,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900371": {
     "name": "Schwarzes Schwert",
@@ -4205,7 +7284,12 @@
     "group_id": 90037,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900381": {
     "name": "#LookatCurren",
@@ -4213,7 +7297,13 @@
     "group_id": 90038,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900391": {
     "name": "A Princess Must Seize Victory!",
@@ -4221,7 +7311,12 @@
     "group_id": 90039,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900401": {
     "name": "KEEP IT REAL.",
@@ -4229,7 +7324,12 @@
     "group_id": 90040,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 5
   },
   "900411": {
     "name": "Genius x Bakushin = Victory",
@@ -4237,7 +7337,12 @@
     "group_id": 90041,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900451": {
     "name": "Pure Heart",
@@ -4245,7 +7350,12 @@
     "group_id": 90045,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 5
   },
   "900461": {
     "name": "SPARKLY☆STARDOM",
@@ -4253,7 +7363,13 @@
     "group_id": 90046,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900481": {
     "name": "Pop & Polish",
@@ -4261,7 +7377,12 @@
     "group_id": 90048,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900501": {
     "name": "Nemesis",
@@ -4269,7 +7390,12 @@
     "group_id": 90050,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900511": {
     "name": "Budding Blossom",
@@ -4277,7 +7403,12 @@
     "group_id": 90051,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 5
   },
   "900521": {
     "name": "Super-Duper Climax",
@@ -4285,7 +7416,12 @@
     "group_id": 90052,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 5
   },
   "900561": {
     "name": "I See Victory in My Future!",
@@ -4293,7 +7429,13 @@
     "group_id": 90056,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900581": {
     "name": "I Never Goof Up!",
@@ -4301,7 +7443,13 @@
     "group_id": 90058,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900591": {
     "name": "Moving Past, and Beyond",
@@ -4309,7 +7457,12 @@
     "group_id": 90059,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 5
   },
   "900601": {
     "name": "Just a Little Farther!",
@@ -4317,7 +7470,12 @@
     "group_id": 90060,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900611": {
     "name": "Prideful King",
@@ -4325,7 +7483,12 @@
     "group_id": 90061,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900621": {
     "name": "Go, Go, Mun!",
@@ -4333,7 +7496,13 @@
     "group_id": 90062,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 5
   },
   "900641": {
     "name": "Keep Pushing Ahead",
@@ -4341,7 +7510,13 @@
     "group_id": 90064,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 5
   },
   "900671": {
     "name": "Eternal Encompassing Shine",
@@ -4349,7 +7524,12 @@
     "group_id": 90067,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900681": {
     "name": "Victory Cheer!",
@@ -4357,7 +7537,13 @@
     "group_id": 90068,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900691": {
     "name": "Ambition to Surpass the Sakura",
@@ -4365,7 +7551,12 @@
     "group_id": 90069,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900711": {
     "name": "A Lifelong Dream, A Moment's Flight",
@@ -4373,7 +7564,12 @@
     "group_id": 90071,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900721": {
     "name": "Peerless Dance of Flowering Flames",
@@ -4381,7 +7577,12 @@
     "group_id": 90072,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "900741": {
     "name": "Lovely Spring Breeze",
@@ -4389,7 +7590,12 @@
     "group_id": 90074,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910011": {
     "name": "Dazzl'n ♪ Diver",
@@ -4397,7 +7603,12 @@
     "group_id": 91001,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 5
   },
   "910031": {
     "name": "Certain Victory",
@@ -4405,7 +7616,12 @@
     "group_id": 91003,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910041": {
     "name": "A Kiss for Courage",
@@ -4413,7 +7629,12 @@
     "group_id": 91004,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910051": {
     "name": "Ravissant",
@@ -4421,7 +7642,12 @@
     "group_id": 91005,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910061": {
     "name": "Festive Miracle",
@@ -4429,7 +7655,14 @@
     "group_id": 91006,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910111": {
     "name": "Superior Heal",
@@ -4437,7 +7670,12 @@
     "group_id": 91011,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 5
   },
   "910131": {
     "name": "Legacy of the Strong",
@@ -4445,7 +7683,12 @@
     "group_id": 91013,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910141": {
     "name": "Condor's Fury",
@@ -4453,7 +7696,12 @@
     "group_id": 91014,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 5
   },
   "910151": {
     "name": "Barcarole of Blessings",
@@ -4461,7 +7709,12 @@
     "group_id": 91015,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910171": {
     "name": "Arrows Whistle, Shadows Disperse",
@@ -4469,7 +7722,12 @@
     "group_id": 91017,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910181": {
     "name": "Eternal Moments",
@@ -4477,7 +7735,12 @@
     "group_id": 91018,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910201": {
     "name": "Break It Down!",
@@ -4485,7 +7748,13 @@
     "group_id": 91020,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910231": {
     "name": "Presents from X",
@@ -4493,7 +7762,12 @@
     "group_id": 91023,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910241": {
     "name": "Flowery☆Maneuver",
@@ -4501,7 +7775,13 @@
     "group_id": 91024,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910261": {
     "name": "Operation Cacao",
@@ -4509,7 +7789,13 @@
     "group_id": 91026,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      402
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910301": {
     "name": "Every Rose Has Its Fangs",
@@ -4517,7 +7803,12 @@
     "group_id": 91030,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      402
+    ],
+    "icon_id": 20021,
+    "skill_category": 5
   },
   "910371": {
     "name": "Guten Appetit ♪",
@@ -4525,7 +7816,12 @@
     "group_id": 91037,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910401": {
     "name": "Dancing in the Leaves",
@@ -4533,7 +7829,13 @@
     "group_id": 91040,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910451": {
     "name": "Give Mummy a Hug ♡",
@@ -4541,7 +7843,13 @@
     "group_id": 91045,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401,
+      403
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910521": {
     "name": "114th Time's the Charm",
@@ -4549,7 +7857,12 @@
     "group_id": 91052,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910561": {
     "name": "Bountiful Harvest",
@@ -4557,7 +7870,12 @@
     "group_id": 91056,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910601": {
     "name": "Go☆Go☆Goal!",
@@ -4565,7 +7883,12 @@
     "group_id": 91060,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      401
+    ],
+    "icon_id": 20011,
+    "skill_category": 5
   },
   "910611": {
     "name": "Louder! Tracen Cheer!",
@@ -4573,7 +7896,12 @@
     "group_id": 91061,
     "grade_value": 180,
     "need_skill_point": 200,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      403
+    ],
+    "icon_id": 20041,
+    "skill_category": 5
   },
   "1000011": {
     "name": "Carnival Bonus",
@@ -4581,7 +7909,12 @@
     "group_id": 100001,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      0
+    ],
+    "icon_id": 1010011,
+    "skill_category": 101
   },
   "1000012": {
     "name": "Carnival Bonus",
@@ -4589,7 +7922,12 @@
     "group_id": 100001,
     "grade_value": 0,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      0
+    ],
+    "icon_id": 1010011,
+    "skill_category": 101
   },
   "1100011": {
     "name": "Feelin' a Bit Silly",
@@ -4597,6 +7935,13 @@
     "group_id": 110001,
     "grade_value": -500,
     "need_skill_point": 0,
-    "disable_singlemode": 1
+    "disable_singlemode": 1,
+    "tags": [
+      301,
+      403,
+      407
+    ],
+    "icon_id": 20064,
+    "skill_category": 1
   }
 }

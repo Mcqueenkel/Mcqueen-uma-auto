@@ -678,6 +678,7 @@ class RunCareerRequest(BaseModel):
     dev_mode: bool = False
 
 class SaveRacesRequest(BaseModel):
+    preset_name: str
     races: list[int]
 
 class SavePresetRequest(BaseModel):
@@ -737,9 +738,9 @@ async def generate_master_data():
 
 @app.post("/api/presets/save_races")
 async def save_races(req: SaveRacesRequest):
-    preset = preset_store.read_one("xguri parent")
+    preset = preset_store.read_one(req.preset_name)
     if not preset:
-        return {"success": False, "detail": "xguri parent preset missing"}
+        return {"success": False, "detail": f"{req.preset_name} preset missing"}
     preset["extra_race_list"] = req.races
     preset_store.write(preset)
     return {"success": True}
@@ -755,6 +756,15 @@ async def save_preset(req: SavePresetRequest):
 @app.post("/api/presets/delete")
 async def delete_preset(req: DeletePresetByNameRequest):
     return {"success": preset_store.delete(req.name)}
+
+@app.get("/api/skills")
+async def get_skills():
+    current_skill_data = {}
+    path = base_dir / 'data' / 'skill_data.json'
+    if path.exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            current_skill_data = json.load(f)
+    return {"success": True, "skills": current_skill_data}
 
 def start_career_from_request(req):
     global active_account, active_dashboard_data
@@ -1188,9 +1198,10 @@ async def run_career(req: RunCareerRequest):
     global active_account, backend_loop_thread
     if career_runner.snapshot().get("running") or (backend_loop_thread and backend_loop_thread.is_alive()):
         return {"success": False, "detail": "Career runner loop already active"}
-    preset = preset_store.read_one("xguri parent")
+    preset_name = req.preset_name or "xguri parent"
+    preset = preset_store.read_one(preset_name)
     if not preset:
-        return {"success": False, "detail": "xguri parent preset missing"}
+        return {"success": False, "detail": f"{preset_name} preset missing"}
     
     try:
         account = active_account or {}

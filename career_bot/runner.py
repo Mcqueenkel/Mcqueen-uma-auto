@@ -880,8 +880,18 @@ class CareerRunner:
         program_id = payload.get("program_id")
         current_turn = payload["current_turn"]
         strategy = payload.get("_strategy")
+
+        running_style = preset.get("running_style") if isinstance(preset, dict) else None
         try:
-            entry = client.race_entry(program_id=program_id, current_turn=current_turn)
+            running_style = int(running_style)
+        except (TypeError, ValueError):
+            running_style = 0
+
+        try:
+            if running_style in (1, 2, 3, 4):
+                entry = client.race_entry(program_id=program_id, current_turn=current_turn, running_style=running_style)
+            else:
+                entry = client.race_entry(program_id=program_id, current_turn=current_turn)
         except Exception as exc:
             print(f"Race Entry Error at turn {current_turn}: {exc}")
             if not any(err in str(exc) for err in ("205", "208")):
@@ -894,6 +904,7 @@ class CareerRunner:
             entry_data = entry.get("data") or {}
             if entry_data.get("unchecked_event_array"):
                 entry = self._drain_events(client, strategy, entry)
+        
         race_start_info = (entry.get("data") or {}).get("race_start_info") or {}
         is_short = 1
         res = client.race_start(is_short=is_short, current_turn=current_turn)

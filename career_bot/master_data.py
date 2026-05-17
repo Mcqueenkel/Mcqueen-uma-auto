@@ -137,12 +137,17 @@ def synthesize_skill_data(base_dir, master_data):
         for row in master_rows(master_data, "single_mode_skill_need_point")
         if row.get("id") is not None
     }
-
     skills = {}
     for row in master_rows(master_data, "skill_data"):
         skill_id = int(row.get("id") or 0)
         if not skill_id:
             continue
+            
+        tags = []
+        raw_tags = str(row.get("tag_id") or "")
+        if raw_tags:
+            tags = [int(t) for t in raw_tags.split("/") if t.isdigit()]
+
         skills[str(skill_id)] = {
             "name": skill_names.get(skill_id, str(skill_id)),
             "rarity": int(row.get("rarity") or 0),
@@ -150,6 +155,9 @@ def synthesize_skill_data(base_dir, master_data):
             "grade_value": int(row.get("grade_value") or 0),
             "need_skill_point": skill_costs.get(skill_id, 0),
             "disable_singlemode": int(row.get("disable_singlemode") or 0),
+            "tags": tags,
+            "icon_id": int(row.get("icon_id") or 0),
+            "skill_category": int(row.get("skill_category") or 0),
         }
 
     write_json(data_dir / "skill_data.json", skills)
