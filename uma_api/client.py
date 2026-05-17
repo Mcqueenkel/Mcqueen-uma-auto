@@ -865,14 +865,14 @@ class UmaClient:
             'current_turn': current_turn
         })
 
-    def race_entry(self, program_id, current_turn, running_style=None, retry_208=6, retry_205=3):
+    def race_entry(self, program_id, current_turn, running_style=None):
         payload = {
             'program_id': program_id,
             'current_turn': current_turn
         }
         if running_style is not None:
             payload['running_style'] = running_style
-        return self.call('single_mode_free/race_entry', payload, retry_208=retry_208, retry_205=retry_205)
+        return self.call('single_mode_free/race_entry', payload)
 
     def race_start(self, is_short, current_turn):
         return self.call('single_mode_free/race_start', {
