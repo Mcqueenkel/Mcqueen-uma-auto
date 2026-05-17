@@ -907,7 +907,8 @@ class CareerRunner:
             running_style = 0
         if running_style in (1, 2, 3, 4):
             if current_running_style != running_style:
-                entry = client.race_entry(program_id=program_id, current_turn=current_turn, running_style=running_style)
+                dna_sleep(5.2, 6.8, 6.0, 0.35)
+                entry = client.race_entry(program_id=program_id, current_turn=current_turn, running_style=running_style, retry_208=0, retry_205=0)
                 if strategy:
                     entry_data = entry.get("data") or {}
                     if entry_data.get("unchecked_event_array"):
