@@ -918,10 +918,11 @@ async def login(req: LoginRequest):
             raise Exception('Fresh in-game auth capture required; switch to the target in-game account, restart capture, then login again')
 
         c = UmaClient(cfg, trace_enabled=False)
-        res = c.login()
+        gated_client = GateKeeper(c)
+        res = gated_client.login()
         if not res:
             raise HTTPException(status_code=401, detail="Game login failed")
-        active_client = GateKeeper(c)
+        active_client = gated_client
 
         d = res.get('data', {})
         career_data = None
