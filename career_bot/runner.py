@@ -186,7 +186,7 @@ class CareerRunner:
                 self._mark(turn=turn)
                 self._track_turn_scores(state)
 
-                if turn == 77 and not getattr(self, "dev_mode", False):
+                if turn == 77 and not getattr(self, "dev_mode", False) and not preset.get("play_full_career", True):
                     print("Turn 77 reached terminating", flush=True)
                     self.stop()
                     break

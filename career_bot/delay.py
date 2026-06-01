@@ -48,6 +48,11 @@ TURN_DELAY_RESTORE_MIN = 2.5
 TURN_DELAY_RESTORE_MAX = 5.0
 GLOBAL_DELAYS_DISABLED = False
 
+# Per-action ("button press") delay scale. 1.0 = realistic human pacing,
+# 0.5 = 2x faster, 0.33 = 3x faster. Keeps the human-like variation/jitter but
+# compresses the magnitude. Only affects simulate_delay, NOT the per-turn delay.
+ACTION_DELAY_SCALE = 0.5
+
 
 class TimingDNA:
     """A self-contained, thread-safe "timing personality".
@@ -169,6 +174,8 @@ class TimingDNA:
 
         if self._chance() < self.distraction_chance:
             dt += self.uniform(self.distraction_min, self.distraction_max)
+
+        dt *= ACTION_DELAY_SCALE
 
         print(f"Endpoint: {endpoint} | Delay: {dt:.3f}s", flush=True)
 
