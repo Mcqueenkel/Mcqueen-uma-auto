@@ -315,21 +315,21 @@ class MantItemManager:
             return current, instant_used
 
         targets = []
-        SUMMER_CAMP_2_START = 60
-        CLIMAX_RACE_TURNS = [74, 76, 78]
 
         vital = int(chara.get("vital") or 0)
         if owned.get("Energy Drink MAX", 0) > 0 and vital <= 1:
             targets.append(("Energy Drink MAX", 1))
 
-        cleat_choice = self._old_ui_cleat_before_race(owned, turn, program_id, race_planner)
-        is_climax_race = turn in CLIMAX_RACE_TURNS
         is_g1 = self._is_g1_program(program_id, race_planner)
-        use_gear = cleat_choice is not None or is_climax_race or is_g1 or turn > SUMMER_CAMP_2_START
-        if use_gear and owned.get("Glow Sticks", 0) > 0:
-            targets.append(("Glow Sticks", 1))
+        # Cleat Hammer (Artisan 20% / Master 35%) is reserved for G1 races only
+        # (the climax finale is itself G1, so it is covered here).
+        cleat_choice = self._old_ui_cleat_before_race(owned, turn, program_id, race_planner) if is_g1 else None
         if cleat_choice:
             targets.append((cleat_choice, 1))
+        # Glow Sticks are reserved for the marquee races only: Arima Kinen,
+        # Japan Cup, and the final climax race.
+        if owned.get("Glow Sticks", 0) > 0 and self._is_glow_stick_race(turn, program_id, race_planner):
+            targets.append(("Glow Sticks", 1))
 
         targets = self._merge_targets(targets, owned)
         self.last_pre_race_use_selected = [{"name": name, "item_id": DISPLAY_TO_ID.get(name), "use_num": count} for name, count in targets]
@@ -629,6 +629,17 @@ class MantItemManager:
         info = (race_planner.program or {}).get(program_id) or {}
         race_inst = str(info.get("race_instance_id") or "")
         return race_inst.startswith("1")
+
+    def _is_glow_stick_race(self, turn, program_id, race_planner):
+        """Glow Sticks are spent only on the marquee races: Arima Kinen, Japan
+        Cup, and the final climax race (turn 78)."""
+        if int(turn or 0) >= 78:
+            return True
+        if not race_planner or not program_id:
+            return False
+        info = (race_planner.program or {}).get(int(program_id or 0)) or {}
+        name = str(info.get("name") or "").lower()
+        return "arima kinen" in name or "japan cup" in name
 
     def _old_ui_cleat_before_race(self, owned, turn, program_id, race_planner):
         SUMMER_CAMP_2_START = 60

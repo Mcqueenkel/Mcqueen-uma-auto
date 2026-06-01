@@ -17,7 +17,7 @@ from career_bot.items import MantItemManager, ITEM_NAMES, SHOP_ITEM_COSTS, DISPL
 
 
 from career_bot.report import new_report, add_event, add_api_call, add_decision, finish_report, write_report, set_error
-from career_bot.delay import dna_sleep, dna_gauss
+from career_bot.delay import dna_sleep, dna_gauss, backoff_sleep, use_dna
 
 
 STRATEGIES = {
@@ -164,6 +164,9 @@ class CareerRunner:
             self._log_locked("update_setting", 0, f"burn_clocks set to {value}")
 
     def _run(self, client, preset, result, strategy, max_steps):
+        dna = getattr(client, "_dna", None)
+        if dna is not None:
+            use_dna(dna)
 
         state = result or {}
         last_turn = -1
@@ -728,7 +731,7 @@ class CareerRunner:
                 err_str = str(exc)
                 errors.append(err_str)
                 if attempt < max_retries - 1:
-                    dna_sleep(10, 10)
+                    backoff_sleep(attempt, base=6.0, cap=20.0)
         if hasattr(client, "hard_reset"):
             return client.hard_reset()
         raise RuntimeError("career recovery failed: " + " | ".join(errors[-2:]))

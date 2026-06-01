@@ -18,6 +18,7 @@ SUMMER_CONSERVE_TURNS = {35, 36, 59, 60}
 SUMMER_CONSERVE_ENERGY = 60
 ENERGY_FAST_MEDIC = 80
 ENERGY_MEDIC_GENERAL = 85
+RACE_SKIP_TRAIN_STAT = 30
 DECK_PARTNERS = {1, 2, 3, 4, 5, 6}
 BAD_EFFECT_NAMES = {
     1: "Night Owl",
@@ -67,7 +68,7 @@ class MantStrategy(ScenarioStrategy):
             if forced_program_id:
                 return Decision("race", {"program_id": forced_program_id, "current_turn": chara["turn"], "_strategy": self}, self.race_planner.label(forced_program_id))
             program_id = self.race_planner.choose(state, preset)
-            if program_id:
+            if program_id and not self._train_outvalues_race(data, chara, preset):
                 return Decision("race", {"program_id": program_id, "current_turn": chara["turn"], "_strategy": self}, self.race_planner.label(program_id))
         command = self._best_command(data, chara, preset)
         if command:
@@ -147,7 +148,15 @@ class MantStrategy(ScenarioStrategy):
             stat_keys = ["speed", "stamina", "power", "guts", "wiz"]
             highest_idx = max(range(5), key=lambda idx: int(chara.get(stat_keys[idx]) or 0))
             scored = [(score * 0.95 if TRAINING_COMMANDS.get(cmd.get("command_id"), 0) == highest_idx and score > 0 else score, cmd) for score, cmd in scored]
-        best_score, best = max(scored, key=lambda row: row[0])
+        if turn <= 24 and preset.get("junior_bond_rush", True):
+            # Junior bond-rush: on non-race training turns, prioritize the training
+            # that gathers the most not-yet-maxed support partners (building toward
+            # rainbow) over taking an existing rainbow, using the normal score only
+            # as a tiebreak. The score magnitude is kept intact so the rest/medic/
+            # recreation thresholds below behave exactly as before.
+            best_score, best = max(scored, key=lambda row: (self._bondable_count(row[1], chara), row[0]))
+        else:
+            best_score, best = max(scored, key=lambda row: row[0])
         rest_threshold = int(preset.get("rest_threshold") or 48)
         failure = int(best.get("failure_rate") or 0)
         if medic and bad_status and vital <= ENERGY_FAST_MEDIC:
@@ -378,6 +387,59 @@ class MantStrategy(ScenarioStrategy):
         for row in chara.get("evaluation_info_array") or []:
             result[row.get("target_id", 0)] = row.get("evaluation", 0)
         return result
+
+    def _bondable_count(self, command, chara):
+        """How many deck support partners on this training still need bonding.
+
+        A partner already at max bond (>= 80) contributes a rainbow but no longer
+        builds friendship, so it does not count toward the Junior bond-rush. The
+        friend/pal slot (6) counts too since it also unlocks rainbow training.
+        """
+        bonds = self._bond_map(chara)
+        count = 0
+        for partner_id in command.get("training_partner_array") or []:
+            if partner_id in DECK_PARTNERS and int(bonds.get(partner_id, 0) or 0) < 80:
+                count += 1
+        return count
+
+    def _command_stat_gain(self, command):
+        """Raw stat points a training yields this turn (Speed/Stamina/Power/Guts/Wit).
+
+        This is the "jumlah training" the player thinks in: a 2-rainbow turn lands
+        around 30+. Skill points are not counted; the stat cap is not considered.
+        """
+        total = 0
+        for item in command.get("params_inc_dec_info_array") or []:
+            if item.get("target_type") in (1, 2, 3, 4, 5):
+                total += int(item.get("value") or 0)
+        if total == 0:
+            for field in ["speed", "stamina", "power", "guts", "wiz"]:
+                total += int(command.get(field) or 0)
+        return total
+
+    def _train_outvalues_race(self, data, chara, preset):
+        """Should a scheduled race be skipped in favor of training this turn?
+
+        True only when (a) some enabled training yields >= the configured raw stat
+        threshold (default 30 = ~2 rainbow), and (b) the bot would actually train
+        (not rest/recreate for low energy/mood) -- so we never drop a race just to
+        rest. Applies to both wanted and fan-farming races.
+        """
+        threshold = preset.get("race_skip_train_stat", RACE_SKIP_TRAIN_STAT)
+        if not threshold:
+            return False
+        commands = (data.get("home_info") or {}).get("command_info_array") or []
+        training = [
+            cmd for cmd in commands
+            if cmd.get("is_enable", 1) and cmd.get("command_type") == 1 and cmd.get("command_id") in TRAINING_COMMANDS
+        ]
+        if not training:
+            return False
+        best_stat = max(self._command_stat_gain(cmd) for cmd in training)
+        if best_stat < float(threshold):
+            return False
+        command = self._best_command(data, chara, preset)
+        return bool(command) and int(command.get("command_type") or 0) == 1
 
     def _npc_score(self, bond, turn, preset):
         if bond >= 80:

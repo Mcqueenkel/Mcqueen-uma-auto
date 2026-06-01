@@ -22,7 +22,7 @@ from career_bot import master_data
 from career_bot.presets import PresetStore
 from career_bot.runner import CareerRunner
 from uma_api.client import UmaClient
-from career_bot.delay import GateKeeper, dna_sleep, dna_uniform
+from career_bot.delay import GateKeeper, dna_sleep, dna_uniform, backoff_sleep
 
 PROCESS_NAME = "UmamusumePrettyDerby.exe"
 APP_ID = "3224770"
@@ -817,7 +817,7 @@ def start_career_from_request(req):
                         active_client.refresh_cached_account_state(res.get("data", {}))
                     except Exception:
                         pass
-                dna_sleep(1.0, 1.0)
+                backoff_sleep(attempt, base=1.0, cap=6.0)
 
     if req.use_tp and current_tp < req.use_tp:
         return {"success": False, "detail": f"Not enough TP: {current_tp}/{req.use_tp}"}

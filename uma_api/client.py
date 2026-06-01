@@ -16,7 +16,7 @@ import socket
 import shutil
 from datetime import datetime
 from pathlib import Path
-from career_bot.delay import dna_sleep, dna_uniform, dna_gauss, dna_randint
+from career_bot.delay import dna_sleep, dna_uniform, dna_gauss, dna_randint, backoff_sleep, jittered_sleep
 
 class StateRecoveryError(Exception):
     pass
@@ -568,8 +568,7 @@ class UmaClient:
                 break
             except Exception as e:
                 if attempt < max_retries - 1:
-                    wait_time = min(1.0 + (attempt * 2.5), 15.0)
-                    dna_sleep(wait_time, wait_time)
+                    backoff_sleep(attempt, base=1.0, cap=15.0)
                     continue
                 self.api_log("ERR", ep, {"error": str(e)}, req_id)
                 raise Exception(f'Network error on {ep}: {e}')
@@ -670,7 +669,7 @@ class UmaClient:
     def signup(self):
         self.regen_sid()
         self.call('tool/pre_signup')
-        dna_sleep(0.83, 0.83)
+        jittered_sleep(0.83)
         self.regen_sid()
         res = self.call('tool/signup', {
             'error_code': 0, 'error_message': '', 'attestation_type': 0, 
@@ -706,13 +705,13 @@ class UmaClient:
             except Exception as e:
                 err = str(e)
                 if '709' in err and attempt < max_retries:
-                    dna_sleep(0.83, 0.83)
+                    jittered_sleep(0.83)
                     continue
                 if '394' in err and attempt < max_retries:
-                    dna_sleep(2.5, 2.5)
+                    jittered_sleep(2.5)
                     continue
                 if '202' in err and attempt < max_retries:
-                    dna_sleep(4.15, 4.15)
+                    jittered_sleep(4.15)
                     continue
                 raise
 
