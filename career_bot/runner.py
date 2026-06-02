@@ -18,6 +18,7 @@ from career_bot.items import MantItemManager, ITEM_NAMES, SHOP_ITEM_COSTS, DISPL
 
 from career_bot.report import new_report, add_event, add_api_call, add_decision, finish_report, write_report, set_error
 from career_bot.delay import dna_sleep, dna_gauss, backoff_sleep, use_dna
+from career_bot import notify
 
 
 STRATEGIES = {
@@ -169,6 +170,7 @@ class CareerRunner:
             use_dna(dna)
 
         state = result or {}
+        self._notify_card_id = str(((state.get("data") or {}).get("chara_info") or {}).get("card_id") or "")
         last_turn = -1
         try:
             for i in range(max_steps):
@@ -362,10 +364,47 @@ class CareerRunner:
                     print(f"career report written: {out}", flush=True)
                 except Exception as e:
                     print(f"failed to write report: {e}", flush=True)
+                try:
+                    notify.send_career_summary(self.base_dir, self._build_notify_summary())
+                except Exception as e:
+                    print(f"discord notify failed: {e}", flush=True)
 
     def _should_stop(self):
         with self.lock:
             return self.stop_requested
+
+    def _build_notify_summary(self):
+        report = self.report or {}
+        turns = sorted(report.get("turns") or [], key=lambda t: int(t.get("turn") or 0))
+        last_stats = {}
+        races = 0
+        for t in turns:
+            if t.get("stats"):
+                last_stats = t["stats"]
+            if t.get("selected_action") == "race":
+                races += 1
+        duration = "?"
+        st, en = report.get("started_at"), report.get("ended_at")
+        if st and en:
+            try:
+                secs = (datetime.fromisoformat(en) - datetime.fromisoformat(st)).total_seconds()
+                duration = f"{secs / 60:.1f} mnt"
+            except Exception:
+                pass
+        with self.lock:
+            skills_bought = int(self.status.get("skills_bought") or 0)
+        return {
+            "status": report.get("status") or "",
+            "account": os.environ.get("SWEEPY_ACCOUNT") or "",
+            "final_turn": report.get("final_turn") or 0,
+            "preset": report.get("preset_name") or "",
+            "stats": last_stats,
+            "duration": duration,
+            "skills_bought": skills_bought,
+            "races": races,
+            "fans": int(last_stats.get("fans") or 0),
+            "card_id": getattr(self, "_notify_card_id", ""),
+        }
 
     def _advance(self, action):
         with self.lock:
@@ -454,6 +493,7 @@ class CareerRunner:
             "guts": int(chara.get("guts") or 0),
             "wit": int(chara.get("wiz") or 0),
             "skill_point": int(chara.get("skill_point") or 0),
+            "fans": int(chara.get("fans") or 0),
         }
 
     def _format_turn_stats(self, stats):
@@ -860,6 +900,17 @@ class CareerRunner:
 
         return finish_order + 1
 
+    def _should_force_clocks(self, program_id, preset):
+        """Always retry (burn clocks) to win the Junior Make Debut, even if the
+        global burn-clocks toggle is off. Controlled by preset 'force_clock_debut'
+        (default True)."""
+        if not (preset or {}).get("force_clock_debut", True):
+            return False
+        if not self.race_planner:
+            return False
+        info = (self.race_planner.program or {}).get(int(program_id or 0)) or {}
+        return "make debut" in str(info.get("name") or "").lower()
+
     def _race(self, client, state, preset, payload):
         if int((preset or {}).get("scenario_id") or (preset or {}).get("scenario") or 4) == 4:
             self.item_manager.recover_after_use_error = False
@@ -932,7 +983,11 @@ class CareerRunner:
         std_clocks = int(home_info.get("available_continue_num", 0))
         free_clocks = int(home_info.get("available_free_continue_num", 0))
 
-        while self.burn_clocks and rank > 1 and (std_clocks > 0 or free_clocks > 0):
+        force_clocks = self._should_force_clocks(program_id, preset)
+        if force_clocks and rank > 1:
+            self._log("race_clock_force", current_turn, f"forcing 1st place on debut (rank {rank})")
+
+        while (self.burn_clocks or force_clocks) and rank > 1 and (std_clocks > 0 or free_clocks > 0):
             clocks_left = std_clocks + free_clocks
             continue_type = 1 if free_clocks > 0 else 2
             

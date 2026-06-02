@@ -714,6 +714,43 @@ async def get_turn_delay_settings():
 async def set_turn_delay_settings(req: ApiDelayRequest):
     return set_turn_delay(req.min, req.max, req.disabled)
 
+class DiscordWebhookRequest(BaseModel):
+    webhook_url: str = ""
+    account_name: str = ""
+
+@app.get("/api/settings/discord-webhook")
+async def get_discord_webhook():
+    from career_bot import notify
+    url = notify.get_webhook_url(base_dir)
+    name = notify.get_account_name(base_dir)
+    return {"success": True, "configured": bool(url), "webhook_url": url, "account_name": name}
+
+@app.post("/api/settings/discord-webhook")
+async def set_discord_webhook(req: DiscordWebhookRequest):
+    from career_bot import notify
+    notify.set_webhook_url(base_dir, req.webhook_url)
+    notify.set_account_name(base_dir, req.account_name)
+    return {"success": True, "configured": bool(req.webhook_url.strip())}
+
+@app.post("/api/settings/discord-webhook/test")
+async def test_discord_webhook():
+    from career_bot import notify
+    if not notify.get_webhook_url(base_dir):
+        return {"success": False, "detail": "No webhook URL configured"}
+    ok = notify.send_career_summary(base_dir, {
+        "status": "finished",
+        "account": os.environ.get("SWEEPY_ACCOUNT") or "",
+        "uma_name": "Webhook Test",
+        "preset": "test",
+        "final_turn": 78,
+        "duration": "0.0 mnt",
+        "stats": {"speed": 1200, "stamina": 800, "power": 1000, "guts": 600, "wit": 900, "skill_point": 350, "fans": 123456},
+        "skills_bought": 0,
+        "races": 0,
+        "fans": 123456,
+    })
+    return {"success": ok}
+
 @app.get("/api/master-data/status")
 async def master_data_status():
     return master_data.status(base_dir)
@@ -1089,6 +1126,33 @@ async def session_status():
     data["selection"] = active_selection
     data["success"] = True
     return data
+
+@app.post("/api/session/refresh")
+async def refresh_session():
+    # Re-pull live state from the game so changes made directly in the game
+    # (e.g. a career started in-game) show up without a full logout/login.
+    global active_account, active_dashboard_data
+    if not active_client:
+        return {"success": False, "detail": "Not logged in"}
+    try:
+        res = active_client.call('load/index', {"adid": ""})
+        d = res.get('data', {})
+        active_client.refresh_cached_account_state(d)
+        update_start_state(d)
+        career_data = None
+        if d.get('single_mode_chara_light') or d.get('single_mode_chara'):
+            try:
+                career_res = active_client.load_career()
+                career_data = career_res.get('data')
+            except Exception:
+                pass
+        account = get_account_status(d, career_data)
+        active_account = account
+        if active_dashboard_data:
+            active_dashboard_data["account"] = account
+        return {"success": True, "account": account}
+    except Exception as e:
+        return {"success": False, "detail": str(e)}
 
 class UISelectionRequest(BaseModel):
     selection: dict
@@ -1692,6 +1756,8 @@ if __name__ == "__main__":
     import uvicorn
 
     port, account, reauth = parse_cli_args(sys.argv[1:])
+    if account:
+        os.environ["SWEEPY_ACCOUNT"] = account
 
     try:
         subprocess.run(["git", "pull"], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

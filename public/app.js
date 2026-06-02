@@ -25,6 +25,7 @@ const els = {
     brandMark: document.querySelector('.title span'),
     loginBtn: document.getElementById('login-btn'),
     logoutBtn: document.getElementById('logout-btn'),
+    refreshBtn: document.getElementById('refresh-btn'),
     turnDelayMin: document.getElementById('turn-delay-min'),
     turnDelayMax: document.getElementById('turn-delay-max'),
     temptFateBtn: document.getElementById('tempt-fate-btn'),
@@ -69,6 +70,11 @@ const els = {
     masterDataPath: document.getElementById('master-data-path'),
     masterDataSaveBtn: document.getElementById('master-data-save-btn'),
     masterDataStatus: document.getElementById('master-data-status'),
+    discordWebhookUrl: document.getElementById('discord-webhook-url'),
+    discordAccountName: document.getElementById('discord-account-name'),
+    discordWebhookSaveBtn: document.getElementById('discord-webhook-save-btn'),
+    discordWebhookTestBtn: document.getElementById('discord-webhook-test-btn'),
+    discordWebhookStatus: document.getElementById('discord-webhook-status'),
     presetSection: document.getElementById('preset-section'),
     presetAddBtn: document.getElementById('preset-add-btn'),
     presetDelBtn: document.getElementById('preset-del-btn'),
@@ -412,6 +418,63 @@ const els = {
             });
             loadMasterDataStatus();
         }
+        function setDiscordStatus(message, stateName = '') {
+            if (!els.discordWebhookStatus) return;
+            els.discordWebhookStatus.textContent = message || '';
+            els.discordWebhookStatus.className = `master-data-status ${stateName}`.trim();
+        }
+        async function loadDiscordWebhook() {
+            if (!els.discordWebhookUrl) return;
+            try {
+                const data = await apiJson('/api/settings/discord-webhook');
+                if (data.webhook_url) els.discordWebhookUrl.value = data.webhook_url;
+                if (els.discordAccountName && data.account_name) els.discordAccountName.value = data.account_name;
+                setDiscordStatus(data.configured ? 'Webhook tersimpan' : 'Belum diatur', data.configured ? 'ok' : '');
+            } catch (e) {
+                setDiscordStatus('Tidak bisa membaca status webhook', 'needs-action');
+            }
+        }
+        async function saveDiscordWebhook() {
+            if (!els.discordWebhookUrl) return;
+            const webhook_url = els.discordWebhookUrl.value.trim();
+            const account_name = els.discordAccountName ? els.discordAccountName.value.trim() : '';
+            if (els.discordWebhookSaveBtn) els.discordWebhookSaveBtn.disabled = true;
+            setDiscordStatus('Menyimpan...', 'working');
+            try {
+                const data = await apiJson('/api/settings/discord-webhook', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ webhook_url, account_name })
+                });
+                setDiscordStatus(data.configured ? 'Webhook tersimpan' : 'Webhook dikosongkan', data.configured ? 'ok' : '');
+            } catch (e) {
+                setDiscordStatus(e.message || 'Gagal menyimpan webhook', 'needs-action');
+            } finally {
+                if (els.discordWebhookSaveBtn) els.discordWebhookSaveBtn.disabled = false;
+            }
+        }
+        async function testDiscordWebhook() {
+            if (els.discordWebhookTestBtn) els.discordWebhookTestBtn.disabled = true;
+            setDiscordStatus('Mengirim pesan tes...', 'working');
+            try {
+                const data = await apiJson('/api/settings/discord-webhook/test', { method: 'POST' });
+                setDiscordStatus(
+                    data.success ? 'Pesan tes terkirim — cek channel Discord' : (data.detail || 'Gagal mengirim tes'),
+                    data.success ? 'ok' : 'needs-action'
+                );
+            } catch (e) {
+                setDiscordStatus(e.message || 'Gagal mengirim tes', 'needs-action');
+            } finally {
+                if (els.discordWebhookTestBtn) els.discordWebhookTestBtn.disabled = false;
+            }
+        }
+        function bindDiscordWebhookControls() {
+            if (!els.discordWebhookUrl) return;
+            if (els.discordWebhookSaveBtn) els.discordWebhookSaveBtn.addEventListener('click', saveDiscordWebhook);
+            if (els.discordWebhookTestBtn) els.discordWebhookTestBtn.addEventListener('click', testDiscordWebhook);
+            els.discordWebhookUrl.addEventListener('input', () => setDiscordStatus(''));
+            loadDiscordWebhook();
+        }
         function writeLocalSetting(key, value) {
             try {
                 localStorage.setItem(key, JSON.stringify(value));
@@ -585,6 +648,7 @@ const els = {
             els.dashboardView.style.display = 'none';
             els.dashboardView.classList.remove('active');
             els.logoutBtn.style.display = 'none';
+            if (els.refreshBtn) els.refreshBtn.style.display = 'none';
             els.standardFields.style.display = 'block';
             els.faFields.style.display = 'none';
             els.loginBtn.innerText = 'LOGIN';
@@ -597,6 +661,21 @@ const els = {
             syncDashboardHeight();
             loginForm.reset();
         });
+
+        if (els.refreshBtn) {
+            els.refreshBtn.addEventListener('click', async () => {
+                if (els.refreshBtn.disabled) return;
+                els.refreshBtn.disabled = true;
+                const original = els.refreshBtn.textContent;
+                els.refreshBtn.textContent = '...';
+                try {
+                    // Pull fresh state from the game (detects careers/changes made in-game),
+                    // then reload so the dashboard re-renders cleanly with the new state.
+                    await apiJson('/api/session/refresh', { method: 'POST' });
+                } catch (e) {}
+                window.location.reload();
+            });
+        }
 
         const formatNumber = value => Number(value || 0).toLocaleString();
         function closeCareerModal() {
@@ -2291,6 +2370,7 @@ const els = {
             els.dashboardView.style.display = '';
             els.dashboardView.classList.add('active');
             els.logoutBtn.style.display = 'block';
+            if (els.refreshBtn) els.refreshBtn.style.display = 'block';
             showNavbar();
             renderAccountStrip(data.account);
             syncDashboardHeight();
@@ -2430,6 +2510,7 @@ const els = {
         }
         bindDelayControls();
         bindMasterDataControls();
+        bindDiscordWebhookControls();
         setLoadingScreen(true);
         restoreSession();
 })();

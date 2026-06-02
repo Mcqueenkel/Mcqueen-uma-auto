@@ -50,6 +50,7 @@
             </div>
 
             <div class="navbar-meta">
+                <button id="refresh-btn" class="btn btn-sm" type="button" style="display:none">REFRESH</button>
                 <button id="logout-btn" class="btn btn-sm logout-btn" style="display:none">LOGOUT</button>
             </div>
         </header>
@@ -144,6 +145,23 @@
                                     <button id="master-data-save-btn" class="btn btn-sm" type="button">SAVE</button>
                                 </div>
                                 <div id="master-data-status" class="master-data-status"></div>
+                            </div>
+                        </section>
+
+                        <section class="dashboard-section" id="discord-webhook-section">
+                            <h2 class="dashboard-section-title">DISCORD WEBHOOK</h2>
+                            <div class="master-data-panel">
+                                <label class="form-label" for="discord-account-name">NAMA AKUN (tampil di notifikasi)</label>
+                                <div class="master-data-row">
+                                    <input id="discord-account-name" class="form-input master-data-input" type="text" spellcheck="false" placeholder="mis. Special Week Main">
+                                </div>
+                                <label class="form-label" for="discord-webhook-url">WEBHOOK URL (notifikasi karir selesai)</label>
+                                <div class="master-data-row">
+                                    <input id="discord-webhook-url" class="form-input master-data-input" type="text" spellcheck="false" placeholder="https://discord.com/api/webhooks/...">
+                                    <button id="discord-webhook-save-btn" class="btn btn-sm" type="button">SAVE</button>
+                                    <button id="discord-webhook-test-btn" class="btn btn-sm" type="button">TEST</button>
+                                </div>
+                                <div id="discord-webhook-status" class="master-data-status"></div>
                             </div>
                         </section>
 
