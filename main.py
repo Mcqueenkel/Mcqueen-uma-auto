@@ -1759,10 +1759,8 @@ if __name__ == "__main__":
     if account:
         os.environ["SWEEPY_ACCOUNT"] = account
 
-    try:
-        subprocess.run(["git", "pull"], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    except Exception:
-        pass
+    # Auto git-pull intentionally disabled: this build is detached from any
+    # remote, so the upstream repo can never overwrite local work on startup.
 
     set_console_topmost()
     kill_listeners_on_port(port)
