@@ -68,7 +68,7 @@ class MantStrategy(ScenarioStrategy):
             if forced_program_id:
                 return Decision("race", {"program_id": forced_program_id, "current_turn": chara["turn"], "_strategy": self}, self.race_planner.label(forced_program_id))
             program_id = self.race_planner.choose(state, preset)
-            if program_id and not self._train_outvalues_race(data, chara, preset):
+            if program_id and not self._train_outvalues_race(data, chara, preset, program_id):
                 return Decision("race", {"program_id": program_id, "current_turn": chara["turn"], "_strategy": self}, self.race_planner.label(program_id))
         command = self._best_command(data, chara, preset)
         if command:
@@ -417,14 +417,25 @@ class MantStrategy(ScenarioStrategy):
                 total += int(command.get(field) or 0)
         return total
 
-    def _train_outvalues_race(self, data, chara, preset):
+    def _is_g1_program(self, program_id):
+        """Is this race a G1? (race_instance_id starting with '1' is the codebase's
+        G1 convention, same as the item/cleat logic.)"""
+        if not self.race_planner or not program_id:
+            return False
+        info = (self.race_planner.program or {}).get(int(program_id or 0)) or {}
+        return str(info.get("race_instance_id") or "").startswith("1")
+
+    def _train_outvalues_race(self, data, chara, preset, program_id=0):
         """Should a scheduled race be skipped in favor of training this turn?
 
-        True only when (a) some enabled training yields >= the configured raw stat
+        Never for a G1 race -- those are too valuable to pass up, so the bot always
+        runs a scheduled G1 regardless of how good the training is. Otherwise True
+        only when (a) some enabled training yields >= the configured raw stat
         threshold (default 30 = ~2 rainbow), and (b) the bot would actually train
-        (not rest/recreate for low energy/mood) -- so we never drop a race just to
-        rest. Applies to both wanted and fan-farming races.
+        (not rest/recreate for low energy/mood). Applies to wanted and fan races.
         """
+        if self._is_g1_program(program_id):
+            return False
         threshold = preset.get("race_skip_train_stat", RACE_SKIP_TRAIN_STAT)
         if not threshold:
             return False

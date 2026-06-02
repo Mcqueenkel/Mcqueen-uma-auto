@@ -42,21 +42,20 @@ with open(_dna_path, 'r') as f:
 
 # These stay module-level globals on purpose: the Web UI toggles them at runtime
 # (see set_turn_delay/get_turn_delay in main.py) and they apply to every account.
-# Per-turn pause (between turns). Raised well above the realistic 2.5-5s so a
-# full career stretches to ~45-50 min (more human, less bot-like). Adjustable
-# from the Web UI; these are the startup defaults.
-TURN_DELAY_MIN = 12.0
-TURN_DELAY_MAX = 24.0
-TURN_DELAY_RESTORE_MIN = 12.0
-TURN_DELAY_RESTORE_MAX = 24.0
+# Per-turn pause (between turns). Raised above the realistic 2.5-5s so a full
+# career lands around ~30-37 min (more human, less bot-like). Adjustable from
+# the Web UI; these are the startup defaults.
+TURN_DELAY_MIN = 8.0
+TURN_DELAY_MAX = 15.0
+TURN_DELAY_RESTORE_MIN = 8.0
+TURN_DELAY_RESTORE_MAX = 15.0
 GLOBAL_DELAYS_DISABLED = False
 
 # Per-action ("button press") delay scale. 1.0 = realistic human pacing,
-# >1 = slower, <1 = faster (0.5 = 2x faster). Set to 1.2 so per-action timing is
-# slightly above realistic; together with the longer turn delay above this puts
-# a full career around 45-50 min. Keeps the human-like variation/jitter. Only
-# affects simulate_delay, NOT the per-turn delay.
-ACTION_DELAY_SCALE = 1.2
+# >1 = slower, <1 = faster (0.5 = 2x faster). Set to 0.8 so that, together with
+# the turn delay above, a full career lands around ~30-37 min. Keeps the
+# human-like variation/jitter. Only affects simulate_delay, NOT the turn delay.
+ACTION_DELAY_SCALE = 0.8
 
 
 class TimingDNA:
