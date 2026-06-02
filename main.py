@@ -1625,8 +1625,73 @@ def refresh_auth_before_serving(timeout_sec=None):
     return False
 
 
+def parse_cli_args(argv):
+    # Usage: python main.py [PORT] [--account NAME] [--reauth]
+    # Each account runs as its own process on its own port. --account NAME lets
+    # the captured credentials be saved and reused, so you don't have to relaunch
+    # the game and re-capture every time. --reauth forces a fresh capture.
+    port = None
+    account = os.environ.get("SWEEPY_ACCOUNT") or None
+    reauth = False
+    args = list(argv)
+    i = 0
+    while i < len(args):
+        a = str(args[i]).strip()
+        if a in ("--account", "-a") and i + 1 < len(args):
+            account = str(args[i + 1]).strip() or account
+            i += 2
+            continue
+        if a == "--reauth":
+            reauth = True
+        elif a.isdigit() and port is None and 1 <= int(a) <= 65535:
+            port = int(a)
+        i += 1
+    if port is None:
+        env = str(os.environ.get("SWEEPY_PORT") or "").strip()
+        port = int(env) if env.isdigit() and 1 <= int(env) <= 65535 else 1616
+    return port, account, reauth
+
+
+def account_store_path(name):
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "_", str(name or "").strip()) or "default"
+    # uma_runtime is gitignored, so saved credentials never reach the repo/GitHub.
+    return base_dir / "uma_runtime" / "accounts" / f"{safe}.json"
+
+
+def save_account_config(name, cfg):
+    if not name or not cfg:
+        return False
+    safe_cfg = dict(cfg)
+    # The Steam session ticket is short-lived, so we drop it and let a fresh one
+    # be generated at login. What we keep is the persistent in-game auth
+    # (auth_key / viewer_id / udid / app_ver / res_ver / device fingerprint).
+    safe_cfg.pop("steam_session_ticket", None)
+    try:
+        path = account_store_path(name)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(safe_cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+        return True
+    except Exception as exc:
+        print(f"Failed to save account '{name}': {exc}", flush=True)
+        return False
+
+
+def load_account_config(name):
+    if not name:
+        return None
+    path = account_store_path(name)
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
 if __name__ == "__main__":
     import uvicorn
+
+    port, account, reauth = parse_cli_args(sys.argv[1:])
 
     try:
         subprocess.run(["git", "pull"], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -1634,8 +1699,20 @@ if __name__ == "__main__":
         pass
 
     set_console_topmost()
-    kill_listeners_on_port(1616)
-    if not refresh_auth_before_serving():
-        raise SystemExit(1)
-    print("Access the Web UI at: http://127.0.0.1:1616", flush=True)
-    uvicorn.run(app, host="127.0.0.1", port=1616, log_level="error")
+    kill_listeners_on_port(port)
+
+    saved_cfg = None if reauth else load_account_config(account)
+    if saved_cfg:
+        # Reuse saved in-game auth -> skip the game launch + Frida capture.
+        pending_game_auth_config = saved_cfg
+        print(f"Loaded saved credentials for account '{account}' (skipping in-game capture; use --reauth to refresh).", flush=True)
+    else:
+        # No saved creds (or --reauth): do the live in-game Frida capture...
+        if not refresh_auth_before_serving():
+            raise SystemExit(1)
+        # ...then persist them for this account so next time we can skip capture.
+        if account and save_account_config(account, pending_game_auth_config):
+            print(f"Saved credentials for account '{account}' to {account_store_path(account)}", flush=True)
+
+    print(f"Access the Web UI at: http://127.0.0.1:{port}", flush=True)
+    uvicorn.run(app, host="127.0.0.1", port=port, log_level="error")
