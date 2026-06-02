@@ -71,7 +71,6 @@ const els = {
     masterDataSaveBtn: document.getElementById('master-data-save-btn'),
     masterDataStatus: document.getElementById('master-data-status'),
     discordWebhookUrl: document.getElementById('discord-webhook-url'),
-    discordAccountName: document.getElementById('discord-account-name'),
     discordWebhookSaveBtn: document.getElementById('discord-webhook-save-btn'),
     discordWebhookTestBtn: document.getElementById('discord-webhook-test-btn'),
     discordWebhookStatus: document.getElementById('discord-webhook-status'),
@@ -428,7 +427,6 @@ const els = {
             try {
                 const data = await apiJson('/api/settings/discord-webhook');
                 if (data.webhook_url) els.discordWebhookUrl.value = data.webhook_url;
-                if (els.discordAccountName && data.account_name) els.discordAccountName.value = data.account_name;
                 setDiscordStatus(data.configured ? 'Webhook tersimpan' : 'Belum diatur', data.configured ? 'ok' : '');
             } catch (e) {
                 setDiscordStatus('Tidak bisa membaca status webhook', 'needs-action');
@@ -437,14 +435,13 @@ const els = {
         async function saveDiscordWebhook() {
             if (!els.discordWebhookUrl) return;
             const webhook_url = els.discordWebhookUrl.value.trim();
-            const account_name = els.discordAccountName ? els.discordAccountName.value.trim() : '';
             if (els.discordWebhookSaveBtn) els.discordWebhookSaveBtn.disabled = true;
             setDiscordStatus('Menyimpan...', 'working');
             try {
                 const data = await apiJson('/api/settings/discord-webhook', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ webhook_url, account_name })
+                    body: JSON.stringify({ webhook_url })
                 });
                 setDiscordStatus(data.configured ? 'Webhook tersimpan' : 'Webhook dikosongkan', data.configured ? 'ok' : '');
             } catch (e) {

@@ -171,6 +171,7 @@ class CareerRunner:
 
         state = result or {}
         self._notify_card_id = str(((state.get("data") or {}).get("chara_info") or {}).get("card_id") or "")
+        self._notify_factor_ids = []
         last_turn = -1
         try:
             for i in range(max_steps):
@@ -317,6 +318,7 @@ class CareerRunner:
                             self._log("finish_reconciled", decision.payload["current_turn"], f"graceful exit: {e}")
                         else:
                             raise
+                    self._capture_sparks(state)
                     self._mark(last_action="finish", finished=True)
                     break
                 else:
@@ -373,6 +375,20 @@ class CareerRunner:
         with self.lock:
             return self.stop_requested
 
+    def _capture_sparks(self, state):
+        # The just-finished uma's inheritance factors (sparks) live in the finish
+        # response under single_mode_finish_common: the trained_chara entry whose
+        # trained_chara_id matches the new trained_chara_id.
+        try:
+            sfc = ((state or {}).get("data") or {}).get("single_mode_finish_common") or {}
+            tcid = sfc.get("trained_chara_id")
+            for row in sfc.get("trained_chara") or []:
+                if row.get("trained_chara_id") == tcid:
+                    self._notify_factor_ids = list(row.get("factor_id_array") or [])
+                    return
+        except Exception:
+            pass
+
     def _build_notify_summary(self):
         report = self.report or {}
         turns = sorted(report.get("turns") or [], key=lambda t: int(t.get("turn") or 0))
@@ -404,6 +420,7 @@ class CareerRunner:
             "races": races,
             "fans": int(last_stats.get("fans") or 0),
             "card_id": getattr(self, "_notify_card_id", ""),
+            "factor_ids": list(getattr(self, "_notify_factor_ids", []) or []),
         }
 
     def _advance(self, action):

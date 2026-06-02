@@ -63,6 +63,46 @@ def uma_name(base_dir, card_id):
         return None
 
 
+_SPARK_CAT_ORDER = ["stat", "aptitude", "unique", "skill", "race", "scenario", "other"]
+_SPARK_CAT_LABEL = {
+    "stat": "Stat", "aptitude": "Aptitude", "unique": "Unique",
+    "skill": "Skill", "race": "Race", "scenario": "Scenario", "other": "Other",
+}
+
+
+def resolve_sparks(base_dir, factor_ids):
+    """Turn factor ids (inheritance sparks) into {name, stars, category} via
+    data/factor_map.json. Unknown ids are skipped."""
+    if not factor_ids:
+        return []
+    try:
+        fm = json.loads((Path(base_dir) / "data" / "factor_map.json").read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    out = []
+    for fid in factor_ids:
+        e = fm.get(str(fid))
+        if e and e.get("name"):
+            out.append({
+                "name": e["name"],
+                "stars": int(e.get("stars") or 0),
+                "category": e.get("category") or "other",
+            })
+    return out
+
+
+def _format_sparks(sparks):
+    by_cat = {}
+    for s in sparks:
+        stars = max(1, min(3, int(s.get("stars") or 1)))
+        by_cat.setdefault(s.get("category") or "other", []).append(f"{s['name']} {'★' * stars}")
+    lines = []
+    for cat in _SPARK_CAT_ORDER:
+        if by_cat.get(cat):
+            lines.append(f"**{_SPARK_CAT_LABEL.get(cat, cat)}:** " + " · ".join(by_cat[cat]))
+    return "\n".join(lines)
+
+
 def _build_embed(summary):
     status = str(summary.get("status") or "?")
     color = {"finished": 0x2ECC71, "stopped": 0xF1C40F, "error": 0xE74C3C}.get(status, 0x95A5A6)
@@ -98,6 +138,11 @@ def _build_embed(summary):
         },
         {"name": "Race", "value": str(summary.get("races", 0)), "inline": True},
     ]
+    sparks = summary.get("sparks") or []
+    if sparks:
+        spark_text = _format_sparks(sparks)
+        if spark_text:
+            fields.append({"name": "✨ Sparks (faktor inheritance)", "value": spark_text[:1024], "inline": False})
     return {"title": f"{title} — {status}", "description": description, "color": color, "fields": fields}
 
 
@@ -115,6 +160,8 @@ def send_career_summary(base_dir, summary):
         summary["account"] = label  # UI-set display name overrides the --account label
     if not summary.get("uma_name") and summary.get("card_id"):
         summary["uma_name"] = uma_name(base_dir, summary.get("card_id"))
+    if "sparks" not in summary:
+        summary["sparks"] = resolve_sparks(base_dir, summary.get("factor_ids") or [])
     payload = {"embeds": [_build_embed(summary)]}
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(

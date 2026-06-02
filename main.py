@@ -716,20 +716,17 @@ async def set_turn_delay_settings(req: ApiDelayRequest):
 
 class DiscordWebhookRequest(BaseModel):
     webhook_url: str = ""
-    account_name: str = ""
 
 @app.get("/api/settings/discord-webhook")
 async def get_discord_webhook():
     from career_bot import notify
     url = notify.get_webhook_url(base_dir)
-    name = notify.get_account_name(base_dir)
-    return {"success": True, "configured": bool(url), "webhook_url": url, "account_name": name}
+    return {"success": True, "configured": bool(url), "webhook_url": url}
 
 @app.post("/api/settings/discord-webhook")
 async def set_discord_webhook(req: DiscordWebhookRequest):
     from career_bot import notify
     notify.set_webhook_url(base_dir, req.webhook_url)
-    notify.set_account_name(base_dir, req.account_name)
     return {"success": True, "configured": bool(req.webhook_url.strip())}
 
 @app.post("/api/settings/discord-webhook/test")
@@ -748,6 +745,7 @@ async def test_discord_webhook():
         "skills_bought": 0,
         "races": 0,
         "fans": 123456,
+        "factor_ids": [201, 3302, 1000702, 1001201, 1001902, 2002001, 2015302, 10060201],
     })
     return {"success": ok}
 
@@ -921,6 +919,14 @@ async def login(req: LoginRequest):
         cfg = dict(pending_game_auth_config)
         pending_game_auth_config = {}
 
+        if not cfg.get('auth_key'):
+            # Saved-account mode: the persistent in-game auth lives in
+            # accounts/<name>.json. Reload it so a previous failed login attempt
+            # (which consumed `pending`) doesn't lock us out of retrying.
+            saved_account = os.environ.get("SWEEPY_ACCOUNT")
+            if saved_account:
+                cfg = load_account_config(saved_account) or cfg
+
         active_client = None
         active_account = None
         active_dashboard_data = None
@@ -962,6 +968,15 @@ async def login(req: LoginRequest):
         active_client = gated_client
 
         d = res.get('data', {})
+        try:
+            # Auto-detect the in-game trainer name so Discord notifications can use
+            # it by default (no manual entry needed). Stored in SWEEPY_ACCOUNT,
+            # which the webhook uses unless a manual override is set in the UI.
+            ingame_name = str((d.get('user_info') or {}).get('name') or '').strip()
+            if ingame_name:
+                os.environ['SWEEPY_ACCOUNT'] = ingame_name
+        except Exception:
+            pass
         career_data = None
         if d.get('single_mode_chara_light') or d.get('single_mode_chara'):
             try:
