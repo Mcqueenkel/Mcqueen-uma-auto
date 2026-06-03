@@ -59,6 +59,8 @@ class CareerRunner:
         self.thread = None
         self.stop_requested = False
         self.burn_clocks = False
+        self._loop_index = 1
+        self._loop_target = 1
         self.race_planner = RacePlanner(base_dir)
         self.skill_buyer = SkillBuyer(base_dir)
         self.item_manager = MantItemManager()
@@ -152,6 +154,12 @@ class CareerRunner:
     def stop(self):
         with self.lock:
             self.stop_requested = True
+
+    def set_loop_info(self, index, target):
+        # Which career this is within a loop (index) and the loop size (target,
+        # 0 = infinite). Used only for the Discord notification.
+        self._loop_index = int(index or 1)
+        self._loop_target = int(target or 0)
 
     def snapshot(self):
         with self.lock:
@@ -421,6 +429,8 @@ class CareerRunner:
             "fans": int(last_stats.get("fans") or 0),
             "card_id": getattr(self, "_notify_card_id", ""),
             "factor_ids": list(getattr(self, "_notify_factor_ids", []) or []),
+            "loop_index": int(getattr(self, "_loop_index", 1) or 1),
+            "loop_target": int(getattr(self, "_loop_target", 1) or 0),
         }
 
     def _advance(self, action):

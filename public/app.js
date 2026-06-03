@@ -16,6 +16,7 @@ const state = {
     burnClocks: false,
     displayedClocksUsed: 0,
     devEnabled: false,
+    runCount: 1,
     consecutiveRunnerFails: 0
 };
 const els = {
@@ -31,6 +32,8 @@ const els = {
     temptFateBtn: document.getElementById('tempt-fate-btn'),
     burnClocksBtn: document.getElementById('burn-clocks-btn'),
     devBtn: document.getElementById('dev-career-btn'),
+    runCountInput: document.getElementById('run-count-input'),
+    runCountHint: document.getElementById('run-count-hint'),
     loginView: document.getElementById('login-view'),
     dashboardView: document.getElementById('dashboard-view'),
     errorMsg: document.getElementById('error-msg'),
@@ -112,9 +115,26 @@ const els = {
         const storedDev = localStorage.getItem(devStorageKey);
         if (storedDev !== null) setDevEnabled(storedDev === 'true', { persist: false });
 
-        if (els.devBtn) {
-            els.devBtn.addEventListener('click', () => {
-                setDevEnabled(!state.devEnabled, { persist: true });
+        const runCountStorageKey = 'uma_run_count';
+        function readRunCount() {
+            const v = parseInt(els.runCountInput && els.runCountInput.value, 10);
+            return (Number.isInteger(v) && v >= 0) ? v : 1;
+        }
+        function updateRunCountHint() {
+            if (!els.runCountHint) return;
+            const n = state.runCount;
+            els.runCountHint.textContent = n === 0 ? '∞ tak terhingga' : (n === 1 ? '1 karir (sekali)' : `${n} karir`);
+            els.runCountHint.classList.toggle('infinite', n === 0);
+        }
+        const storedRunCount = localStorage.getItem(runCountStorageKey);
+        if (storedRunCount !== null && els.runCountInput) els.runCountInput.value = storedRunCount;
+        state.runCount = readRunCount();
+        updateRunCountHint();
+        if (els.runCountInput) {
+            els.runCountInput.addEventListener('input', () => {
+                state.runCount = readRunCount();
+                localStorage.setItem(runCountStorageKey, String(state.runCount));
+                updateRunCountHint();
             });
         }
 
@@ -325,15 +345,7 @@ const els = {
             const nextTheme = document.body.classList.contains('theme-blue') ? 'pink' : 'blue';
             applyTheme(nextTheme);
             localStorage.setItem('theme', nextTheme);
-            themeToggleClicks++;
-            if (themeToggleClicks >= 11 && els.devBtn) {
-                els.devBtn.style.display = 'inline-block';
-            }
         });
-        window.iwillnotabusethis = function() {
-            if (els.devBtn) els.devBtn.style.display = 'inline-block';
-            setDevEnabled(true, { persist: true });
-        };
         const sleep = ms => new Promise(resolve => window.setTimeout(resolve, ms));
         const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
         async function waitForDomPaint(frames = 2) {
@@ -863,7 +875,7 @@ const els = {
             const parentError = getParentSelectionError();
             if (parentError) return parentError;
             const tp = state.account && state.account.tp ? Number(state.account.tp.current || 0) : 0;
-            if (state.account && tp < 30 && !state.devEnabled) return `Not enough TP: ${tp}/30`;
+            if (state.account && tp < 30 && state.runCount === 1) return `Not enough TP: ${tp}/30`;
             return '';
         }
         function getParentLineageCards(parent) {
@@ -1950,7 +1962,7 @@ const els = {
                 preset_name: state.selectedPreset,
                 max_steps: 2500,
                 burn_clocks: state.burnClocks,
-                dev_mode: state.devEnabled
+                run_count: state.runCount
             } : {
                 card_id: Number(selection.trainee.id),
                 support_card_ids: selection.deck.cards.map(card => Number(card.id)),
@@ -1968,7 +1980,7 @@ const els = {
                 preset_name: state.selectedPreset,
                 max_steps: 2500,
                 burn_clocks: state.burnClocks,
-                dev_mode: state.devEnabled
+                run_count: state.runCount
             };
             try {
                 const data = await apiJson('/api/career/run', {
@@ -2038,36 +2050,22 @@ const els = {
                     if (!rows.length) els.startStatus.innerText = `Turn ${runner.turn || '?'} / ${runner.last_action || 'running'} / ${runner.steps || 0}`;
                     return;
                 }
-                if (state.runnerTimer && !state.devEnabled) {
+                if (state.runnerTimer && !runner.loop_active) {
                     bgClearTimer(state.runnerTimer);
                     state.runnerTimer = 0;
                 }
                 if (runner.last_error) {
                     els.startStatus.classList.toggle('error', true);
                     if (!rows.length) els.startStatus.innerText = runner.last_error;
-                    if (state.devEnabled) {
-                        state.consecutiveRunnerFails++;
-                        if (state.consecutiveRunnerFails >= 3) {
-                            if (!rows.length) els.startStatus.innerText = runner.last_error + " (Auto-retry disabled due to loop)";
-                            setDevEnabled(false, { persist: true });
-                        }
-                    }
-                } else if (state.devEnabled && runner.finished && !runner.last_error) {
+                } else if (runner.finished && !runner.last_error) {
                     state.consecutiveRunnerFails = 0;
                     els.startStatus.classList.toggle('error', false);
-                    if (!rows.length) els.startStatus.innerText = `Career finished! Restarting...`;
+                    if (!rows.length) els.startStatus.innerText = runner.loop_active ? 'Career finished! Restarting...' : 'Career finished!';
                     if (state.account && state.account.career) state.account.career.active = false;
                     renderAccountStrip(state.account);
                 } else if (runner.steps) {
                     els.startStatus.classList.toggle('error', false);
                     if (!rows.length) els.startStatus.innerText = `Runner stopped after ${runner.steps} steps`;
-                    if (state.devEnabled) {
-                        state.consecutiveRunnerFails++;
-                        if (state.consecutiveRunnerFails >= 3) {
-                            if (!rows.length) els.startStatus.innerText = `Runner stopped after ${runner.steps} steps (Auto-retry disabled due to loop)`;
-                            setDevEnabled(false, { persist: true });
-                        }
-                    }
                 }
             } catch (e) {}
         }

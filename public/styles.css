@@ -372,6 +372,17 @@ body.dashboard-mode .turn-delay-control {
   border-color: var(--accent-primary);
   background: #0a000a;
 }
+.run-count-hint {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  letter-spacing: 0.02rem;
+  white-space: nowrap;
+  min-width: 5.2rem;
+}
+.run-count-hint.infinite {
+  color: #f1c40f;
+}
 
 .control-btns {
   display: flex;

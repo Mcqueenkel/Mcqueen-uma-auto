@@ -120,6 +120,9 @@ def _build_embed(summary):
     description += f"**{summary.get('uma_name') or 'Unknown'}**"
     if summary.get("preset"):
         description += f" · `{summary['preset']}`"
+    loop_target = int(summary.get("loop_target") or 0)
+    if loop_target != 1:
+        description += f" · 🔁 Run {int(summary.get('loop_index') or 1)}/{'∞' if loop_target == 0 else loop_target}"
 
     fields = [
         {"name": "Status", "value": status, "inline": True},

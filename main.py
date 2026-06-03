@@ -676,6 +676,7 @@ class RunCareerRequest(BaseModel):
     max_steps: int = 2500
     burn_clocks: bool = False
     dev_mode: bool = False
+    run_count: int = 1
 
 class SaveRacesRequest(BaseModel):
     preset_name: str
@@ -746,6 +747,8 @@ async def test_discord_webhook():
         "races": 0,
         "fans": 123456,
         "factor_ids": [201, 3302, 1000702, 1001201, 1001902, 2002001, 2015302, 10060201],
+        "loop_index": 2,
+        "loop_target": 5,
     })
     return {"success": ok}
 
@@ -1149,9 +1152,14 @@ async def refresh_session():
     global active_account, active_dashboard_data
     if not active_client:
         return {"success": False, "detail": "Not logged in"}
+    if career_runner.snapshot().get("running") or (backend_loop_thread and backend_loop_thread.is_alive()):
+        return {"success": False, "detail": "Career runner active; stop it before refreshing"}
     try:
-        res = active_client.call('load/index', {"adid": ""})
-        d = res.get('data', {})
+        # Re-establish the session (start_session + load/index + read_info, with
+        # built-in retries) rather than a bare load/index, which can 201 on a
+        # stale session.
+        res = active_client.login()
+        d = (res or {}).get('data', {})
         active_client.refresh_cached_account_state(d)
         update_start_state(d)
         career_data = None
@@ -1214,18 +1222,23 @@ backend_loop_stop = False
 def manage_career_loop(req, preset, initial_result):
     global backend_loop_stop, active_account, active_client
     max_steps = max(1, min(int(req.max_steps or 2500), 3000))
+    target = max(0, int(getattr(req, "run_count", 1) or 0))  # 0 = run forever
     consecutive_fails = 0
     current_result = initial_result
-    
+    runs_done = 0
+
+    print(f"[LOOP] starting career loop: {'INFINITE (until Stop)' if not target else f'{target} career(s)'}", flush=True)
+
     while not backend_loop_stop:
-        career_runner.start(active_client, preset, current_result, max_steps, burn_clocks=req.burn_clocks, dev_mode=req.dev_mode)
-        
+        career_runner.set_loop_info(runs_done + 1, target)
+        career_runner.start(active_client, preset, current_result, max_steps, burn_clocks=req.burn_clocks, dev_mode=True)
+
         while career_runner.snapshot().get("running"):
             if backend_loop_stop:
                 career_runner.stop()
                 return
             dna_sleep(1.0, 1.0)
-            
+
         status = career_runner.snapshot()
         if status.get("last_error"):
             consecutive_fails += 1
@@ -1233,12 +1246,15 @@ def manage_career_loop(req, preset, initial_result):
                 break
         else:
             consecutive_fails = 0
+            runs_done += 1
+            print(f"[LOOP] career {runs_done}/{target if target else '∞'} finished", flush=True)
             if active_account and "career" in active_account and active_account["career"]:
                 active_account["career"]["active"] = False
-            
-        if not req.dev_mode:
+
+        if target and runs_done >= target:
+            print(f"[LOOP] target reached ({runs_done}/{target}) — stopping loop", flush=True)
             break
-            
+
         for _ in range(6):
             if backend_loop_stop:
                 return
@@ -1327,22 +1343,28 @@ async def run_career(req: RunCareerRequest):
             account, chara_info = apply_career_result(result)
 
         apply_deck_type_counts(preset, req=req, chara_info=chara_info)
-        
-        if req.dev_mode:
+
+        # run_count: 1 = single career, N = N careers, 0 = run forever.
+        # Anything other than exactly 1 loops via manage_career_loop.
+        looping = int(req.run_count or 0) != 1
+        if looping:
             backend_loop_stop = False
             backend_loop_thread = threading.Thread(target=manage_career_loop, args=(req, preset, result), daemon=True)
             backend_loop_thread.start()
             dna_sleep(0.5, 0.5)
         else:
-            career_runner.start(active_client, preset, result, max(1, min(int(req.max_steps or 2500), 3000)), burn_clocks=req.burn_clocks, dev_mode=req.dev_mode)
-            
+            career_runner.set_loop_info(1, 1)
+            career_runner.start(active_client, preset, result, max(1, min(int(req.max_steps or 2500), 3000)), burn_clocks=req.burn_clocks, dev_mode=False)
+
         return {"success": True, "account": account, "chara_info": chara_info, "runner": career_runner.snapshot()}
     except Exception as e:
         return {"success": False, "detail": str(e)}
 
 @app.get("/api/career/runner")
 async def career_runner_status():
-    return {"success": True, "runner": career_runner.snapshot()}
+    snap = career_runner.snapshot()
+    snap["loop_active"] = bool(backend_loop_thread and backend_loop_thread.is_alive())
+    return {"success": True, "runner": snap}
 
 @app.post("/api/career/runner/stop")
 async def stop_career_runner():

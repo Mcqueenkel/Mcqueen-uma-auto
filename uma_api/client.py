@@ -565,13 +565,19 @@ class UmaClient:
         for attempt in range(max_retries):
             try:
                 resp = self.session.post(BASE_URL + ep, data=body, headers=headers, timeout=30)
-                break
             except Exception as e:
                 if attempt < max_retries - 1:
                     backoff_sleep(attempt, base=1.0, cap=15.0)
                     continue
                 self.api_log("ERR", ep, {"error": str(e)}, req_id)
                 raise Exception(f'Network error on {ep}: {e}')
+            # Transient server-side errors (HTTP 5xx, e.g. a 500 on race_end) are
+            # retried with backoff instead of crashing the whole career/loop.
+            if 500 <= resp.status_code < 600 and attempt < max_retries - 1:
+                print(f"HTTP {resp.status_code} on {ep}, retrying... (attempt {attempt + 1})", flush=True)
+                backoff_sleep(attempt, base=1.0, cap=15.0)
+                continue
+            break
 
         if resp.status_code != 200:
             body_preview = resp.text[:500] if resp.text else ""
