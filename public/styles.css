@@ -383,6 +383,18 @@ body.dashboard-mode .turn-delay-control {
 .run-count-hint.infinite {
   color: #f1c40f;
 }
+.race-save-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+}
+.race-save-status {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.race-save-status.dirty { color: #f1c40f; }
+.race-save-status.saved { color: #2ecc71; }
 
 .control-btns {
   display: flex;
@@ -509,6 +521,17 @@ body.dashboard-mode .turn-delay-control {
   border-color: #ff4d6d;
   color: #fff;
   background: linear-gradient(135deg, #d71952, var(--accent-primary));
+}
+.nav-run-btn {
+  border-color: #2ee06a;
+  color: #03110a;
+  font-weight: 900;
+  background: linear-gradient(135deg, #38e87d, #16a653);
+}
+.nav-run-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
 }
 .main-container {
   flex: 1;

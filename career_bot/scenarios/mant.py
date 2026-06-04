@@ -19,6 +19,8 @@ SUMMER_CONSERVE_ENERGY = 60
 ENERGY_FAST_MEDIC = 80
 ENERGY_MEDIC_GENERAL = 85
 RACE_SKIP_TRAIN_STAT = 30
+ENERGY_ITEM_VALUES = {2001: 20, 2002: 40, 2003: 65, 2101: 100}  # Vita 20/40/65, Royal Kale Juice
+GOOD_LUCK_CHARM_ID = 10001
 DECK_PARTNERS = {1, 2, 3, 4, 5, 6}
 BAD_EFFECT_NAMES = {
     1: "Night Owl",
@@ -75,7 +77,7 @@ class MantStrategy(ScenarioStrategy):
             command_type = command.get("command_type", 1)
             command_id = command.get("command_id")
             command_group_id = command.get("command_group_id", 0)
-            reason = self._command_reason(command)
+            reason = self._command_reason(command, chara)
             if command_type == 3:
                 command_group_id = command_id
                 command_id = 0
@@ -168,7 +170,12 @@ class MantStrategy(ScenarioStrategy):
         if self._should_recreate(recreation, preset, turn, motivation, vital, best_score):
             return recreation
         if rest and (vital <= rest_threshold or failure >= 35 or best_score < 0):
-            return rest
+            if not self._can_rescue_training(data, chara, preset, best, best_score, vital, failure, rest_threshold):
+                return rest
+            # else: a strong/rainbow turn we can charm or energy-up into. Don't rest
+            # it away -- fall through to train it. items.py tops up energy with the
+            # smallest sufficient Vita (+ charm) before the command executes, and the
+            # post-item re-decision then runs the training at the restored energy.
         conserve = self._summer_conserve_command(enabled, turn, vital, best_score, preset, rest, recreation)
         if conserve:
             return conserve
@@ -246,11 +253,16 @@ class MantStrategy(ScenarioStrategy):
             return ""
         return "".join(ch.lower() for ch in text if ch.isalnum())
 
-    def _command_reason(self, command):
+    def _command_reason(self, command, chara=None):
         command_type = command.get("command_type")
         command_id = command.get("command_id")
         if command_id in TRAINING_COMMANDS:
-            return f"training {TRAINING_NAMES[TRAINING_COMMANDS.get(command_id, 0)]} {command_id}"
+            label = f"training {TRAINING_NAMES[TRAINING_COMMANDS.get(command_id, 0)]} {command_id}"
+            if chara is not None:
+                rc = self._rainbow_count(command, chara)
+                if rc:
+                    label += f" [{rc} rainbow]"
+            return label
         if command_type == 7 and command_id == 701:
             return f"rest {command_id}"
         if command_type == 3:
@@ -276,12 +288,19 @@ class MantStrategy(ScenarioStrategy):
         hints = set(command.get("tips_event_partner_array") or [])
         pal_count = 0
         hint_count = 0
+        rainbow_count = 0
+        useful_stat_score = 0.0
         for partner_id in partners:
             bond = bonds.get(partner_id, 0)
             if partner_id in hints:
                 hint_count += 1
 
             if bond >= 80:
+                # Maxed support on this training is delivering a rainbow (friendship
+                # training) this turn. There is no more bond to build, so it adds no
+                # bond value, but we count it for the explicit rainbow reward below.
+                if partner_id in DECK_PARTNERS:
+                    rainbow_count += 1
                 continue
 
             time_decay = max(0.0, (72 - turn) / 72.0)
@@ -343,6 +362,20 @@ class MantStrategy(ScenarioStrategy):
                 elif ratio > 0.70:
                     stat_gain_score *= 1.00 - ((ratio - 0.70) / 0.04) * 0.02
             score += stat_gain_score
+            useful_stat_score += max(0.0, stat_gain_score)
+        if rainbow_count and preset.get("rainbow_explicit", True):
+            # Explicit rainbow (friendship-training) reward. The reported stat gain
+            # already includes the friendship bonus, but the bond loop gives a maxed
+            # support zero value, which can make the bot pass up a multi-rainbow turn
+            # to keep building bond elsewhere. Add a tunable per-rainbow bonus,
+            # attenuated by the useful (non-capped) stat this turn yields so the bot
+            # never chases a rainbow on already-capped stats. Failure compensation,
+            # period extra-weight and deck multipliers below still apply to it.
+            ref = float(preset.get("rainbow_useful_ref") or 0.12)
+            atten = 1.0 if ref <= 0 else min(1.0, useful_stat_score / ref)
+            per = float(preset.get("rainbow_bonus") or 0.12)
+            stack = float(preset.get("rainbow_stack_bonus") or 0.06)
+            score += (per * rainbow_count + stack * max(0, rainbow_count - 1)) * atten
         if pal_count:
             score *= 1.0 + max(0.0, min(1.0, float(preset.get("pal_card_multiplier") or 0.1)))
         if preset.get("compensate_failure", True):
@@ -401,6 +434,74 @@ class MantStrategy(ScenarioStrategy):
             if partner_id in DECK_PARTNERS and int(bonds.get(partner_id, 0) or 0) < 80:
                 count += 1
         return count
+
+    def _rainbow_count(self, command, chara):
+        """How many deck supports on this training are at max bond (>=80) = rainbows.
+
+        A maxed support present on a training delivers a friendship-training
+        ("rainbow") bonus; stacking several on one training is the biggest stat turn
+        in the game. NPCs (not in DECK_PARTNERS) don't trigger friendship training.
+        """
+        bonds = self._bond_map(chara)
+        count = 0
+        for partner_id in command.get("training_partner_array") or []:
+            if partner_id in DECK_PARTNERS and int(bonds.get(partner_id, 0) or 0) >= 80:
+                count += 1
+        return count
+
+    def _owned_item_count(self, data, item_id):
+        total = 0
+        for row in (data.get("free_data_set") or {}).get("user_item_info_array") or []:
+            if int(row.get("item_id") or 0) == int(item_id):
+                total += int(row.get("num") or row.get("current_num") or row.get("item_num") or 0)
+        return total
+
+    def _rescue_energy_value(self, data, vital, rest_threshold, margin):
+        """Restore value of the SMALLEST owned energy item that would lift vital
+        comfortably above the rest threshold, or None if none owned can do it. Used
+        to decide whether a low-energy turn can be rescued into a training."""
+        target = rest_threshold + margin
+        owned = {}
+        for row in (data.get("free_data_set") or {}).get("user_item_info_array") or []:
+            iid = int(row.get("item_id") or 0)
+            if iid in ENERGY_ITEM_VALUES:
+                owned[iid] = owned.get(iid, 0) + int(row.get("num") or row.get("current_num") or row.get("item_num") or 0)
+        best = None
+        for iid, qty in owned.items():
+            if qty > 0 and vital + ENERGY_ITEM_VALUES[iid] > target:
+                if best is None or ENERGY_ITEM_VALUES[iid] < ENERGY_ITEM_VALUES[best]:
+                    best = iid
+        return ENERGY_ITEM_VALUES[best] if best is not None else None
+
+    def _can_rescue_training(self, data, chara, preset, best, best_score, vital, failure, rest_threshold):
+        """Spend a charm / energy item to RUN a strong training instead of resting it
+        away for low energy or high failure? Only for a genuinely good turn (a rainbow
+        or a high cap-aware score), only when energy isn't critically low, and only
+        when we actually own the mitigation that can clear the blocker: an energy item
+        big enough to beat the vital floor, or a charm/energy when only failure is high.
+        Mirrors items.py _rescue_energy_target so the post-item re-decision agrees."""
+        if not preset.get("rescue_good_training", True):
+            return False
+        if best is None or int(best.get("command_type") or 0) != 1:
+            return False
+        if best_score is None or best_score <= 0:
+            return False
+        if vital < int(preset.get("rescue_min_vital") or 25):
+            return False
+        rainbow = self._rainbow_count(best, chara)
+        strong = best_score >= float(preset.get("rescue_score_threshold") or 0.55)
+        if rainbow < 1 and not strong:
+            return False
+        margin = int(preset.get("rescue_vital_margin") or 12)
+        energy_val = self._rescue_energy_value(data, vital, rest_threshold, margin)
+        has_charm = self._owned_item_count(data, GOOD_LUCK_CHARM_ID) > 0
+        if vital <= rest_threshold:
+            # only an energy item can lift vital back over the rest threshold
+            return energy_val is not None
+        if failure >= 35:
+            # vital is fine, just the (possibly stale) failure is high -> charm/energy fixes it
+            return has_charm or energy_val is not None
+        return False
 
     def _command_stat_gain(self, command):
         """Raw stat points a training yields this turn (Speed/Stamina/Power/Guts/Wit).

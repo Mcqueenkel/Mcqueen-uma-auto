@@ -12,6 +12,7 @@ const state = {
     isSavingPreset: false,
     raceData: [],
     selectedRaces: [],
+    racesDirty: false,
     scenarioType: "Mant",
     burnClocks: false,
     displayedClocksUsed: 0,
@@ -55,16 +56,22 @@ const els = {
     friendRefreshBtn: document.getElementById('friend-refresh-btn'),
     presetSelect: document.getElementById('preset-select'),
     startCareerBtn: document.getElementById('start-career-btn'),
+    navRunBtn: document.getElementById('nav-run-btn'),
     startStatus: document.getElementById('start-status'),
     accountStrip: document.getElementById('account-strip'),
     careerModal: document.getElementById('career-modal'),
     careerModalCopy: document.getElementById('career-modal-copy'),
     careerCancelBtn: document.getElementById('career-cancel-btn'),
     careerDeleteBtn: document.getElementById('career-delete-btn'),
+    runConfirmModal: document.getElementById('run-confirm-modal'),
+    runConfirmCopy: document.getElementById('run-confirm-copy'),
+    runConfirmOk: document.getElementById('run-confirm-ok'),
+    runConfirmCancel: document.getElementById('run-confirm-cancel'),
     raceToggle: document.getElementById('race-toggle'),
     raceChevron: document.getElementById('race-chevron'),
     raceBody: document.getElementById('race-body'),
     saveRacesBtn: document.getElementById('save-races-btn'),
+    raceSaveStatus: document.getElementById('race-save-status'),
     raceOptionsContent: document.getElementById('race-options-content'),
     racePopupOverlay: document.getElementById('race-slot-popup-overlay'),
     racePopupTitle: document.getElementById('race-slot-popup-title'),
@@ -123,7 +130,7 @@ const els = {
         function updateRunCountHint() {
             if (!els.runCountHint) return;
             const n = state.runCount;
-            els.runCountHint.textContent = n === 0 ? '∞ tak terhingga' : (n === 1 ? '1 karir (sekali)' : `${n} karir`);
+            els.runCountHint.textContent = n === 0 ? '∞ infinite' : (n === 1 ? '1 career (once)' : `${n} careers`);
             els.runCountHint.classList.toggle('infinite', n === 0);
         }
         const storedRunCount = localStorage.getItem(runCountStorageKey);
@@ -905,6 +912,12 @@ const els = {
                 els.startStatus.innerText = reason;
                 els.startStatus.classList.toggle('error', false);
             }
+            if (els.navRunBtn) {
+                els.navRunBtn.disabled = els.startCareerBtn.disabled;
+                const activeCareer = state.account && state.account.career && state.account.career.active;
+                els.navRunBtn.innerText = state.isStartingCareer ? 'RUNNING' : (activeCareer ? 'RESUME' : 'RUN');
+                els.navRunBtn.title = (!state.isStartingCareer && reason) ? reason : '';
+            }
         }
         function renderTeamPanel() {
             document.getElementById('dashboard-view').classList.add('active');
@@ -1151,6 +1164,8 @@ const els = {
             state.selectedRaces = (current?.extra_race_list || [])
                 .map(id => parseInt(id, 10))
                 .filter(id => Number.isFinite(id));
+            state.racesDirty = false;
+            updateRaceSaveStatus();
         }
 
         function getYearSlots(yearIdx) {
@@ -1285,7 +1300,7 @@ const els = {
 
                         openSlotPopup(slot, yearIdx);
                         renderRaces();
-                        await autoSaveRaces();
+                        markRacesDirty();
                     };
                     list.appendChild(item);
                 });
@@ -1294,19 +1309,38 @@ const els = {
             els.racePopupOverlay.style.display = 'flex';
         }
 
-        async function autoSaveRaces() {
+        function updateRaceSaveStatus() {
+            if (!els.raceSaveStatus) return;
+            els.raceSaveStatus.textContent = state.racesDirty ? '● Belum disimpan' : '';
+            els.raceSaveStatus.className = state.racesDirty ? 'race-save-status dirty' : 'race-save-status';
+        }
+        function markRacesDirty() {
+            state.racesDirty = true;
+            updateRaceSaveStatus();
+        }
+        async function saveRaces() {
+            if (!state.selectedPreset) {
+                if (els.raceSaveStatus) { els.raceSaveStatus.textContent = 'Pilih preset dulu'; els.raceSaveStatus.className = 'race-save-status dirty'; }
+                return;
+            }
+            if (els.saveRacesBtn) els.saveRacesBtn.disabled = true;
+            if (els.raceSaveStatus) { els.raceSaveStatus.textContent = 'Menyimpan...'; els.raceSaveStatus.className = 'race-save-status'; }
             try {
                 const current = getCurrentPreset();
                 if (current) current.extra_race_list = [...state.selectedRaces];
-                await apiJson('/api/presets/save_races', {
+                const data = await apiJson('/api/presets/save_races', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        preset_name: state.selectedPreset,
-                        races: state.selectedRaces
-                    })
+                    body: JSON.stringify({ preset_name: state.selectedPreset, races: state.selectedRaces })
                 });
-            } catch (e) {}
+                if (data && data.success === false) throw new Error(data.detail || 'gagal simpan');
+                state.racesDirty = false;
+                if (els.raceSaveStatus) { els.raceSaveStatus.textContent = `✓ Tersimpan (${state.selectedRaces.length} race)`; els.raceSaveStatus.className = 'race-save-status saved'; }
+            } catch (e) {
+                if (els.raceSaveStatus) { els.raceSaveStatus.textContent = e.message || 'Gagal menyimpan'; els.raceSaveStatus.className = 'race-save-status dirty'; }
+            } finally {
+                if (els.saveRacesBtn) els.saveRacesBtn.disabled = false;
+            }
         }
 
         function getTurnFromDate(dateStr) {
@@ -1325,6 +1359,7 @@ const els = {
             els.racePopupOverlay?.addEventListener('click', (e) => {
                 if (e.target === els.racePopupOverlay) els.racePopupOverlay.style.display = 'none';
             });
+            els.saveRacesBtn?.addEventListener('click', saveRaces);
 
             makeSectionToggle('race-toggle', 'race-chevron', 'race-body', false);
         }
@@ -1947,6 +1982,41 @@ const els = {
                 });
             });
         }
+        function formatRunEstimate(n) {
+            // rough: ~30-37 min per career (current pacing)
+            const fmt = (m) => m < 90 ? `${Math.round(m)} min` : `${(m / 60).toFixed(1)} hr`;
+            return `${fmt(n * 30)} – ${fmt(n * 37)}`;
+        }
+        function closeRunConfirm() {
+            if (els.runConfirmModal) els.runConfirmModal.style.display = 'none';
+        }
+        function openRunConfirm() {
+            const n = state.runCount;
+            const activeCareer = state.account && state.account.career && state.account.career.active;
+            const lead = activeCareer ? 'Resume the active career, then run ' : 'The bot will run ';
+            let copy, infinite = false;
+            if (n === 0) {
+                infinite = true;
+                copy = `<strong style="color:#ffcf48">⚠️ INFINITE MODE</strong><br>${lead}careers <strong>continuously</strong> until you click <strong>STOP</strong>. It won't stop on its own.`;
+            } else if (n === 1) {
+                copy = `${lead}<strong>1 career</strong> (single run), then stop.<br><span style="opacity:.7">Est. ~${formatRunEstimate(1)}</span>`;
+            } else {
+                copy = `${lead}<strong>${n} careers</strong> back-to-back, then stop automatically.<br><span style="opacity:.7">Est. total ~${formatRunEstimate(n)}</span>`;
+            }
+            els.runConfirmCopy.innerHTML = copy;
+            els.runConfirmOk.textContent = infinite ? 'YES, RUN ∞' : `YES, RUN ${n}×`;
+            els.runConfirmOk.classList.toggle('btn-danger', infinite);
+            els.runConfirmOk.classList.toggle('btn-primary', !infinite);
+            els.runConfirmModal.style.display = 'flex';
+        }
+        function requestStartCareer() {
+            const reason = getStartMissingReason();
+            if (reason || state.isStartingCareer) {
+                syncStartButton();
+                return;
+            }
+            openRunConfirm();
+        }
         async function startCareer() {
             const reason = getStartMissingReason();
             if (reason || state.isStartingCareer) {
@@ -2194,7 +2264,13 @@ const els = {
             event.stopPropagation();
             loadFriends(true);
         });
-        els.startCareerBtn.addEventListener('click', startCareer);
+        els.startCareerBtn.addEventListener('click', requestStartCareer);
+        if (els.navRunBtn) els.navRunBtn.addEventListener('click', requestStartCareer);
+        if (els.runConfirmOk) els.runConfirmOk.addEventListener('click', () => { closeRunConfirm(); startCareer(); });
+        if (els.runConfirmCancel) els.runConfirmCancel.addEventListener('click', closeRunConfirm);
+        if (els.runConfirmModal) els.runConfirmModal.addEventListener('click', event => {
+            if (event.target === els.runConfirmModal) closeRunConfirm();
+        });
 
         function selectDeck(index, element) {
             const alreadySelected = element.classList.contains('selected');

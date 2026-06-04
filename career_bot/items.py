@@ -766,6 +766,7 @@ class MantItemManager:
                 targets.append((name, qty))
 
         targets.extend(self._energy_targets(chara, owned, preset))
+        targets.extend(self._rescue_energy_target(chara, owned, preset, best_command))
         targets.extend(self._ailment_cure_targets(data, owned))
         mood_target = self._mood_target(chara, owned)
         if mood_target:
@@ -1045,6 +1046,42 @@ class MantItemManager:
 
         return result
 
+    def _rescue_energy_target(self, chara, owned, preset, best_command):
+        """Top up energy with the smallest sufficient Vita so a STRONG training (the
+        chosen best_command) can run this turn instead of being rested away for low
+        energy. Mirrors MantStrategy._can_rescue_training so the post-item re-decision
+        actually trains it. Very-low energy (<= reactive floor) is left to the normal
+        _energy_targets; here we only handle the 'a bit too tired for a great turn' band."""
+        if not (preset or {}).get("rescue_good_training", True):
+            return []
+        if not best_command or int(best_command.get("command_type") or 0) != 1:
+            return []
+        vital = int(chara.get("vital") or 0)
+        cfg = self._mant_cfg(preset)
+        reactive_floor = int(cfg.get("energy_recovery_threshold") or 30)
+        if vital <= reactive_floor:
+            return []  # reactive _energy_targets already refills critically low energy
+        rest_threshold = int((preset or {}).get("rest_threshold") or 48)
+        margin = int((preset or {}).get("rescue_vital_margin") or 12)
+        target = rest_threshold + margin
+        if vital >= target:
+            return []  # already enough energy to train without resting
+        failure = int(best_command.get("failure_rate") or 0)
+        at_risk = vital <= rest_threshold or failure >= int(cfg.get("rescue_failure") or 30)
+        if not at_risk:
+            return []
+        gain = self._command_stat_gain(best_command)
+        rainbow = self._rainbow_count(best_command, chara)
+        if rainbow < 1 and gain < int(cfg.get("rescue_train_stat") or 27):
+            return []
+        best = None
+        for name, value in ENERGY_ITEMS.items():
+            if owned.get(name, 0) <= 0:
+                continue
+            if vital + value > target and (best is None or value < ENERGY_ITEMS[best]):
+                best = name
+        return [(best, 1)] if best else []
+
     def _mood_target(self, chara, owned):
         motivation = int(chara.get("motivation") or 3)
         if motivation >= 5:
@@ -1253,6 +1290,21 @@ class MantItemManager:
             elif item_id == 8002: current_mega_tier = max(current_mega_tier, 2)
             elif item_id == 8003: current_mega_tier = max(current_mega_tier, 3)
         return current_mega_tier
+
+    def _rainbow_count(self, command, chara):
+        """Deck supports at max bond (>=80) present on this training = rainbows.
+        Used to recognise a 'good training' worth spending a Vita/charm to run."""
+        if not command or not chara:
+            return 0
+        bonds = {}
+        for row in chara.get("evaluation_info_array") or []:
+            bonds[int(row.get("target_id") or 0)] = int(row.get("evaluation") or 0)
+        count = 0
+        for pid in command.get("training_partner_array") or []:
+            pid = int(pid or 0)
+            if pid in {1, 2, 3, 4, 5, 6} and bonds.get(pid, 0) >= 80:
+                count += 1
+        return count
 
     def _command_stat_gain(self, cmd, sp_weight=0):
         if not cmd: return 0

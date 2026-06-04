@@ -47,6 +47,7 @@
                         <span id="run-count-hint" class="run-count-hint">1 karir</span>
                     </div>
                     <div class="control-btns">
+                        <button id="nav-run-btn" class="btn btn-sm turn-delay-button nav-run-btn" type="button" disabled>RUN</button>
                         <button id="tempt-fate-btn" class="btn btn-sm turn-delay-button" type="button">TEMPT FATE</button>
                         <button id="burn-clocks-btn" class="btn btn-sm turn-delay-button" type="button">BURN CLOCKS: OFF</button>
                         <button id="dev-career-btn" class="btn btn-sm turn-delay-button" type="button" style="display: none;">DEV</button>
@@ -182,6 +183,10 @@
                                     </div>
                                 </div>
                                 <div class="race-options-content" id="race-options-content"></div>
+                                <div class="race-save-row">
+                                    <button id="save-races-btn" class="btn btn-sm preset-action-btn" type="button">SAVE RACES</button>
+                                    <span id="race-save-status" class="race-save-status"></span>
+                                </div>
                             </div>
                         </section>
 
@@ -260,6 +265,17 @@
                 <div class="modal-actions">
                     <button id="career-cancel-btn" type="button" class="btn btn-sm">CANCEL</button>
                     <button id="career-delete-btn" type="button" class="btn btn-sm btn-danger">DELETE</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="run-confirm-modal" class="modal-backdrop">
+            <div class="modal-panel">
+                <div class="modal-title">Confirm Run</div>
+                <div id="run-confirm-copy" class="modal-copy"></div>
+                <div class="modal-actions">
+                    <button id="run-confirm-cancel" type="button" class="btn btn-sm">CANCEL</button>
+                    <button id="run-confirm-ok" type="button" class="btn btn-sm btn-primary">YES, RUN</button>
                 </div>
             </div>
         </div>
