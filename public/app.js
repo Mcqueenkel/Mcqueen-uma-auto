@@ -446,40 +446,40 @@ const els = {
             try {
                 const data = await apiJson('/api/settings/discord-webhook');
                 if (data.webhook_url) els.discordWebhookUrl.value = data.webhook_url;
-                setDiscordStatus(data.configured ? 'Webhook tersimpan' : 'Belum diatur', data.configured ? 'ok' : '');
+                setDiscordStatus(data.configured ? 'Webhook saved' : 'Not configured', data.configured ? 'ok' : '');
             } catch (e) {
-                setDiscordStatus('Tidak bisa membaca status webhook', 'needs-action');
+                setDiscordStatus('Could not read webhook status', 'needs-action');
             }
         }
         async function saveDiscordWebhook() {
             if (!els.discordWebhookUrl) return;
             const webhook_url = els.discordWebhookUrl.value.trim();
             if (els.discordWebhookSaveBtn) els.discordWebhookSaveBtn.disabled = true;
-            setDiscordStatus('Menyimpan...', 'working');
+            setDiscordStatus('Saving...', 'working');
             try {
                 const data = await apiJson('/api/settings/discord-webhook', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ webhook_url })
                 });
-                setDiscordStatus(data.configured ? 'Webhook tersimpan' : 'Webhook dikosongkan', data.configured ? 'ok' : '');
+                setDiscordStatus(data.configured ? 'Webhook saved' : 'Webhook cleared', data.configured ? 'ok' : '');
             } catch (e) {
-                setDiscordStatus(e.message || 'Gagal menyimpan webhook', 'needs-action');
+                setDiscordStatus(e.message || 'Failed to save webhook', 'needs-action');
             } finally {
                 if (els.discordWebhookSaveBtn) els.discordWebhookSaveBtn.disabled = false;
             }
         }
         async function testDiscordWebhook() {
             if (els.discordWebhookTestBtn) els.discordWebhookTestBtn.disabled = true;
-            setDiscordStatus('Mengirim pesan tes...', 'working');
+            setDiscordStatus('Sending test message...', 'working');
             try {
                 const data = await apiJson('/api/settings/discord-webhook/test', { method: 'POST' });
                 setDiscordStatus(
-                    data.success ? 'Pesan tes terkirim — cek channel Discord' : (data.detail || 'Gagal mengirim tes'),
+                    data.success ? 'Test message sent — check your Discord channel' : (data.detail || 'Failed to send test'),
                     data.success ? 'ok' : 'needs-action'
                 );
             } catch (e) {
-                setDiscordStatus(e.message || 'Gagal mengirim tes', 'needs-action');
+                setDiscordStatus(e.message || 'Failed to send test', 'needs-action');
             } finally {
                 if (els.discordWebhookTestBtn) els.discordWebhookTestBtn.disabled = false;
             }
@@ -1311,7 +1311,7 @@ const els = {
 
         function updateRaceSaveStatus() {
             if (!els.raceSaveStatus) return;
-            els.raceSaveStatus.textContent = state.racesDirty ? '● Belum disimpan' : '';
+            els.raceSaveStatus.textContent = state.racesDirty ? '● Unsaved' : '';
             els.raceSaveStatus.className = state.racesDirty ? 'race-save-status dirty' : 'race-save-status';
         }
         function markRacesDirty() {
@@ -1320,11 +1320,11 @@ const els = {
         }
         async function saveRaces() {
             if (!state.selectedPreset) {
-                if (els.raceSaveStatus) { els.raceSaveStatus.textContent = 'Pilih preset dulu'; els.raceSaveStatus.className = 'race-save-status dirty'; }
+                if (els.raceSaveStatus) { els.raceSaveStatus.textContent = 'Select a preset first'; els.raceSaveStatus.className = 'race-save-status dirty'; }
                 return;
             }
             if (els.saveRacesBtn) els.saveRacesBtn.disabled = true;
-            if (els.raceSaveStatus) { els.raceSaveStatus.textContent = 'Menyimpan...'; els.raceSaveStatus.className = 'race-save-status'; }
+            if (els.raceSaveStatus) { els.raceSaveStatus.textContent = 'Saving...'; els.raceSaveStatus.className = 'race-save-status'; }
             try {
                 const current = getCurrentPreset();
                 if (current) current.extra_race_list = [...state.selectedRaces];
@@ -1333,11 +1333,11 @@ const els = {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ preset_name: state.selectedPreset, races: state.selectedRaces })
                 });
-                if (data && data.success === false) throw new Error(data.detail || 'gagal simpan');
+                if (data && data.success === false) throw new Error(data.detail || 'save failed');
                 state.racesDirty = false;
-                if (els.raceSaveStatus) { els.raceSaveStatus.textContent = `✓ Tersimpan (${state.selectedRaces.length} race)`; els.raceSaveStatus.className = 'race-save-status saved'; }
+                if (els.raceSaveStatus) { els.raceSaveStatus.textContent = `✓ Saved (${state.selectedRaces.length} races)`; els.raceSaveStatus.className = 'race-save-status saved'; }
             } catch (e) {
-                if (els.raceSaveStatus) { els.raceSaveStatus.textContent = e.message || 'Gagal menyimpan'; els.raceSaveStatus.className = 'race-save-status dirty'; }
+                if (els.raceSaveStatus) { els.raceSaveStatus.textContent = e.message || 'Failed to save'; els.raceSaveStatus.className = 'race-save-status dirty'; }
             } finally {
                 if (els.saveRacesBtn) els.saveRacesBtn.disabled = false;
             }

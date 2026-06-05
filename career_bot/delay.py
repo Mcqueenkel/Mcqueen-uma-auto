@@ -88,7 +88,7 @@ class TimingDNA:
         """Return the stable, distinct personality for a given account.
 
         The seed mixes the per-install seed with the viewer_id, so the same
-        account always gets the same ritme while different accounts diverge.
+        account always gets the same rhythm while different accounts diverge.
         """
         key = int(viewer_id or 0)
         with cls._registry_lock:

@@ -42,9 +42,9 @@
                         <input id="turn-delay-max" class="turn-delay-input" type="number" min="0" step="0.1" value="3.7">
                     </div>
                     <div class="delay-group">
-                        <span class="turn-delay-label" title="Jumlah karir: 1 = sekali, 0 = tak terhingga">RUNS</span>
-                        <input id="run-count-input" class="turn-delay-input" type="number" min="0" step="1" value="1" title="Jumlah karir: 1 = sekali, 0 = tak terhingga">
-                        <span id="run-count-hint" class="run-count-hint">1 karir</span>
+                        <span class="turn-delay-label" title="Number of careers: 1 = once, 0 = infinite">RUNS</span>
+                        <input id="run-count-input" class="turn-delay-input" type="number" min="0" step="1" value="1" title="Number of careers: 1 = once, 0 = infinite">
+                        <span id="run-count-hint" class="run-count-hint">1 career</span>
                     </div>
                     <div class="control-btns">
                         <button id="nav-run-btn" class="btn btn-sm turn-delay-button nav-run-btn" type="button" disabled>RUN</button>
@@ -157,7 +157,7 @@
                         <section class="dashboard-section" id="discord-webhook-section">
                             <h2 class="dashboard-section-title">DISCORD WEBHOOK</h2>
                             <div class="master-data-panel">
-                                <label class="form-label" for="discord-webhook-url">WEBHOOK URL (notifikasi karir selesai — nama akun otomatis dari game)</label>
+                                <label class="form-label" for="discord-webhook-url">WEBHOOK URL (career-finished notification — account name auto-detected from game)</label>
                                 <div class="master-data-row">
                                     <input id="discord-webhook-url" class="form-input master-data-input" type="text" spellcheck="false" placeholder="https://discord.com/api/webhooks/...">
                                     <button id="discord-webhook-save-btn" class="btn btn-sm" type="button">SAVE</button>

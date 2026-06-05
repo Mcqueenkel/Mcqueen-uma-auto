@@ -107,16 +107,16 @@ def _build_embed(summary):
     status = str(summary.get("status") or "?")
     color = {"finished": 0x2ECC71, "stopped": 0xF1C40F, "error": 0xE74C3C}.get(status, 0x95A5A6)
     title = {
-        "finished": "🏁 Karir Selesai",
-        "stopped": "⏹️ Karir Dihentikan",
-        "error": "⚠️ Karir Error",
-    }.get(status, "Karir")
+        "finished": "🏁 Career Finished",
+        "stopped": "⏹️ Career Stopped",
+        "error": "⚠️ Career Error",
+    }.get(status, "Career")
     stats = summary.get("stats") or {}
     fans = int(summary.get("fans") or stats.get("fans") or 0)
 
     description = ""
     if summary.get("account"):
-        description += f"👤 Akun **{summary['account']}** · "
+        description += f"👤 Account **{summary['account']}** · "
     description += f"**{summary.get('uma_name') or 'Unknown'}**"
     if summary.get("preset"):
         description += f" · `{summary['preset']}`"
@@ -127,10 +127,10 @@ def _build_embed(summary):
     fields = [
         {"name": "Status", "value": status, "inline": True},
         {"name": "Turn", "value": str(summary.get("final_turn") or 0), "inline": True},
-        {"name": "Durasi", "value": str(summary.get("duration") or "?"), "inline": True},
+        {"name": "Duration", "value": str(summary.get("duration") or "?"), "inline": True},
         {"name": "Total Fans", "value": f"{fans:,}", "inline": True},
         {"name": "Skill Point", "value": str(stats.get("skill_point", 0)), "inline": True},
-        {"name": "Skill dibeli", "value": str(summary.get("skills_bought", 0)), "inline": True},
+        {"name": "Skills bought", "value": str(summary.get("skills_bought", 0)), "inline": True},
         {
             "name": "Stat",
             "value": "SPD {} · STA {} · PWR {} · GUT {} · WIT {}".format(
@@ -145,7 +145,7 @@ def _build_embed(summary):
     if sparks:
         spark_text = _format_sparks(sparks)
         if spark_text:
-            fields.append({"name": "✨ Sparks (faktor inheritance)", "value": spark_text[:1024], "inline": False})
+            fields.append({"name": "✨ Sparks (inheritance factors)", "value": spark_text[:1024], "inline": False})
     return {"title": f"{title} — {status}", "description": description, "color": color, "fields": fields}
 
 
