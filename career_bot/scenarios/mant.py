@@ -46,32 +46,32 @@ class MantStrategy(ScenarioStrategy):
         chara = data.get("chara_info") or {}
         home = data.get("home_info") or {}
         if "single_mode_finish_common" in data:
-            return Decision("finish", {"current_turn": chara["turn"]}, "finished")
+            return Decision("finish", {"current_turn": chara.get("turn", 0)}, "finished")
         events = data.get("unchecked_event_array") or []
         if events:
             event = events[0] or {}
             choice = self._choice(event)
-            payload = {"event_id": event.get("event_id"), "chara_id": event.get("chara_id", 0), "choice_number": choice, "current_turn": chara["turn"]}
+            payload = {"event_id": event.get("event_id"), "chara_id": event.get("chara_id", 0), "choice_number": choice, "current_turn": chara.get("turn", 0)}
             if choice is None:
-                payload = {"event_id": event.get("event_id"), "_event": event, "_current_turn": chara["turn"]}
+                payload = {"event_id": event.get("event_id"), "_event": event, "_current_turn": chara.get("turn", 0)}
             return Decision("event", payload, "event")
         if chara.get("state") == 3:
-            return Decision("finish", {"current_turn": chara["turn"]}, "ready to finish")
+            return Decision("finish", {"current_turn": chara.get("turn", 0)}, "ready to finish")
         race = data.get("race_start_info")
         playing_state = (chara.get("playing_state") or 0)
         if playing_state == 3:
-            return Decision("race_progress", {"current_turn": chara["turn"], "phase": "start", "race_start_info": race, "chara_info": chara}, "resume race start")
+            return Decision("race_progress", {"current_turn": chara.get("turn", 0), "phase": "start", "race_start_info": race, "chara_info": chara}, "resume race start")
         if playing_state == 5:
-            return Decision("finish", {"current_turn": chara["turn"]}, "goal failed / career end")     
+            return Decision("finish", {"current_turn": chara.get("turn", 0)}, "goal failed / career end")     
         if race and race.get("program_id") and playing_state in (2, 4):
-            return Decision("race_progress", {"current_turn": chara["turn"], "phase": "start", "race_start_info": race, "chara_info": chara}, "race start")
+            return Decision("race_progress", {"current_turn": chara.get("turn", 0), "phase": "start", "race_start_info": race, "chara_info": chara}, "race start")
         if self.race_planner:
             forced_program_id = self.race_planner.forced_program(state)
             if forced_program_id:
-                return Decision("race", {"program_id": forced_program_id, "current_turn": chara["turn"], "_strategy": self}, self.race_planner.label(forced_program_id))
+                return Decision("race", {"program_id": forced_program_id, "current_turn": chara.get("turn", 0), "_strategy": self}, self.race_planner.label(forced_program_id))
             program_id = self.race_planner.choose(state, preset)
             if program_id and not self._train_outvalues_race(data, chara, preset, program_id):
-                return Decision("race", {"program_id": program_id, "current_turn": chara["turn"], "_strategy": self}, self.race_planner.label(program_id))
+                return Decision("race", {"program_id": program_id, "current_turn": chara.get("turn", 0), "_strategy": self}, self.race_planner.label(program_id))
         command = self._best_command(data, chara, preset)
         if command:
             command_type = command.get("command_type", 1)
@@ -86,7 +86,7 @@ class MantStrategy(ScenarioStrategy):
                 "command_id": command_id,
                 "command_group_id": command_group_id,
                 "select_id": command.get("select_id", 0),
-                "current_turn": chara["turn"],
+                "current_turn": chara.get("turn", 0),
                 "current_vital": chara.get("vital", 0),
             }, reason)
         return Decision("idle", {}, "no action")
@@ -323,7 +323,11 @@ class MantStrategy(ScenarioStrategy):
             yield_val = w_lv1 + (w_lv2 - w_lv1) * ratio
             score += yield_val * weight
         if hint_count:
-            score += w_hint
+            # More skill hints on one training = more skill points / discounts, so scale
+            # the hint reward by how many partners are hinting (gently, capped at 4)
+            # instead of a flat bonus for "at least one hint".
+            hint_scale = float(preset.get("hint_count_scale") or 0.5)
+            score += w_hint * (1.0 + hint_scale * (min(hint_count, 4) - 1))
         for item in command.get("params_inc_dec_info_array") or []:
             value = float(item.get("value") or 0)
             if item.get("target_type") == 10:
@@ -336,8 +340,19 @@ class MantStrategy(ScenarioStrategy):
             if target is None:
                 continue
             if target == 5:
+                # Skill points were previously ignored entirely. Value them with a
+                # tunable weight so the bot collects SP (mostly from Wit) toward buying
+                # skills -- without letting SP dominate raw stat gains. Uses the preset's
+                # stat_value_multiplier[5] (0.005 by default) times skill_point_weight.
+                # Also counted as "useful" so an SP-rich Wit rainbow isn't attenuated to
+                # zero just because the stats it touches are already capped.
+                if preset.get("score_skill_points", True) and value > 0:
+                    sp_mult = float(stat_mult[5] if len(stat_mult) > 5 else 0.005)
+                    sp_score = value * sp_mult * float(preset.get("skill_point_weight") or 1.0)
+                    score += sp_score
+                    useful_stat_score += max(0.0, sp_score)
                 continue
-            
+
             stat_gain_score = value * float(stat_mult[target] if target < len(stat_mult) else 0.01)
             cap = float(targets[target] if target < len(targets) else 9999)
             if cap > 0 and target < 5:
@@ -361,6 +376,16 @@ class MantStrategy(ScenarioStrategy):
                     stat_gain_score *= 0.98 - ((ratio - 0.74) / 0.04) * 0.03
                 elif ratio > 0.70:
                     stat_gain_score *= 1.00 - ((ratio - 0.70) / 0.04) * 0.02
+                elif preset.get("stat_balance", True) and cap < 9000:
+                    # Under-target boost: nudge the bot to FILL a stat that sits far
+                    # below its target instead of piling onto near-capped stats, so the
+                    # final build is balanced (not lopsided). The further under target,
+                    # the bigger the nudge (capped). Only when a real target is set
+                    # (cap != the 9999 "no target" default); complements the cap-based
+                    # down-weighting above.
+                    thr = float(preset.get("stat_balance_threshold") or 0.55)
+                    if ratio < thr:
+                        stat_gain_score *= 1.0 + (thr - ratio) * float(preset.get("stat_balance_boost") or 0.6)
             score += stat_gain_score
             useful_stat_score += max(0.0, stat_gain_score)
         if rainbow_count and preset.get("rainbow_explicit", True):
@@ -391,7 +416,11 @@ class MantStrategy(ScenarioStrategy):
             if vital >= max_vital or (gain > 0 and vital + gain > max_vital):
                 score *= 0.35 if turn > 72 else 0.75
             elif vital < 85:
-                score *= 1.03
+                # Wit also restores energy, so prefer it MORE the lower energy gets --
+                # recovering via Wit (which still trains + gives skills/SP) beats wasting
+                # a whole rest turn. Scales from ~1.0 near full to a tunable cap when low.
+                low = (85 - vital) / 85.0
+                score *= 1.0 + low * float(preset.get("wit_energy_boost") or 0.25)
         extra = self._extra_weight(idx, turn, preset)
         if extra == -1:
             return -999.0

@@ -1270,6 +1270,11 @@ def manage_career_loop(req, preset, initial_result):
             dna_sleep(1.0, 1.0)
 
         status = career_runner.snapshot()
+        if status.get("circuit_tripped"):
+            print("[LOOP] AUTO-BACKOFF: circuit breaker tripped (too many server "
+                  "errors) — stopping the whole loop. Wait before running again.", flush=True)
+            backend_loop_stop = True
+            break
         if status.get("last_error"):
             consecutive_fails += 1
             if consecutive_fails >= 3:
@@ -1373,6 +1378,14 @@ async def run_career(req: RunCareerRequest):
             account, chara_info = apply_career_result(result)
 
         apply_deck_type_counts(preset, req=req, chara_info=chara_info)
+
+        # Fresh, deliberate run: clear any prior auto-backoff state so the user gets a
+        # clean chance. If the server is still throttling, the breaker re-trips fast.
+        try:
+            if active_client is not None:
+                active_client.reset_circuit()
+        except Exception:
+            pass
 
         # run_count: 1 = single career, N = N careers, 0 = run forever.
         # Anything other than exactly 1 loops via manage_career_loop.

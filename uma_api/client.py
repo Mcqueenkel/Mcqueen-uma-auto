@@ -14,9 +14,18 @@ import subprocess
 import platform
 import socket
 import shutil
+import collections
 from datetime import datetime
 from pathlib import Path
 from career_bot.delay import dna_sleep, dna_uniform, dna_gauss, dna_randint, backoff_sleep, jittered_sleep
+
+# --- Auto-backoff circuit breaker -------------------------------------------
+# If the game server rejects this many API calls within the rolling window
+# (seconds), the client trips its breaker. The runner polls `circuit_tripped`
+# and stops cleanly instead of hammering a server that is clearly unhappy
+# (e.g. throttling / temporary restriction). Tunable via env vars.
+CIRCUIT_ERROR_THRESHOLD = int(os.environ.get('SWEEPY_CIRCUIT_THRESHOLD') or 6)
+CIRCUIT_ERROR_WINDOW_SEC = float(os.environ.get('SWEEPY_CIRCUIT_WINDOW_SEC') or 90.0)
 
 class StateRecoveryError(Exception):
     pass
@@ -336,6 +345,11 @@ class UmaClient:
         self.coin_info = {}
         self.item_map = {}
         self.current_scenario_id = None
+        # Auto-backoff: rolling window of recent server-error timestamps. When it
+        # fills past CIRCUIT_ERROR_THRESHOLD, `circuit_tripped` flips True and the
+        # runner stops to avoid hammering a throttled/unhappy server.
+        self.circuit_tripped = False
+        self._err_window = collections.deque()
         self.session = requests.Session()
         self.update_headers()
         self.api_jitter = dna_uniform(-0.02, 0.02)
@@ -504,6 +518,31 @@ class UmaClient:
             'Content-Type': 'application/x-msgpack', 'X-Unity-Version': self.unity_ver
         })
 
+    def reset_circuit(self):
+        """Clear auto-backoff state for a fresh, deliberate run. If the server is
+        still throttling, the breaker simply re-trips within the next window."""
+        self.circuit_tripped = False
+        self._err_window.clear()
+
+    def _note_api_error(self, ep, rc):
+        """Record a surfaced server error and trip the circuit breaker if too
+        many happen within the rolling window. Sets `self.circuit_tripped` so the
+        runner can stop; does NOT raise (the normal API error still propagates)."""
+        now = time.time()
+        win = self._err_window
+        win.append(now)
+        cutoff = now - CIRCUIT_ERROR_WINDOW_SEC
+        while win and win[0] < cutoff:
+            win.popleft()
+        if len(win) >= CIRCUIT_ERROR_THRESHOLD and not self.circuit_tripped:
+            self.circuit_tripped = True
+            print(
+                f"CIRCUIT BREAKER TRIPPED: {len(win)} server errors within "
+                f"{int(CIRCUIT_ERROR_WINDOW_SEC)}s (last: {rc} on {ep}). "
+                f"Auto-backoff -- the server is likely throttling. Stopping soon.",
+                flush=True,
+            )
+
     def call(self, ep, args=None, retry_208=6, retry_205=3):
         if not hasattr(self, '_last_raw_call_ts'):
             self._last_raw_call_ts = 0
@@ -630,7 +669,10 @@ class UmaClient:
                 return self.call(ep, args, retry_208=retry_208 - 1)
             err_detail = format_api_error(ep, rc, res)
             err_msg = f'API error {rc} on {ep}: {err_detail}'
+            # 102 on race_end/race_out is an expected "already done" race condition,
+            # not a real server rejection -- don't count it toward the breaker.
             if not (rc == 102 and ep in {"single_mode_free/race_end", "single_mode_free/race_out"}):
+                self._note_api_error(ep, rc)
                 print(err_msg)
             raise Exception(err_msg)
         if dh.get('sid') and isinstance(dh['sid'], str) and dh['sid'].strip():

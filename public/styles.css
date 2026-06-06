@@ -1420,6 +1420,14 @@ body.dashboard-mode .turn-delay-control {
 .start-status.error {
   color: #ff6b8a;
 }
+/* Auto-backoff: an intentional protective stop, not a crash — amber, not red. */
+.start-status.backoff {
+  color: #ffcf5c;
+  text-transform: none;
+  line-height: 1.45;
+  text-align: left;
+  font-weight: 700;
+}
 .friend-card .grid-card-overlay {
   min-height: 2rem;
   gap: 0.14rem;

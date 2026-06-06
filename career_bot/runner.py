@@ -75,6 +75,7 @@ class CareerRunner:
             "last_action": "",
             "last_error": "",
             "finished": False,
+            "circuit_tripped": False,
             "skills_bought": 0,
             "items_bought": 0,
             "items_used": 0,
@@ -129,6 +130,7 @@ class CareerRunner:
                 "last_action": "started",
                 "last_error": "",
                 "finished": False,
+                "circuit_tripped": False,
                 "skills_bought": 0,
                 "items_bought": 0,
                 "items_used": 0,
@@ -206,6 +208,18 @@ class CareerRunner:
             for i in range(max_steps):
                 if self._should_stop():
                     break
+                # Auto-backoff: the API client tripped its circuit breaker (too many
+                # server errors in a short window -- the server is likely throttling).
+                # Stop this career cleanly instead of continuing to hammer the server.
+                if getattr(client, "circuit_tripped", False):
+                    msg = ("Auto-backoff: too many server errors in a short time "
+                           "(server likely throttling). Stopped to avoid hammering -- "
+                           "wait a while before running again.")
+                    print(f"AUTO-BACKOFF: stopping career -- {msg}", flush=True)
+                    self._log("auto_backoff", self.snapshot().get("turn", 0), msg)
+                    self._mark(last_error=msg, last_action="auto-backoff", circuit_tripped=True)
+                    self.stop_requested = True
+                    break
                 # Pause: idle here (no game action taken) until resumed or stopped. The
                 # career session stays alive; only the bot's moves are held.
                 if self._is_paused():
@@ -274,13 +288,13 @@ class CareerRunner:
                         state = self._drain_events(client, strategy, state)
                     data = state.get("data") or {}
                     chara = data.get("chara_info") or {}
-                    self._mark(turn=chara["turn"])
+                    self._mark(turn=chara.get("turn", 0))
                     decision = strategy.next_decision(state, preset)
 
                     if self.report:
                         add_decision(self.report, state, decision)
                 
-                self._log(decision.action, chara["turn"], decision.reason)
+                self._log(decision.action, chara.get("turn", 0), decision.reason)
                 if decision.action == "idle":
                     self._mark(last_action=decision.reason)
                     break

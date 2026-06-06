@@ -405,6 +405,9 @@ class MantItemManager:
         owned = self._owned_map(free)
         any_sale = any(int(row.get("coin_num") or 0) < int(row.get("original_coin_num") or 0) for row in pickups if int(row.get("original_coin_num") or 0) > 0)
         sale_modifier = 0.9 if any_sale else 1.0
+        # Per-stat support-card counts [Speed, Stamina, Power, Guts, Wit] of the running
+        # deck -- used to prioritize stat-specific shop items toward the deck's focus.
+        deck_counts = preset.get("_deck_type_counts") or []
         motivation = int(chara.get("motivation") or 3)
         non_rainbow_count = 0
         for row in chara.get("evaluation_info_array") or []:
@@ -482,6 +485,18 @@ class MantItemManager:
                 eff_t = min(eff_t, base_t - cupcake_shift)
             elif slug in {"artisan_cleat_hammer", "master_cleat_hammer"}:
                 eff_t = 999
+            elif name in TRAINING_ITEM_DECK_TYPE_INDEX:
+                # Deck-match priority: a stat item (Ankle Weights / Training Application)
+                # whose stat the deck is built around gets a higher priority (lower tier)
+                # than a borderline secondary stat. So a Speed-heavy deck (4 cards) buys
+                # Speed Ankle Weights before Power ones (2 cards), instead of treating all
+                # stat items at the same tier. Items for stats with < min cards were
+                # already dropped by _skip_buy, so this only orders the ones worth buying.
+                if preset.get("deck_match_stat_items", True):
+                    type_idx = TRAINING_ITEM_DECK_TYPE_INDEX.get(name)
+                    dc = int(deck_counts[type_idx]) if (deck_counts and type_idx is not None and 0 <= type_idx < len(deck_counts)) else 0
+                    bump = max(0, dc - int(preset.get("deck_match_min_count") or 2))
+                    eff_t = max(1, base_t - bump)
             effective_rows.append((max(1, eff_t), name, row))
 
         targets = []

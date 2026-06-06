@@ -2183,6 +2183,7 @@ const els = {
                 if (rows.length) renderActionHistory(rows);
                 if (runner.running) {
                     els.startStatus.classList.toggle('error', false);
+                    els.startStatus.classList.remove('backoff');
                     if (!rows.length) els.startStatus.innerText = `Turn ${runner.turn || '?'} / ${runner.last_action || 'running'} / ${runner.steps || 0}`;
                     return;
                 }
@@ -2190,16 +2191,26 @@ const els = {
                     bgClearTimer(state.runnerTimer);
                     state.runnerTimer = 0;
                 }
-                if (runner.last_error) {
+                if (runner.circuit_tripped) {
+                    // Auto-backoff: the bot stopped itself after repeated server errors.
+                    // Show it distinctly (amber, not red) so it doesn't read as a crash,
+                    // and always show the message even when an action table is present.
+                    els.startStatus.classList.toggle('error', false);
+                    els.startStatus.classList.add('backoff');
+                    els.startStatus.innerText = '🛑 Auto-backoff: too many server errors in a short time. The bot stopped ITSELF to protect your account — this is intentional, not a crash. Wait a while (ideally hours) before running again.';
+                } else if (runner.last_error) {
+                    els.startStatus.classList.remove('backoff');
                     els.startStatus.classList.toggle('error', true);
                     if (!rows.length) els.startStatus.innerText = runner.last_error;
                 } else if (runner.finished && !runner.last_error) {
+                    els.startStatus.classList.remove('backoff');
                     state.consecutiveRunnerFails = 0;
                     els.startStatus.classList.toggle('error', false);
                     if (!rows.length) els.startStatus.innerText = runner.loop_active ? 'Career finished! Restarting...' : 'Career finished!';
                     if (state.account && state.account.career) state.account.career.active = false;
                     renderAccountStrip(state.account);
                 } else if (runner.steps) {
+                    els.startStatus.classList.remove('backoff');
                     els.startStatus.classList.toggle('error', false);
                     if (!rows.length) els.startStatus.innerText = `Runner stopped after ${runner.steps} steps`;
                 }
