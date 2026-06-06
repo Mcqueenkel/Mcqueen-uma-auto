@@ -58,6 +58,7 @@ class CareerRunner:
         self.lock = threading.Lock()
         self.thread = None
         self.stop_requested = False
+        self.pause_requested = False
         self.burn_clocks = False
         self._loop_index = 1
         self._loop_target = 1
@@ -66,6 +67,7 @@ class CareerRunner:
         self.item_manager = MantItemManager()
         self.status = {
             "running": False,
+            "paused": False,
             "preset": "",
             "scenario_id": 0,
             "turn": 0,
@@ -111,6 +113,7 @@ class CareerRunner:
             if not strategy_cls:
                 raise RuntimeError(f"No runner for scenario {scenario_id}")
             self.stop_requested = False
+            self.pause_requested = False
             self.burn_clocks = burn_clocks
             self.dev_mode = dev_mode
             self.race_planner = RacePlanner(self.base_dir)
@@ -118,6 +121,7 @@ class CareerRunner:
             self.item_manager = MantItemManager()
             self.status = {
                 "running": True,
+                "paused": False,
                 "preset": preset.get("name", ""),
                 "scenario_id": scenario_id,
                 "turn": 0,
@@ -155,6 +159,23 @@ class CareerRunner:
         with self.lock:
             self.stop_requested = True
 
+    def pause(self):
+        with self.lock:
+            if self.status.get("running"):
+                self.pause_requested = True
+                self.status["paused"] = True
+                self._log_locked("pause", self.status.get("turn", 0), "career paused")
+
+    def resume(self):
+        with self.lock:
+            self.pause_requested = False
+            self.status["paused"] = False
+            self._log_locked("resume", self.status.get("turn", 0), "career resumed")
+
+    def _is_paused(self):
+        with self.lock:
+            return self.pause_requested
+
     def set_loop_info(self, index, target):
         # Which career this is within a loop (index) and the loop size (target,
         # 0 = infinite). Used only for the Discord notification.
@@ -185,6 +206,14 @@ class CareerRunner:
             for i in range(max_steps):
                 if self._should_stop():
                     break
+                # Pause: idle here (no game action taken) until resumed or stopped. The
+                # career session stays alive; only the bot's moves are held.
+                if self._is_paused():
+                    import time
+                    while self._is_paused() and not self._should_stop():
+                        time.sleep(0.4)
+                    if self._should_stop():
+                        break
                 data = state.get("data") or {}
                 chara = data.get("chara_info") or {}
                 turn = int(chara.get("turn") or 0)

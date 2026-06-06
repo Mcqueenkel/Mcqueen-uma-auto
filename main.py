@@ -945,14 +945,27 @@ async def login(req: LoginRequest):
         }
 
         has_form_creds = bool(req.username and req.password)
+        has_captured_ticket = bool(cfg.get('steam_id') and cfg.get('steam_session_ticket'))
+        used_captured = False
         if req.steam_id and req.steam_session_ticket:
             sid = str(req.steam_id)
             tkt = str(req.steam_session_ticket)
-            print('Using provided Steam ticket')
+            print('Using provided Steam ticket', flush=True)
+        elif has_captured_ticket:
+            # PREFER the Steam ticket captured from the game during --reauth: it skips the
+            # manual Steam login AND always matches the just-captured in-game account, so
+            # there is no viewer_id mismatch / error 1055 -- exactly what a 1-Steam /
+            # many-Uma-accounts setup needs. If this ticket is stale/rejected we auto-fall
+            # back to manual login below (when credentials were entered), so it can never
+            # make login worse than before.
+            sid = str(cfg.get('steam_id'))
+            tkt = str(cfg.get('steam_session_ticket'))
+            used_captured = True
+            print('Using captured in-game Steam ticket (no manual Steam login needed)', flush=True)
         elif has_form_creds:
             sid, tkt = get_ticket(req.username, req.password, req.code)
         else:
-            raise Exception('Steam credentials required')
+            raise Exception('No Steam ticket available -- re-capture with "auth" first, or enter Steam credentials')
 
         if not cfg.get('steam_id') or not cfg.get('steam_session_ticket'):
             cfg.update({
@@ -965,7 +978,24 @@ async def login(req: LoginRequest):
 
         c = UmaClient(cfg, trace_enabled=False)
         gated_client = GateKeeper(c)
-        res = gated_client.login()
+        try:
+            res = gated_client.login()
+            if not res:
+                raise Exception("empty login response")
+        except Exception as login_err:
+            # Auto-fallback: if the captured in-game ticket was used and it failed (e.g.
+            # expired / already consumed by the game), retry once with a fresh manual
+            # Steam login -- but only when credentials were actually provided.
+            if used_captured and has_form_creds:
+                print(f'Captured ticket login failed ({login_err}); falling back to manual Steam login', flush=True)
+                sid, tkt = get_ticket(req.username, req.password, req.code)
+                cfg['steam_id'] = sid
+                cfg['steam_session_ticket'] = tkt
+                c = UmaClient(cfg, trace_enabled=False)
+                gated_client = GateKeeper(c)
+                res = gated_client.login()
+            else:
+                raise
         if not res:
             raise HTTPException(status_code=401, detail="Game login failed")
         active_client = gated_client
@@ -1373,6 +1403,18 @@ async def stop_career_runner():
     career_runner.stop()
     return {"success": True, "runner": career_runner.snapshot()}
 
+@app.post("/api/career/runner/pause")
+async def pause_career_runner():
+    # Hold the bot's moves without ending the career (resumable). Does not touch the
+    # loop-stop flag, so the multi-run loop simply waits while this career is paused.
+    career_runner.pause()
+    return {"success": True, "runner": career_runner.snapshot()}
+
+@app.post("/api/career/runner/resume")
+async def resume_career_runner():
+    career_runner.resume()
+    return {"success": True, "runner": career_runner.snapshot()}
+
 class BurnClocksRequest(BaseModel):
     burn_clocks: bool
 
@@ -1380,6 +1422,48 @@ class BurnClocksRequest(BaseModel):
 async def set_burn_clocks(req: BurnClocksRequest):
     career_runner.set_burn_clocks(req.burn_clocks)
     return {"success": True, "runner": career_runner.snapshot()}
+
+# --- In-app auth re-capture: switch Uma account WITHOUT restarting the server. ---
+auth_capture_status = {"capturing": False, "ok": None, "message": "idle", "viewer_id": None}
+auth_capture_lock = threading.Lock()
+
+def _run_recapture():
+    global auth_capture_status
+    try:
+        ok = refresh_auth_before_serving()
+        vid = (pending_game_auth_config or {}).get("viewer_id") if ok else None
+        with auth_capture_lock:
+            auth_capture_status = {
+                "capturing": False,
+                "ok": bool(ok),
+                "message": ("Capture complete -- now click LOGIN with the Steam fields BLANK."
+                            if ok else
+                            "Capture failed/timed out -- trigger a FRESH game login (title screen -> tap to enter), then try again."),
+                "viewer_id": vid,
+            }
+    except Exception as e:
+        with auth_capture_lock:
+            auth_capture_status = {"capturing": False, "ok": False, "message": f"Capture error: {e}", "viewer_id": None}
+
+@app.post("/api/auth/recapture")
+async def recapture_auth():
+    global auth_capture_status
+    # Re-capture closes the game, so refuse while a career/loop is running -- stop first.
+    if career_runner.snapshot().get("running") or bool(backend_loop_thread and backend_loop_thread.is_alive()):
+        return {"success": False, "detail": "Stop the current run first -- re-capture closes the game."}
+    with auth_capture_lock:
+        if auth_capture_status.get("capturing"):
+            return {"success": False, "detail": "Already capturing.", "capture": dict(auth_capture_status)}
+        auth_capture_status = {"capturing": True, "ok": None,
+                               "message": "Launching game -- switch to your target Uma account and reach the home menu (<=180s).",
+                               "viewer_id": None}
+    threading.Thread(target=_run_recapture, daemon=True).start()
+    return {"success": True, "capture": dict(auth_capture_status)}
+
+@app.get("/api/auth/recapture/status")
+async def recapture_auth_status():
+    with auth_capture_lock:
+        return {"success": True, "capture": dict(auth_capture_status)}
 
 @app.post("/api/career/friends")
 async def get_friend_list(req: FriendListRequest):

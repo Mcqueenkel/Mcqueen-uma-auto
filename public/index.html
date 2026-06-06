@@ -48,7 +48,8 @@
                     </div>
                     <div class="control-btns">
                         <button id="nav-run-btn" class="btn btn-sm turn-delay-button nav-run-btn" type="button" disabled>RUN</button>
-                        <button id="tempt-fate-btn" class="btn btn-sm turn-delay-button" type="button">TEMPT FATE</button>
+                        <button id="nav-pause-btn" class="btn btn-sm turn-delay-button nav-pause-btn" type="button" style="display:none">PAUSE</button>
+                        <button id="tempt-fate-btn" class="btn btn-sm turn-delay-button" type="button">NO CD</button>
                         <button id="burn-clocks-btn" class="btn btn-sm turn-delay-button" type="button">BURN CLOCKS: OFF</button>
                         <button id="dev-career-btn" class="btn btn-sm turn-delay-button" type="button" style="display: none;">DEV</button>
                     </div>
@@ -81,7 +82,10 @@
                             </div>
                         </div>
                         <div id="error-msg" class="status-msg"></div>
+                        <div class="login-hint">💡 After <code>auth</code> (capture), you can log in <strong>without</strong> Steam credentials — just click LOGIN. The captured ticket matches the captured account (no error 1055). Typing credentials is only a fallback.</div>
                         <button id="login-btn" type="submit" class="btn btn-primary">LOGIN</button>
+                        <button id="recapture-btn" type="button" class="btn btn-sm recapture-btn">🔄 RE-CAPTURE (switch Uma account)</button>
+                        <div id="recapture-status" class="recapture-status"></div>
                     </form>
                 </div>
             </div>

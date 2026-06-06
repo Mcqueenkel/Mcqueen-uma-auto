@@ -533,6 +533,50 @@ body.dashboard-mode .turn-delay-control {
   cursor: not-allowed;
   filter: grayscale(0.5);
 }
+.login-hint {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0.1rem 0 0.9rem;
+  opacity: 0.85;
+}
+.login-hint code {
+  color: var(--accent-secondary);
+  font-weight: 700;
+}
+.nav-pause-btn {
+  border-color: #f1c40f;
+  color: #1a1500;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ffd84d, #e0a800);
+}
+.nav-pause-btn.paused {
+  border-color: #2ee06a;
+  color: #03110a;
+  background: linear-gradient(135deg, #38e87d, #16a653);
+}
+.recapture-btn {
+  width: 100%;
+  margin-top: 0.6rem;
+  border-color: #36c5d8;
+  color: #04181c;
+  font-weight: 800;
+  background: linear-gradient(135deg, #45d6e8, #1f9fb0);
+}
+.recapture-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.recapture-status {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-top: 0.5rem;
+  color: var(--text-secondary);
+  min-height: 1rem;
+}
+.recapture-status.working { color: #ffd84d; }
+.recapture-status.ok { color: #38e87d; }
+.recapture-status.error { color: #ff6b81; }
 .main-container {
   flex: 1;
   display: flex;

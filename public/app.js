@@ -26,6 +26,8 @@ const els = {
     themeToggle: document.getElementById('theme-toggle'),
     brandMark: document.querySelector('.title span'),
     loginBtn: document.getElementById('login-btn'),
+    recaptureBtn: document.getElementById('recapture-btn'),
+    recaptureStatus: document.getElementById('recapture-status'),
     logoutBtn: document.getElementById('logout-btn'),
     refreshBtn: document.getElementById('refresh-btn'),
     turnDelayMin: document.getElementById('turn-delay-min'),
@@ -57,6 +59,7 @@ const els = {
     presetSelect: document.getElementById('preset-select'),
     startCareerBtn: document.getElementById('start-career-btn'),
     navRunBtn: document.getElementById('nav-run-btn'),
+    navPauseBtn: document.getElementById('nav-pause-btn'),
     startStatus: document.getElementById('start-status'),
     accountStrip: document.getElementById('account-strip'),
     careerModal: document.getElementById('career-modal'),
@@ -537,7 +540,7 @@ const els = {
             els.turnDelayMin.disabled = disabled;
             els.turnDelayMax.disabled = disabled;
             els.temptFateBtn.classList.toggle('is-active', disabled);
-            els.temptFateBtn.innerText = disabled ? 'FATE TEMPTED' : 'TEMPT FATE';
+            els.temptFateBtn.innerText = disabled ? 'NO CD ✓' : 'NO CD';
         }
         async function saveDelaySettings(settings) {
             setDelayControls(settings);
@@ -623,6 +626,46 @@ const els = {
             img.onerror = null;
             img.style.display = 'none';
         }
+        function setRecaptureStatus(msg, cls) {
+            if (!els.recaptureStatus) return;
+            els.recaptureStatus.textContent = msg || '';
+            els.recaptureStatus.className = 'recapture-status' + (cls ? ' ' + cls : '');
+        }
+        async function pollRecapture() {
+            try {
+                const data = await apiJson('/api/auth/recapture/status');
+                const cap = (data && data.capture) || {};
+                if (cap.capturing) {
+                    setRecaptureStatus(cap.message || 'Capturing…', 'working');
+                    setTimeout(pollRecapture, 2000);
+                } else {
+                    setRecaptureStatus(cap.message || (cap.ok ? 'Done' : 'Failed'), cap.ok ? 'ok' : 'error');
+                    if (els.recaptureBtn) els.recaptureBtn.disabled = false;
+                }
+            } catch (e) {
+                setRecaptureStatus('Status check failed', 'error');
+                if (els.recaptureBtn) els.recaptureBtn.disabled = false;
+            }
+        }
+        async function doRecapture() {
+            if (els.recaptureBtn) els.recaptureBtn.disabled = true;
+            setRecaptureStatus('Starting capture…', 'working');
+            try {
+                const data = await apiJson('/api/auth/recapture', { method: 'POST' });
+                if (!data || !data.success) {
+                    setRecaptureStatus((data && data.detail) || 'Could not start capture', 'error');
+                    if (els.recaptureBtn) els.recaptureBtn.disabled = false;
+                    return;
+                }
+                const cap = data.capture || {};
+                setRecaptureStatus(cap.message || 'Capturing…', 'working');
+                setTimeout(pollRecapture, 2000);
+            } catch (e) {
+                setRecaptureStatus('Network error', 'error');
+                if (els.recaptureBtn) els.recaptureBtn.disabled = false;
+            }
+        }
+        if (els.recaptureBtn) els.recaptureBtn.addEventListener('click', doRecapture);
         const loginForm = document.getElementById('login-form');
         loginForm.addEventListener('submit', async event => {
             event.preventDefault();
@@ -641,8 +684,8 @@ const els = {
                 if (data.needs_2fa) {
                     showTwoFactorPrompt();
                 } else if (data.success) {
-                    localStorage.setItem('saved_username', payload.username);
-                    localStorage.setItem('saved_password', payload.password);
+                    if (payload.username) localStorage.setItem('saved_username', payload.username);
+                    if (payload.password) localStorage.setItem('saved_password', payload.password);
                     await renderDashboard(data, { animateIntro: true, waitForIntro: true });
                     state.isLoading = false;
                 } else {
@@ -2101,10 +2144,33 @@ const els = {
                 state.displayedClocksUsed = clocksUsed;
             }
         }
+        function updatePauseButton(runner) {
+            if (!els.navPauseBtn) return;
+            const active = !!(runner && (runner.running || runner.loop_active));
+            els.navPauseBtn.style.display = active ? '' : 'none';
+            if (active) {
+                const paused = !!(runner && runner.paused);
+                els.navPauseBtn.textContent = paused ? 'RESUME' : 'PAUSE';
+                els.navPauseBtn.classList.toggle('paused', paused);
+            }
+        }
+        async function togglePause() {
+            const paused = !!(state.runner && state.runner.paused);
+            const endpoint = paused ? '/api/career/runner/resume' : '/api/career/runner/pause';
+            els.navPauseBtn.disabled = true;
+            try {
+                const data = await apiJson(endpoint, { method: 'POST' });
+                if (data && data.runner) applyRunnerSnapshot(data.runner);
+            } catch (e) {
+            } finally {
+                els.navPauseBtn.disabled = false;
+            }
+        }
         function applyRunnerSnapshot(runner) {
             state.runner = runner;
             applyRunnerSettings(runner);
             applyRunnerClockUsage(runner);
+            updatePauseButton(runner);
         }
         async function refreshRunnerStatus() {
             try {
@@ -2266,6 +2332,7 @@ const els = {
         });
         els.startCareerBtn.addEventListener('click', requestStartCareer);
         if (els.navRunBtn) els.navRunBtn.addEventListener('click', requestStartCareer);
+        if (els.navPauseBtn) els.navPauseBtn.addEventListener('click', togglePause);
         if (els.runConfirmOk) els.runConfirmOk.addEventListener('click', () => { closeRunConfirm(); startCareer(); });
         if (els.runConfirmCancel) els.runConfirmCancel.addEventListener('click', closeRunConfirm);
         if (els.runConfirmModal) els.runConfirmModal.addEventListener('click', event => {
