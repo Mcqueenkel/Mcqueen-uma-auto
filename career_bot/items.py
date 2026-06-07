@@ -131,6 +131,12 @@ ENERGY_ITEMS = {
     "Royal Kale Juice": 100,
 }
 
+# Turns just before each Summer Camp (camp is ~36-40 and ~60-64). During this window the
+# bot proactively stockpiles the camp-prep items (energy / charm / Empowering Megaphone /
+# Ankle Weights -- off-deck ankles are already dropped by _skip_buy) so the boosted Lv5
+# camp turns run high-gain and low-failure.
+PRE_SUMMER_TURNS = {31, 32, 33, 34, 35, 55, 56, 57, 58, 59}
+
 MEGAPHONE_TIERS = {
     "Coaching Megaphone": (1, 4),
     "Motivating Megaphone": (2, 3),
@@ -464,6 +470,7 @@ class MantItemManager:
             self.last_buy_result = {"skip": "no_available", "mant_coin": budget}
             return state, 0
 
+        pre_summer = bool(preset.get("pre_summer_stock", True)) and current_turn in (cfg.get("pre_summer_window") or PRE_SUMMER_TURNS)
         effective_rows = []
         for name, row in available:
             slug = display_to_slug(name)
@@ -497,6 +504,10 @@ class MantItemManager:
                     dc = int(deck_counts[type_idx]) if (deck_counts and type_idx is not None and 0 <= type_idx < len(deck_counts)) else 0
                     bump = max(0, dc - int(preset.get("deck_match_min_count") or 2))
                     eff_t = max(1, base_t - bump)
+            if pre_summer:
+                boost = self._pre_summer_boost_tier(name, owned, cfg)
+                if boost is not None:
+                    eff_t = min(eff_t, boost)
             effective_rows.append((max(1, eff_t), name, row))
 
         targets = []
@@ -1088,6 +1099,11 @@ class MantItemManager:
         if vital >= target:
             return []  # already enough energy to train without resting
         failure = int(best_command.get("failure_rate") or 0)
+        # Mirror mant.py's failure hard-cap: above the cap an energy bump is NOT trusted to
+        # clear the failure, so the energy rescue does not fire (only a charm may, via
+        # _charm_target). Keeps this half in agreement with _can_rescue_training.
+        if failure >= int((preset or {}).get("failure_hard_cap") or 50):
+            return []
         at_risk = vital <= rest_threshold or failure >= int(cfg.get("rescue_failure") or 30)
         if not at_risk:
             return []
@@ -1144,13 +1160,19 @@ class MantItemManager:
         cfg = self._mant_cfg(preset)
         if fail_rate < int(cfg.get("charm_failure_rate") or 30):
             return None
+        # Above the failure hard-cap, _can_rescue_training only let this strong turn train
+        # BECAUSE a charm is owned (energy isn't trusted that high), so the charm MUST fire
+        # here regardless of Vita-coverage or the stat-gain gate -- otherwise the turn would
+        # run unmitigated at a dangerous failure. Below the cap, keep the Vita-first +
+        # strong-turn rules.
+        above_cap = fail_rate >= int((preset or {}).get("failure_hard_cap") or 50)
         # Vita-first: if an energy item is already topping up this turn (which lowers the
         # failure), the cheap Vita is covering it -- don't burn the charm.
-        if vita_covered:
+        if vita_covered and not above_cap:
             return None
         # Only worth a charm on a genuinely strong turn (a rainbow or a big stat gain),
         # not a mediocre training.
-        if chara is not None:
+        if chara is not None and not above_cap:
             rainbow = self._rainbow_count(best_command, chara)
             gain = self._command_stat_gain(best_command)
             if rainbow < 1 and gain < int(cfg.get("charm_min_stat") or 27):
@@ -1366,6 +1388,22 @@ class MantItemManager:
             if actual > 0:
                 result.append((name, actual))
         return result
+
+    def _pre_summer_boost_tier(self, name, owned, cfg):
+        """During the pre-camp window, give summer-prep items that are still under their
+        target owned-count a high buy priority (low tier number) so the Lv5 camp turns are
+        stocked. Returns the boosted tier, or None for items not being stockpiled. All
+        targets are tunable via mant_config."""
+        tier = int(cfg.get("pre_summer_tier") or 2)
+        if name == "Empowering Megaphone" and owned.get(name, 0) < int(cfg.get("summer_mega_stock") or 2):
+            return tier
+        if name == "Good-Luck Charm" and owned.get(name, 0) < int(cfg.get("summer_charm_stock") or 2):
+            return tier
+        if name in ENERGY_ITEMS and sum(owned.get(n, 0) for n in ENERGY_ITEMS) < int(cfg.get("summer_energy_stock") or 3):
+            return tier
+        if name.endswith("Ankle Weights") and owned.get(name, 0) < int(cfg.get("summer_ankle_stock") or 1):
+            return tier
+        return None
 
     def _skip_buy(self, name, owned, preset=None, turn=0, budget=0, data=None, race_planner=None):
         # Notepads (+3 stat) are poor value per coin -- never buy them by default

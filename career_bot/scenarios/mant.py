@@ -523,6 +523,13 @@ class MantStrategy(ScenarioStrategy):
         margin = int(preset.get("rescue_vital_margin") or 12)
         energy_val = self._rescue_energy_value(data, vital, rest_threshold, margin)
         has_charm = self._owned_item_count(data, GOOD_LUCK_CHARM_ID) > 0
+        hard_cap = int(preset.get("failure_hard_cap") or 50)
+        if failure >= hard_cap:
+            # Absolute failure ceiling: above the cap only a Good-Luck Charm (which forces
+            # a verified 0%) may rescue the turn -- an energy bump does NOT guarantee the
+            # failure drops below the cap, so we never gamble a high-intensity facility on
+            # it. With no charm we rest instead. (A pro run was seen training at 99%.)
+            return has_charm
         if vital <= rest_threshold:
             # only an energy item can lift vital back over the rest threshold
             return energy_val is not None
@@ -643,6 +650,13 @@ class MantStrategy(ScenarioStrategy):
             return False
         if turn in SUMMER_CAMP_TURNS:
             return False
+        # Opt-in: proactively top mood up to GREAT (motivation 5) on weak, energy-spare
+        # training turns -- a strong-run habit (the GREAT multiplier on the next good turn
+        # outvalues a mediocre training now). Default off; never fires on a rainbow/strong
+        # turn (gated by best_score) or when energy is near full.
+        if preset.get("mood_target_recreate") and motivation < 5 and vital < 90 \
+                and best_score <= float(preset.get("mood_recreate_max_score") or 0.30):
+            return True
         if motivation < self._mood_threshold(turn, preset) and vital < 90 and best_score <= 0.3:
             return True
         if not preset.get("prioritize_recreation"):
