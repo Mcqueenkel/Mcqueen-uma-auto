@@ -340,13 +340,12 @@ class MantStrategy(ScenarioStrategy):
             if target is None:
                 continue
             if target == 5:
-                # Skill points were previously ignored entirely. Value them with a
-                # tunable weight so the bot collects SP (mostly from Wit) toward buying
-                # skills -- without letting SP dominate raw stat gains. Uses the preset's
-                # stat_value_multiplier[5] (0.005 by default) times skill_point_weight.
-                # Also counted as "useful" so an SP-rich Wit rainbow isn't attenuated to
-                # zero just because the stats it touches are already capped.
-                if preset.get("score_skill_points", True) and value > 0:
+                # Skill points are NOT scored by default -- the bot chases the biggest raw
+                # STAT gain instead, and whatever SP accumulates is spent at career end by
+                # the leftover-SP skill dump. Opt back in with preset "score_skill_points"
+                # (uses stat_value_multiplier[5] * skill_point_weight) if you want training
+                # to actively favour SP-rich turns.
+                if preset.get("score_skill_points", False) and value > 0:
                     sp_mult = float(stat_mult[5] if len(stat_mult) > 5 else 0.005)
                     sp_score = value * sp_mult * float(preset.get("skill_point_weight") or 1.0)
                     score += sp_score

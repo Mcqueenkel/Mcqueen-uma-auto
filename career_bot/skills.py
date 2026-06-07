@@ -188,7 +188,23 @@ class SkillBuyer:
             return state, 0
 
         candidates = self._candidates(chara, preset)
-        if force and not candidates:
+        if force and preset.get("skill_dump_leftover", True):
+            # End of the career: don't waste leftover SP. After the important (priority /
+            # user-provided / non-blacklisted) skills, append every OTHER still-available
+            # skill -- first relaxing only-user-provided, then dropping the blacklist -- so
+            # the greedy purchase below spends remaining SP on ANY buyable skill. Important
+            # skills keep their place at the front, so the relaxed ones are reached only
+            # once nothing better is left to buy.
+            seen = {c["skill_id"] for c in candidates}
+            for relaxed in (
+                {**preset, "learn_skill_only_user_provided": False},
+                {**preset, "learn_skill_only_user_provided": False, "learn_skill_blacklist": []},
+            ):
+                for extra in self._candidates(chara, relaxed):
+                    if extra["skill_id"] not in seen:
+                        seen.add(extra["skill_id"])
+                        candidates.append(extra)
+        elif force and not candidates:
             candidates = self._candidates(chara, {**preset, "learn_skill_only_user_provided": False})
 
         self.last_candidates = [dict(item) for item in candidates]
