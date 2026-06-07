@@ -715,6 +715,82 @@ async def get_turn_delay_settings():
 async def set_turn_delay_settings(req: ApiDelayRequest):
     return set_turn_delay(req.min, req.max, req.disabled)
 
+# --- Event choices (EVENT CHOICES tab) ------------------------------------------
+# Manual per-event overrides live in uma_runtime/ (never data/). The bot logs every
+# multi-choice event it meets to events_seen.json so the UI can list them.
+class EventOverrideRequest(BaseModel):
+    story_id: str
+    choice: int = -1   # -1 = clear the override (back to auto)
+
+def _event_paths():
+    rt = base_dir / "uma_runtime"
+    return rt / "events_seen.json", rt / "event_overrides.json", base_dir / "data" / "event_outcomes.json"
+
+def _read_json_file(p):
+    try:
+        return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+    except Exception:
+        return {}
+
+@app.get("/api/events")
+async def get_events(cards: str = ""):
+    # `cards` = comma-separated support_card_ids (the active deck). When given, the
+    # event list is pre-populated from master.mdb for those cards so the user can
+    # configure a deck's events up front, merged with anything already seen / in the DB.
+    seen_path, ov_path, db_path = _event_paths()
+    seen = _read_json_file(seen_path)
+    overrides = _read_json_file(ov_path)
+    db = _read_json_file(db_path)
+    merged = {}
+    for sid in set(seen.keys()) | set(db.keys()):
+        s = seen.get(sid) or {}
+        d = db.get(sid) or {}
+        merged[sid] = {
+            "story_id": sid,
+            "event_name": s.get("event_name") or d.get("event_name") or "",
+            "support_card_id": int(s.get("support_card_id") or 0),
+            "num_choices": int(s.get("num_choices") or len(d.get("outcomes") or {}) or 0),
+            "auto_pick": s.get("picked"),
+            "auto_source": s.get("source") or ("db" if d else ""),
+            "count": int(s.get("count") or 0),
+        }
+    if cards.strip():
+        ids = [c for c in cards.split(",") if c.strip()]
+        try:
+            from career_bot import master_data
+            for ev in master_data.event_list_for_cards(base_dir, ids):
+                sid = ev["story_id"]
+                e = merged.get(sid)
+                if e is None:
+                    e = {"story_id": sid, "event_name": "", "support_card_id": 0,
+                         "num_choices": 0, "auto_pick": None, "auto_source": "", "count": 0}
+                    merged[sid] = e
+                if not e.get("event_name"):
+                    e["event_name"] = ev["event_name"]
+                e["support_card_id"] = ev["support_card_id"]
+        except Exception:
+            pass
+    events = []
+    for sid, e in merged.items():
+        ov = overrides.get(sid)
+        e["override"] = (int(ov) if ov is not None else None)
+        events.append(e)
+    events.sort(key=lambda x: (x.get("support_card_id") or 0, -x["count"], x["event_name"] or "~", x["story_id"]))
+    return {"success": True, "events": events}
+
+@app.post("/api/events/override")
+async def set_event_override(req: EventOverrideRequest):
+    _, ov_path, _ = _event_paths()
+    overrides = _read_json_file(ov_path)
+    sid = str(req.story_id)
+    if int(req.choice) < 0:
+        overrides.pop(sid, None)
+    else:
+        overrides[sid] = int(req.choice)
+    ov_path.parent.mkdir(parents=True, exist_ok=True)
+    ov_path.write_text(json.dumps(overrides, ensure_ascii=False, indent=1), encoding="utf-8")
+    return {"success": True, "story_id": sid, "override": overrides.get(sid)}
+
 class DiscordWebhookRequest(BaseModel):
     webhook_url: str = ""
 

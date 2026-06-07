@@ -338,6 +338,81 @@ const els = {
         makeSectionToggle('trainees-toggle', 'trainees-chevron', 'trainees-body', true);
         makeSectionToggle('parents-toggle',  'parents-chevron',  'parents-body',  true);
         makeSectionToggle('cards-toggle',    'cards-chevron',    'card-grid-wrapper', false);
+        makeSectionToggle('events-toggle',   'events-chevron',   'events-body',       false);
+
+        async function loadEvents() {
+            const list = document.getElementById('events-list');
+            const countEl = document.getElementById('events-count');
+            if (!list) return;
+            // Active deck's support cards -> pre-populate their events from master.mdb.
+            let deckCards = [];
+            try { if (selection && selection.deck && selection.deck.cards) deckCards = selection.deck.cards; } catch (e) {}
+            const cardNames = {};
+            deckCards.forEach(c => { if (c && c.id != null) cardNames[String(c.id)] = c.name || ('Support ' + c.id); });
+            const ids = deckCards.map(c => c && c.id).filter(v => v != null);
+            const q = ids.length ? ('?cards=' + encodeURIComponent(ids.join(','))) : '';
+            try {
+                const data = await apiJson('/api/events' + q);
+                const events = (data && data.events) || [];
+                if (countEl) countEl.textContent = events.length ? `(${events.length})` : '';
+                if (!events.length) {
+                    list.innerHTML = '<div class="events-empty">No events yet. Select your deck, then hit REFRESH — its support-card events show up here.</div>';
+                    return;
+                }
+                let html = '';
+                let lastCard;
+                events.forEach(ev => {
+                    const cardId = ev.support_card_id || 0;
+                    if (cardId !== lastCard) {
+                        lastCard = cardId;
+                        const label = cardId ? (cardNames[String(cardId)] || ('Support ' + cardId)) : 'Other / scenario events';
+                        html += `<div class="event-group-head">${escapeHtml(label)}</div>`;
+                    }
+                    const n = (ev.num_choices && ev.num_choices > 0) ? ev.num_choices : 3;
+                    const name = ev.event_name || `Event ${ev.story_id}`;
+                    const autoTxt = (ev.auto_pick == null) ? 'auto'
+                        : `auto: #${ev.auto_pick + 1}${ev.auto_source ? ' (' + ev.auto_source + ')' : ''}`;
+                    const seenTxt = ev.count ? `seen ${ev.count}×` : 'not seen yet';
+                    let opts = `<option value="-1"${ev.override == null ? ' selected' : ''}>Auto</option>`;
+                    for (let i = 0; i < n; i++) opts += `<option value="${i}"${ev.override === i ? ' selected' : ''}>Choice ${i + 1}</option>`;
+                    html += `
+                        <div class="event-row${ev.override != null ? ' has-override' : ''}">
+                            <div class="event-row-main">
+                                <span class="event-name">${escapeHtml(name)}</span>
+                                <span class="event-meta">${seenTxt} &middot; ${autoTxt}</span>
+                            </div>
+                            <select class="event-override" data-sid="${escapeAttr(ev.story_id)}">${opts}</select>
+                        </div>`;
+                });
+                list.innerHTML = html;
+                list.querySelectorAll('.event-override').forEach(sel => {
+                    sel.addEventListener('change', async () => {
+                        const sid = sel.getAttribute('data-sid');
+                        const choice = parseInt(sel.value, 10);
+                        try {
+                            await apiJson('/api/events/override', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ story_id: sid, choice })
+                            });
+                            const row = sel.closest('.event-row');
+                            if (row) row.classList.toggle('has-override', choice >= 0);
+                        } catch (e) {}
+                    });
+                });
+            } catch (e) {
+                list.innerHTML = '<div class="events-empty">Could not load events.</div>';
+            }
+        }
+        const eventsRefreshBtn = document.getElementById('events-refresh-btn');
+        if (eventsRefreshBtn) eventsRefreshBtn.addEventListener('click', (e) => { e.stopPropagation(); loadEvents(); });
+        // Load when the section is opened (selection/deck is defined by then; avoids
+        // touching `selection` during initial setup).
+        const eventsToggleEl = document.getElementById('events-toggle');
+        if (eventsToggleEl) eventsToggleEl.addEventListener('click', () => {
+            const body = document.getElementById('events-body');
+            if (body && body.classList.contains('expanded')) loadEvents();
+        });
         const applyTheme = theme => {
             const nextTheme = theme === 'blue' ? 'blue' : 'pink';
             document.documentElement.dataset.theme = nextTheme;

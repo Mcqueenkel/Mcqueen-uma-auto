@@ -101,6 +101,45 @@ def dump_text_data_category(cursor, category):
     return [dict(zip(cols, row)) for row in cursor.fetchall()]
 
 
+def event_list_for_cards(base_dir, support_card_ids):
+    """Story-event ids tied to the given support cards + their names (text_data
+    category 181), read read-only from master.mdb. Used to pre-populate the EVENT
+    CHOICES panel so the user can configure a deck's events up front."""
+    ids = []
+    for x in (support_card_ids or []):
+        try:
+            ids.append(int(x))
+        except (TypeError, ValueError):
+            continue
+    if not ids:
+        return []
+    db_path = configured_master_mdb_path(base_dir)
+    if not Path(db_path).exists():
+        return []
+    out, seen = [], set()
+    try:
+        con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        placeholders = ",".join("?" for _ in ids)
+        rows = con.execute(
+            'SELECT s.story_id, s.support_card_id, t.text '
+            'FROM single_mode_story_data s '
+            'LEFT JOIN text_data t ON t.category = 181 AND t."index" = s.story_id '
+            f'WHERE s.support_card_id IN ({placeholders}) '
+            'ORDER BY s.support_card_id, s.story_id',
+            ids,
+        ).fetchall()
+        con.close()
+    except Exception:
+        return out
+    for story_id, card_id, name in rows:
+        sid = str(story_id)
+        if sid in seen:
+            continue
+        seen.add(sid)
+        out.append({"story_id": sid, "support_card_id": int(card_id or 0), "event_name": name or ""})
+    return out
+
+
 def write_json(path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 

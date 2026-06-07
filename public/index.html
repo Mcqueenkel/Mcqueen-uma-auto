@@ -254,6 +254,17 @@
                                 <div id="card-grid" class="data-grid"></div>
                             </div>
                         </section>
+                        <section class="dashboard-section">
+                            <h2 class="dashboard-section-title section-title-toggle" id="events-toggle">
+                                <span class="collapse-chevron" id="events-chevron">&#9658;</span>
+                                EVENT CHOICES <span id="events-count"></span>
+                                <button id="events-refresh-btn" class="btn btn-sm section-title-action" type="button">REFRESH</button>
+                            </h2>
+                            <div id="events-body" class="collapsible-body">
+                                <div class="events-hint">Pick which option the bot chooses for each event. "Auto" uses the built-in logic. Events show up here as the bot meets them while running.</div>
+                                <div id="events-list" class="events-list"></div>
+                            </div>
+                        </section>
                     </div>
                 </div>
                 <div class="split-gutter-controls" aria-label="Panel controls">

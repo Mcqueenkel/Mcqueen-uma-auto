@@ -1428,6 +1428,77 @@ body.dashboard-mode .turn-delay-control {
   text-align: left;
   font-weight: 700;
 }
+
+/* EVENT CHOICES section */
+.events-hint {
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.event-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.event-row.has-override {
+  border-color: rgba(120, 200, 255, 0.45);
+  background: rgba(120, 200, 255, 0.07);
+}
+.event-row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.event-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main, #fff);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.event-meta {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+.event-override {
+  flex: 0 0 auto;
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-main, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+.events-empty {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 0.5rem 0;
+}
+.event-group-head {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: rgba(120, 200, 255, 0.85);
+  margin: 0.55rem 0 0.2rem;
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.event-group-head:first-child { margin-top: 0; }
 .friend-card .grid-card-overlay {
   min-height: 2rem;
   gap: 0.14rem;
