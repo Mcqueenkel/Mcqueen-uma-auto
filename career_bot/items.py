@@ -780,8 +780,10 @@ class MantItemManager:
 
                 targets.append((name, qty))
 
-        targets.extend(self._energy_targets(chara, owned, preset))
-        targets.extend(self._rescue_energy_target(chara, owned, preset, best_command))
+        energy_targets = self._energy_targets(chara, owned, preset)
+        targets.extend(energy_targets)
+        rescue_targets = self._rescue_energy_target(chara, owned, preset, best_command)
+        targets.extend(rescue_targets)
         targets.extend(self._ailment_cure_targets(data, owned))
         mood_target = self._mood_target(chara, owned)
         if mood_target:
@@ -791,7 +793,10 @@ class MantItemManager:
         if whistle:
             targets = [whistle]
         else:
-            charm = self._charm_target(best_command, owned, preset, status)
+            # Vita-first, charm-fallback: if any energy item is already being used this
+            # turn, it covers the failure -- only reach for the scarce charm otherwise.
+            vita_covered = bool(energy_targets) or bool(rescue_targets)
+            charm = self._charm_target(best_command, owned, preset, status, chara, vita_covered)
             if charm:
                 targets.append(charm)
             mega = self._megaphone_target(state, best_command, owned, preset, status, current_turn, race_planner)
@@ -972,7 +977,8 @@ class MantItemManager:
         cfg.setdefault("item_tiers", DEFAULT_ITEM_TIERS)
         cfg.setdefault("tier_count", 8)
         cfg.setdefault("tier_thresholds", {"3": 31, "7": 100, "8": 99999999999})
-        cfg.setdefault("charm_failure_rate", 15)
+        cfg.setdefault("charm_failure_rate", 30)
+        cfg.setdefault("charm_min_stat", 27)
         cfg.setdefault("mega_small_threshold", 11)
         cfg.setdefault("mega_medium_threshold", 21)
         cfg.setdefault("mega_large_threshold", 35)
@@ -1126,17 +1132,30 @@ class MantItemManager:
              return ("Reset Whistle", 1)
         return None
 
-    def _charm_target(self, best_command, owned, preset, status):
+    def _charm_target(self, best_command, owned, preset, status, chara=None, vita_covered=False):
+        # Good-Luck Charm is a scarce item that forces 0% failure. Spend it ONLY on a
+        # strong training whose failure a cheaper Vita can't cover -- the user's rule:
+        # "good training + risky failure -> use Vita if it covers it, else the charm."
         if owned.get("Good-Luck Charm", 0) <= 0:
             return None
         if not best_command or int(best_command.get("command_type") or 0) != 1:
             return None
         fail_rate = int(best_command.get("failure_rate") or 0)
         cfg = self._mant_cfg(preset)
-        threshold = int(cfg.get("charm_failure_rate") or 15)
-        if fail_rate >= threshold:
-            return ("Good-Luck Charm", 1)
-        return None
+        if fail_rate < int(cfg.get("charm_failure_rate") or 30):
+            return None
+        # Vita-first: if an energy item is already topping up this turn (which lowers the
+        # failure), the cheap Vita is covering it -- don't burn the charm.
+        if vita_covered:
+            return None
+        # Only worth a charm on a genuinely strong turn (a rainbow or a big stat gain),
+        # not a mediocre training.
+        if chara is not None:
+            rainbow = self._rainbow_count(best_command, chara)
+            gain = self._command_stat_gain(best_command)
+            if rainbow < 1 and gain < int(cfg.get("charm_min_stat") or 27):
+                return None
+        return ("Good-Luck Charm", 1)
 
     def _megaphone_target(self, state, best_command, owned, preset, status, turn, race_planner):
         if not best_command or int(best_command.get("command_type") or 0) != 1:
@@ -1349,6 +1368,10 @@ class MantItemManager:
         return result
 
     def _skip_buy(self, name, owned, preset=None, turn=0, budget=0, data=None, race_planner=None):
+        # Notepads (+3 stat) are poor value per coin -- never buy them by default
+        # (tunable via preset "buy_notepads"). Scrolls/Manuals stay must-buy.
+        if name.endswith("Notepad") and not (preset or {}).get("buy_notepads", False):
+            return True
         if name in MEGAPHONE_TIERS and self._megaphone_buy_surplus(data or {}, owned, turn, race_planner, preset):
             return True
         if name in CURE_ITEMS:
