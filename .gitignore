@@ -1,6 +1,18 @@
 *.pyc
+__pycache__/
 /node_modules
 /uma_runtime
 /tools
 /scraped game logs
 career_bot/.timing_dna
+
+# Large local files (gameplay videos + extracted analysis frames)
+*.mp4
+*.mkv
+*.mov
+*.webm
+*.avi
+/_frames
+
+# Stray duplicate folder (not part of the project)
+/uma_api/career_bot
