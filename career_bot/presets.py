@@ -24,6 +24,34 @@ RENAMES = {
 MANT_SCENARIO_ID = 4
 URA_SCENARIO_ID = 1
 
+# Sentinel meaning "no user-imposed soft cap on this stat". The scorer then attenuates
+# toward the stat's REAL in-game cap, which the game sends per-stat in chara_info
+# (max_speed/max_stamina/max_power/max_guts/max_wiz) -- 1200 by default but raised by blue
+# inheritance factors / scenario bonuses to 1300-1600. Using the real cap (mant.py) is what
+# fixes the old dead-code bug WITHOUT throttling a cap-raised uma at a flat 1200.
+NO_STAT_TARGET = 9999
+
+
+def _resolve_stat_targets(raw):
+    """Optional per-stat SOFT targets [Speed, Stamina, Power, Guts, Wit].
+
+    By default there is none (sentinel 9999) and the scorer attenuates each stat toward its
+    REAL in-game cap from chara_info. A preset can set a TIGHTER soft cap for a focused build
+    via "expect_attribute" / "stat_targets" (5 positive ints), e.g. [9999, 600, 9999, 700, 600]
+    to stop pouring score into Stamina/Guts/Wit past those values even though the game would
+    allow more -- the scorer takes min(real_game_cap, soft_target) as the effective ceiling."""
+    if isinstance(raw, dict):
+        val = raw.get("expect_attribute")
+        if val is None:
+            val = raw.get("stat_targets")
+        if isinstance(val, list) and len(val) == 5:
+            out = []
+            for v in val:
+                iv = as_int(v, NO_STAT_TARGET)
+                out.append(iv if iv > 0 else NO_STAT_TARGET)
+            return out
+    return [NO_STAT_TARGET] * 5
+
 
 def _resolve_scenario_id(raw):
     """Pick a preset's scenario. Defaults to MANT (4) so existing presets are unchanged;
@@ -99,6 +127,12 @@ def serialize_preset(raw):
     serialized["extra_race_list"] = normalize_race_list(data.get("extra_race_list", data.get("race_list", [])))
     serialized["learn_skill_threshold"] = as_int(data.get("learn_skill_threshold"), 888)
 
+    # Persist explicit per-stat targets only when the user actually set them, so default
+    # presets stay clean but a focused-build override survives a save round-trip (the old
+    # code dropped it here, then hardcoded 9999 in hydrate, so a user target never landed).
+    if data.get("expect_attribute") is not None or data.get("stat_targets") is not None:
+        serialized["expect_attribute"] = _resolve_stat_targets(data)
+
     return serialized
 
 def hydrate_preset(raw):
@@ -108,7 +142,7 @@ def hydrate_preset(raw):
     data["scenario_id"] = scenario_id
     data["scenario"] = scenario_id
     data["cure_asap_conditions"] = ["Migraine", "Night Owl", "Skin Outbreak", "Slacker", "Slow Metabolism", "(Practice poor isn't worth a turn to cure)"]
-    data["expect_attribute"] = [9999, 9999, 9999, 9999, 9999]
+    data["expect_attribute"] = _resolve_stat_targets(raw)
     data["score_value"] = [[0.11, 0.1, 0.006, 0.09], [0.11, 0.1, 0.006, 0.09], [0.11, 0.1, 0.006, 0.09], [0.03, 0.05, 0.006, 0.09], [0, 0, 0.006, 0]]
     data["base_score"] = [0, 0, 0, 0, 0]
     data["stat_value_multiplier"] = [0.01, 0.01, 0.01, 0.01, 0.01, 0.005]

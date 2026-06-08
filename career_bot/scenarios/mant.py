@@ -11,6 +11,12 @@ STAT_TARGETS = {
     30: 5,
 }
 
+# Per-stat REAL in-game cap, sent by the game in chara_info. 1200 by default but blue
+# inheritance factors / scenario bonuses raise it (1300-1600), so the scorer reads it live
+# instead of assuming 1200 -- otherwise it would refuse to train a stat that can still grow.
+STAT_CAP_KEYS = {0: "max_speed", 1: "max_stamina", 2: "max_power", 3: "max_guts", 4: "max_wiz"}
+BASE_STAT_CAP = 1200  # fallback only, if chara_info somehow lacks the max_* field
+
 TRAINING_COMMANDS = {101: 0, 105: 1, 102: 2, 103: 3, 106: 4, 601: 0, 602: 1, 603: 2, 604: 3, 605: 4}
 TRAINING_NAMES = ["Speed", "Stamina", "Power", "Guts", "Wit"]
 SUMMER_CAMP_TURNS = {36, 37, 38, 39, 40, 60, 61, 62, 63, 64}
@@ -290,6 +296,18 @@ class MantStrategy(ScenarioStrategy):
         hint_count = 0
         rainbow_count = 0
         useful_stat_score = 0.0
+        # Rainbow-unlock lookahead: one cheap step of planning past the greedy single-turn
+        # score. Training a deck support that sits just under bond 80 pushes it toward the
+        # rainbow (friendship-training) threshold, which then fires on EVERY future
+        # appearance of that card -- the single biggest stat lever in MANT/URA. Greedy
+        # scoring gives the crossing turn no credit (rainbow_count only rewards supports
+        # ALREADY >=80), so the bot can spread bond thinly and reach rainbow state late.
+        # This accumulates a bounded premium for crossing, strongest when the support is
+        # close to 80 (one training flips it) and early (more future appearances to cash in).
+        rainbow_unlock_score = 0.0
+        rainbow_lookahead = preset.get("rainbow_unlock_lookahead", True)
+        unlock_lo = float(preset.get("rainbow_unlock_band_lo") or 40)
+        unlock_base = float(preset.get("rainbow_unlock_bonus") or 0.12)
         for partner_id in partners:
             bond = bonds.get(partner_id, 0)
             if partner_id in hints:
@@ -322,6 +340,12 @@ class MantStrategy(ScenarioStrategy):
             ratio = min(1.0, bond / 80.0)
             yield_val = w_lv1 + (w_lv2 - w_lv1) * ratio
             score += yield_val * weight
+            if rainbow_lookahead and unlock_lo <= bond < 80:
+                # Proximity ramps 0 (band start) -> ~1 (just under 80): the closer to the
+                # threshold, the likelier this single training crosses it. time_decay (set
+                # above) front-loads the bonus so we secure rainbows while they still pay off.
+                proximity = (bond - unlock_lo) / max(1.0, 80.0 - unlock_lo)
+                rainbow_unlock_score += unlock_base * proximity * time_decay
         if hint_count:
             # More skill hints on one training = more skill points / discounts, so scale
             # the hint reward by how many partners are hinting (gently, capped at 4)
@@ -353,7 +377,13 @@ class MantStrategy(ScenarioStrategy):
                 continue
 
             stat_gain_score = value * float(stat_mult[target] if target < len(stat_mult) else 0.01)
-            cap = float(targets[target] if target < len(targets) else 9999)
+            # Effective ceiling = the stat's REAL in-game cap (raised by inheritance), tightened
+            # by an optional per-preset soft target for focused builds. Reading the live cap is
+            # what activates the attenuation ladder + balance boost below without wrongly
+            # throttling a cap-raised uma at a flat 1200.
+            soft = float(targets[target] if target < len(targets) else 9999)
+            game_cap = float(chara.get(STAT_CAP_KEYS.get(target)) or BASE_STAT_CAP)
+            cap = min(game_cap, soft)
             if cap > 0 and target < 5:
                 current = self._current_stat(chara, target)
                 ratio = current / cap
@@ -379,27 +409,36 @@ class MantStrategy(ScenarioStrategy):
                     # Under-target boost: nudge the bot to FILL a stat that sits far
                     # below its target instead of piling onto near-capped stats, so the
                     # final build is balanced (not lopsided). The further under target,
-                    # the bigger the nudge (capped). Only when a real target is set
-                    # (cap != the 9999 "no target" default); complements the cap-based
-                    # down-weighting above.
+                    # the bigger the nudge (capped). Active by default now that targets
+                    # default to the 1200 stat cap (cap < 9000); complements the cap-based
+                    # down-weighting above. Disable with preset "stat_balance": false.
                     thr = float(preset.get("stat_balance_threshold") or 0.55)
                     if ratio < thr:
                         stat_gain_score *= 1.0 + (thr - ratio) * float(preset.get("stat_balance_boost") or 0.6)
             score += stat_gain_score
             useful_stat_score += max(0.0, stat_gain_score)
+        # Shared "useful stat" attenuation: how much non-capped stat this turn actually
+        # yields, relative to a reference. Both the rainbow reward and the bond-unlock
+        # premium are gated by it so the bot never chases bond/rainbow on a facility whose
+        # stat is already capped (zero useful gain -> zero bond/rainbow incentive).
+        ref = float(preset.get("rainbow_useful_ref") or 0.12)
+        atten = 1.0 if ref <= 0 else min(1.0, useful_stat_score / ref)
         if rainbow_count and preset.get("rainbow_explicit", True):
             # Explicit rainbow (friendship-training) reward. The reported stat gain
             # already includes the friendship bonus, but the bond loop gives a maxed
             # support zero value, which can make the bot pass up a multi-rainbow turn
-            # to keep building bond elsewhere. Add a tunable per-rainbow bonus,
-            # attenuated by the useful (non-capped) stat this turn yields so the bot
-            # never chases a rainbow on already-capped stats. Failure compensation,
-            # period extra-weight and deck multipliers below still apply to it.
-            ref = float(preset.get("rainbow_useful_ref") or 0.12)
-            atten = 1.0 if ref <= 0 else min(1.0, useful_stat_score / ref)
+            # to keep building bond elsewhere. Add a tunable per-rainbow bonus.
+            # Failure compensation, period extra-weight and deck multipliers below apply too.
             per = float(preset.get("rainbow_bonus") or 0.12)
             stack = float(preset.get("rainbow_stack_bonus") or 0.06)
             score += (per * rainbow_count + stack * max(0, rainbow_count - 1)) * atten
+        if rainbow_unlock_score:
+            # Bond-crossing premium: cap it (so many in-band supports can't dominate a turn)
+            # and gate by the same useful-stat factor, then add it here so the pal multiplier
+            # and failure compensation below still apply -- we never force a high-failure or
+            # already-capped training just because it would tip a support toward rainbow range.
+            cap_premium = float(preset.get("rainbow_unlock_cap") or (unlock_base * 2.0))
+            score += min(rainbow_unlock_score, cap_premium) * atten
         if pal_count:
             score *= 1.0 + max(0.0, min(1.0, float(preset.get("pal_card_multiplier") or 0.1)))
         if preset.get("compensate_failure", True):
