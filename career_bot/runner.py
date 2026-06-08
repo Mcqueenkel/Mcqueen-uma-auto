@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 
 from career_bot.scenarios.mant import MantStrategy
+from career_bot.scenarios.ura import UraStrategy
 from career_bot.races import RacePlanner
 from career_bot.skills import SkillBuyer
 from career_bot.items import MantItemManager, ITEM_NAMES, SHOP_ITEM_COSTS, DISPLAY_TO_ID, display_to_slug
@@ -22,7 +23,8 @@ from career_bot import notify
 
 
 STRATEGIES = {
-    4: MantStrategy,
+    1: UraStrategy,   # URA Finale
+    4: MantStrategy,  # MANT / Trackblazer
 }
 
 
@@ -1097,6 +1099,7 @@ class CareerRunner:
                 res = self._drain_events(client, strategy, res)
 
         out = res
+        out_refreshed = False
         try:
             client.race_end(current_turn=current_turn)
             self._log("race_end", current_turn, "")
@@ -1109,6 +1112,7 @@ class CareerRunner:
         try:
             out_res = client.race_out(current_turn=current_turn)
             out = out_res
+            out_refreshed = True
             if strategy:
                 out_data = out.get("data") or {}
                 if out_data.get("unchecked_event_array"):
@@ -1118,6 +1122,17 @@ class CareerRunner:
                 self._log("race_out_reconciled", current_turn, "server already done (102)")
             else:
                 raise
+
+        # If race_out returned 102 ("already done") we never got a fresh post-race state, so
+        # `out` is still the stale race_start state with the race active -- which makes
+        # next_decision loop on the same race. Reload the real current state so the turn
+        # advances (the common "resume a career mid/just-after a race" case).
+        if not out_refreshed:
+            try:
+                out = self._fresh_career_state(client, strategy)
+                self._log("race_reconcile_refresh", current_turn, "reloaded state after 102")
+            except Exception as e:
+                self._log("race_reconcile_refresh_failed", current_turn, str(e))
 
         return out
 
@@ -1147,7 +1162,9 @@ class CareerRunner:
             except Exception as e:
                 if any(err in str(e) for err in ("102", "1503", "201", "StateRecoveryError")):
                     self._log("race_out_reconciled", current_turn, f"graceful exit: {e}")
-                    return payload
+                    # 102/already-done on resume -> reload the real state so the turn
+                    # advances, instead of looping on the stale (still-in-race) payload.
+                    return self._fresh_career_state(client, payload.get("_strategy"))
                 raise
         if phase == "out":
             self._log("race_out", current_turn, "resume")
@@ -1156,7 +1173,9 @@ class CareerRunner:
             except Exception as e:
                 if any(err in str(e) for err in ("102", "1503", "201", "StateRecoveryError")):
                     self._log("race_out_reconciled", current_turn, f"graceful exit: {e}")
-                    return payload
+                    # 102/already-done on resume -> reload the real state so the turn
+                    # advances, instead of looping on the stale (still-in-race) payload.
+                    return self._fresh_career_state(client, payload.get("_strategy"))
                 raise
         race_start_info = payload.get("race_start_info") or {}
         program_id = race_start_info.get("program_id")

@@ -22,6 +22,21 @@ RENAMES = {
 }
 
 MANT_SCENARIO_ID = 4
+URA_SCENARIO_ID = 1
+
+
+def _resolve_scenario_id(raw):
+    """Pick a preset's scenario. Defaults to MANT (4) so existing presets are unchanged;
+    a preset opts into URA Finale by setting "scenario": "ura" (or 1)."""
+    val = None
+    if isinstance(raw, dict):
+        val = raw.get("scenario")
+        if val is None:
+            val = raw.get("scenario_id")
+    s = str(val).strip().lower() if val is not None else ""
+    if s in ("1", "ura", "ura_finale", "ura finale", "urafinale", "finale"):
+        return URA_SCENARIO_ID
+    return MANT_SCENARIO_ID
 
 
 def slugify(value):
@@ -89,8 +104,9 @@ def serialize_preset(raw):
 def hydrate_preset(raw):
     data = serialize_preset(raw)
 
-    data["scenario_id"] = MANT_SCENARIO_ID
-    data["scenario"] = MANT_SCENARIO_ID
+    scenario_id = _resolve_scenario_id(raw)
+    data["scenario_id"] = scenario_id
+    data["scenario"] = scenario_id
     data["cure_asap_conditions"] = ["Migraine", "Night Owl", "Skin Outbreak", "Slacker", "Slow Metabolism", "(Practice poor isn't worth a turn to cure)"]
     data["expect_attribute"] = [9999, 9999, 9999, 9999, 9999]
     data["score_value"] = [[0.11, 0.1, 0.006, 0.09], [0.11, 0.1, 0.006, 0.09], [0.11, 0.1, 0.006, 0.09], [0.03, 0.05, 0.006, 0.09], [0, 0, 0.006, 0]]
