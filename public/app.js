@@ -87,6 +87,7 @@ const els = {
     discordWebhookSaveBtn: document.getElementById('discord-webhook-save-btn'),
     discordWebhookTestBtn: document.getElementById('discord-webhook-test-btn'),
     discordWebhookStatus: document.getElementById('discord-webhook-status'),
+    discordNotifyForecast: document.getElementById('discord-notify-forecast'),
     presetSection: document.getElementById('preset-section'),
     presetAddBtn: document.getElementById('preset-add-btn'),
     presetDelBtn: document.getElementById('preset-del-btn'),
@@ -524,6 +525,7 @@ const els = {
             try {
                 const data = await apiJson('/api/settings/discord-webhook');
                 if (data.webhook_url) els.discordWebhookUrl.value = data.webhook_url;
+                if (els.discordNotifyForecast) els.discordNotifyForecast.checked = data.notify_forecast !== false;
                 setDiscordStatus(data.configured ? 'Webhook saved' : 'Not configured', data.configured ? 'ok' : '');
             } catch (e) {
                 setDiscordStatus('Could not read webhook status', 'needs-action');
@@ -532,13 +534,14 @@ const els = {
         async function saveDiscordWebhook() {
             if (!els.discordWebhookUrl) return;
             const webhook_url = els.discordWebhookUrl.value.trim();
+            const notify_forecast = els.discordNotifyForecast ? els.discordNotifyForecast.checked : true;
             if (els.discordWebhookSaveBtn) els.discordWebhookSaveBtn.disabled = true;
             setDiscordStatus('Saving...', 'working');
             try {
                 const data = await apiJson('/api/settings/discord-webhook', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ webhook_url })
+                    body: JSON.stringify({ webhook_url, notify_forecast })
                 });
                 setDiscordStatus(data.configured ? 'Webhook saved' : 'Webhook cleared', data.configured ? 'ok' : '');
             } catch (e) {

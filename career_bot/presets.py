@@ -53,6 +53,43 @@ def _resolve_stat_targets(raw):
     return [NO_STAT_TARGET] * 5
 
 
+RUNNING_STYLE_APT_KEYS = {
+    1: "proper_running_style_nige",    # Front Runner
+    2: "proper_running_style_senko",   # Pace Chaser
+    3: "proper_running_style_sashi",   # Late Surger
+    4: "proper_running_style_oikomi",  # End Closer
+}
+
+
+def resolve_running_style(preset, chara_info):
+    """Effective race running style (1-4) for an uma.
+
+    Honors the preset's chosen style UNLESS its aptitude is poor -- then it runs the style the
+    uma is actually best at (highest proper_running_style_* grade), so a preset built for one
+    uma doesn't force a bad style on a borrowed/different runner. Aptitude grades are 1(G)..8(S);
+    the default threshold 6 = B keeps a B+ preset style and only switches away from C-or-worse.
+    Set preset "auto_running_style": false to always force the preset style; tune the threshold
+    with "running_style_min_grade". Falls back to the raw preset style if no aptitude data."""
+    raw = preset.get("running_style") if isinstance(preset, dict) else None
+    try:
+        pref = int(raw)
+    except (TypeError, ValueError):
+        pref = 0
+    chara_info = chara_info or {}
+    apts = {s: as_int(chara_info.get(k), 0) for s, k in RUNNING_STYLE_APT_KEYS.items()}
+    if not any(apts.values()):
+        return pref if pref in (1, 2, 3, 4) else 0
+    if not (preset or {}).get("auto_running_style", True):
+        # Explicitly opted out of auto-pick: keep the preset style verbatim (0/invalid falls
+        # through to the downstream "in (1,2,3,4)" guard, leaving the game's current style).
+        return pref if pref in (1, 2, 3, 4) else 0
+    min_grade = as_int((preset or {}).get("running_style_min_grade"), 6)
+    if pref in (1, 2, 3, 4) and apts.get(pref, 0) >= min_grade:
+        return pref
+    # Pick the best-aptitude style; tie-break toward the preset preference, then lower index.
+    return max((1, 2, 3, 4), key=lambda s: (apts.get(s, 0), s == pref, -s))
+
+
 def _resolve_scenario_id(raw):
     """Pick a preset's scenario. Defaults to MANT (4) so existing presets are unchanged;
     a preset opts into URA Finale by setting "scenario": "ura" (or 1)."""

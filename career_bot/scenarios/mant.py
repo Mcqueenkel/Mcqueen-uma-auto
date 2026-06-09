@@ -1,5 +1,6 @@
 from career_bot.events import EventManager
 from career_bot.scenarios.base import Decision, ScenarioStrategy
+from career_bot.foresight import CareerForecaster
 
 
 STAT_TARGETS = {
@@ -44,8 +45,14 @@ class MantStrategy(ScenarioStrategy):
     def __init__(self, race_planner=None):
         self.race_planner = race_planner
         self.event_manager = None
-        if self.race_planner and self.race_planner.base_dir:
-            self.event_manager = EventManager(self.race_planner.base_dir)
+        base_dir = self.race_planner.base_dir if self.race_planner else None
+        if base_dir:
+            self.event_manager = EventManager(base_dir)
+        # Forward-looking career planner: predicts the build this career should aim for and
+        # feeds per-stat targets into the scorer, so training follows the predicted direction
+        # rather than raw single-turn gain. Recomputed each turn in next_decision.
+        self.forecaster = CareerForecaster(base_dir)
+        self._forecast = None
 
     def next_decision(self, state, preset):
         data = state.get("data") or {}
@@ -71,6 +78,13 @@ class MantStrategy(ScenarioStrategy):
             return Decision("finish", {"current_turn": chara.get("turn", 0)}, "goal failed / career end")     
         if race and race.get("program_id") and playing_state in (2, 4):
             return Decision("race_progress", {"current_turn": chara.get("turn", 0), "phase": "start", "race_start_info": race, "chara_info": chara}, "race start")
+        # Predict the career direction once per turn so the scorer trains toward the build this
+        # uma should end on (apt distance + style), not just the biggest raw stat now. Computed
+        # BEFORE the race_planner block, since _train_outvalues_race also scores training.
+        if preset.get("career_foresight", True):
+            self._forecast = self.forecaster.forecast(data, preset)
+        else:
+            self._forecast = None
         if self.race_planner:
             forced_program_id = self.race_planner.forced_program(state)
             if forced_program_id:
@@ -282,6 +296,14 @@ class MantStrategy(ScenarioStrategy):
         weights = self._period_row(preset.get("score_value"), turn, [0.11, 0.10, 0.006, 0.09])
         base = preset.get("base_score") or [0, 0, 0, 0, 0]
         targets = preset.get("expect_attribute") or [9999, 9999, 9999, 9999, 9999]
+        # Career foresight: when the preset sets no explicit per-stat soft caps, steer training
+        # toward the predicted end-build (apt distance + style) instead of leaving stats uncapped.
+        # The min(game_cap, target) logic below still applies, so these never exceed the real caps.
+        forecast = getattr(self, "_forecast", None)
+        if forecast is not None and forecast.active:
+            # Fill only the stats the preset left unset (>=9999) with the predicted target, so a
+            # partial focused-build override (e.g. an explicit Stamina cap) keeps foresight on the rest.
+            targets = [int(t) if int(t) < 9999 else forecast.stat_targets[i] for i, t in enumerate(targets)]
         idx = TRAINING_COMMANDS.get(command.get("command_id"), 0)
         score = float(base[idx] if idx < len(base) else 0)
         w_lv1 = float(weights[0] if len(weights) > 0 else 0.11)
@@ -376,7 +398,8 @@ class MantStrategy(ScenarioStrategy):
                     useful_stat_score += max(0.0, sp_score)
                 continue
 
-            stat_gain_score = value * float(stat_mult[target] if target < len(stat_mult) else 0.01)
+            stat_mult_val = float(stat_mult[target] if target < len(stat_mult) else 0.01)
+            stat_gain_score = value * stat_mult_val
             # Effective ceiling = the stat's REAL in-game cap (raised by inheritance), tightened
             # by an optional per-preset soft target for focused builds. Reading the live cap is
             # what activates the attenuation ladder + balance boost below without wrongly
@@ -416,7 +439,18 @@ class MantStrategy(ScenarioStrategy):
                     if ratio < thr:
                         stat_gain_score *= 1.0 + (thr - ratio) * float(preset.get("stat_balance_boost") or 0.6)
             score += stat_gain_score
-            useful_stat_score += max(0.0, stat_gain_score)
+            # The rainbow/unlock attenuation below keys off useful_stat_score. It must reflect
+            # whether the stat is TRULY near its real in-game cap (genuinely wasted gain), NOT
+            # merely de-prioritised below a tighter soft forecast/user target -- otherwise a
+            # multi-rainbow turn on an off-build stat (e.g. Stamina for a sprinter) would collapse
+            # to zero once that stat crept past its low soft target, throwing away the turn's
+            # bond/friendship value. So when a soft target is tighter than the game cap, measure
+            # headroom against the GAME cap; otherwise keep the soft-attenuated score.
+            if target < 5 and cap < game_cap and game_cap > 0:
+                game_headroom = max(0.0, 1.0 - self._current_stat(chara, target) / game_cap)
+                useful_stat_score += max(0.0, value * stat_mult_val * game_headroom)
+            else:
+                useful_stat_score += max(0.0, stat_gain_score)
         # Shared "useful stat" attenuation: how much non-capped stat this turn actually
         # yields, relative to a reference. Both the rainbow reward and the bond-unlock
         # premium are gated by it so the bot never chases bond/rainbow on a facility whose

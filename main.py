@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 from pathlib import Path
+from typing import Optional
 import random
 import time
 import threading
@@ -792,25 +793,46 @@ async def set_event_override(req: EventOverrideRequest):
     return {"success": True, "story_id": sid, "override": overrides.get(sid)}
 
 class DiscordWebhookRequest(BaseModel):
-    webhook_url: str = ""
+    webhook_url: Optional[str] = None
+    notify_forecast: Optional[bool] = None
+
+_TEST_FORECAST = {
+    "active": True,
+    "archetype": "Long / End Closer",
+    "key_style": "End Closer",
+    "apt_distances": [["long", 7], ["middle", 6], ["mile", 4]],
+    "stat_targets": {"Speed": 1120, "Stamina": 1130, "Power": 990, "Guts": 750, "Wit": 650},
+    "summary": "Direction: Long / End Closer (apt: long, middle).",
+    "turn": 1,
+}
 
 @app.get("/api/settings/discord-webhook")
 async def get_discord_webhook():
     from career_bot import notify
     url = notify.get_webhook_url(base_dir)
-    return {"success": True, "configured": bool(url), "webhook_url": url}
+    return {"success": True, "configured": bool(url), "webhook_url": url,
+            "notify_forecast": notify.get_notify_forecast(base_dir)}
 
 @app.post("/api/settings/discord-webhook")
 async def set_discord_webhook(req: DiscordWebhookRequest):
     from career_bot import notify
-    notify.set_webhook_url(base_dir, req.webhook_url)
-    return {"success": True, "configured": bool(req.webhook_url.strip())}
+    # Patch-style: only update fields that were actually sent, so a partial POST (e.g. just the
+    # forecast toggle) never wipes the saved webhook URL.
+    if req.webhook_url is not None:
+        notify.set_webhook_url(base_dir, req.webhook_url)
+    if req.notify_forecast is not None:
+        notify.set_notify_forecast(base_dir, req.notify_forecast)
+    return {"success": True, "configured": bool(notify.get_webhook_url(base_dir)),
+            "notify_forecast": notify.get_notify_forecast(base_dir)}
 
 @app.post("/api/settings/discord-webhook/test")
 async def test_discord_webhook():
     from career_bot import notify
     if not notify.get_webhook_url(base_dir):
         return {"success": False, "detail": "No webhook URL configured"}
+    meta = {"account": os.environ.get("SWEEPY_ACCOUNT") or "", "uma_name": "Webhook Test", "preset": "test"}
+    # Fire the start-of-career forecast panel too, so the test shows both new pieces.
+    notify.send_forecast(base_dir, _TEST_FORECAST, meta)
     ok = notify.send_career_summary(base_dir, {
         "status": "finished",
         "account": os.environ.get("SWEEPY_ACCOUNT") or "",
@@ -825,6 +847,7 @@ async def test_discord_webhook():
         "factor_ids": [201, 3302, 1000702, 1001201, 1001902, 2002001, 2015302, 10060201],
         "loop_index": 2,
         "loop_target": 5,
+        "forecast": _TEST_FORECAST,
     })
     return {"success": ok}
 

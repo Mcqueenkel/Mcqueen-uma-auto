@@ -12,6 +12,7 @@ from pathlib import Path
 
 from career_bot.scenarios.mant import MantStrategy
 from career_bot.scenarios.ura import UraStrategy
+from career_bot.presets import resolve_running_style
 from career_bot.races import RacePlanner
 from career_bot.skills import SkillBuyer
 from career_bot.items import MantItemManager, ITEM_NAMES, SHOP_ITEM_COSTS, DISPLAY_TO_ID, display_to_slug
@@ -205,6 +206,9 @@ class CareerRunner:
         state = result or {}
         self._notify_card_id = str(((state.get("data") or {}).get("chara_info") or {}).get("card_id") or "")
         self._notify_factor_ids = []
+        self._notify_forecast = None
+        self._forecast_sent = False
+        self._last_forecast_summary = None
         last_turn = -1
         try:
             for i in range(max_steps):
@@ -277,7 +281,28 @@ class CareerRunner:
                 self._debug_turn(state, preset)
                 decision = strategy.next_decision(state, preset)
 
-                
+                # Surface the bot's predicted career direction: log it whenever it shifts, keep
+                # the latest for the end-of-career summary, and push a one-time "Career Forecast"
+                # panel to the Discord webhook the first time it's available this career.
+                fc = getattr(strategy, "_forecast", None)
+                if fc is not None and fc.active:
+                    self._notify_forecast = fc.to_dict()
+                    if fc.summary != getattr(self, "_last_forecast_summary", None):
+                        self._last_forecast_summary = fc.summary
+                        self._log("career_forecast", fc.turn, fc.summary)
+                    if not self._forecast_sent:
+                        self._forecast_sent = True
+                        _meta = {
+                            "account": os.environ.get("SWEEPY_ACCOUNT") or "",
+                            "uma_name": notify.uma_name(self.base_dir, self._notify_card_id) or "",
+                            "preset": (preset.get("name") if isinstance(preset, dict) else "") or "",
+                        }
+                        # Fire the webhook in the background so a slow/failed POST never stalls
+                        # the career loop (send_forecast swallows its own errors).
+                        threading.Thread(target=notify.send_forecast,
+                                         args=(self.base_dir, self._notify_forecast, _meta),
+                                         daemon=True).start()
+
                 if self.report:
                     add_decision(self.report, state, decision)
                 
@@ -476,6 +501,7 @@ class CareerRunner:
             "factor_ids": list(getattr(self, "_notify_factor_ids", []) or []),
             "loop_index": int(getattr(self, "_loop_index", 1) or 1),
             "loop_target": int(getattr(self, "_loop_target", 1) or 0),
+            "forecast": getattr(self, "_notify_forecast", None),
         }
 
     def _advance(self, action):
@@ -1007,12 +1033,6 @@ class CareerRunner:
         current_turn = payload["current_turn"]
         strategy = payload.get("_strategy")
 
-        running_style = preset.get("running_style") if isinstance(preset, dict) else None
-        try:
-            running_style = int(running_style)
-        except (TypeError, ValueError):
-            running_style = 0
-
         try:
             entry = client.race_entry(program_id=program_id, current_turn=current_turn)
         except Exception as exc:
@@ -1031,6 +1051,16 @@ class CareerRunner:
                 entry_data = entry.get("data") or {}
                 chara_info = entry_data.get("chara_info") or {}
 
+        # Resolve the effective running style from aptitude now that chara_info is loaded:
+        # honor the preset style unless its aptitude is poor, then run what the uma is best at.
+        running_style = resolve_running_style(preset, chara_info)
+        try:
+            _pref_style = int(preset.get("running_style")) if isinstance(preset, dict) else 0
+        except (TypeError, ValueError):
+            _pref_style = 0
+        if running_style in (1, 2, 3, 4) and running_style != _pref_style:
+            # Make the aptitude-driven divergence from the configured style visible.
+            self._log("running_style_auto", current_turn, f"aptitude override: preset {_pref_style} -> {running_style}")
         try:
             current_running_style = int(chara_info.get("race_running_style") or 0)
         except (TypeError, ValueError):
@@ -1179,11 +1209,7 @@ class CareerRunner:
                 raise
         race_start_info = payload.get("race_start_info") or {}
         program_id = race_start_info.get("program_id")
-        running_style = preset.get("running_style") if isinstance(preset, dict) else None
-        try:
-            running_style = int(running_style)
-        except (TypeError, ValueError):
-            running_style = 0
+        running_style = resolve_running_style(preset, chara)
         horse = ((race_start_info.get("race_horse_data") or []) + [{}])[0]
         try:
             current_running_style = int(chara.get("race_running_style") or horse.get("running_style") or 0)

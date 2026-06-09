@@ -1,6 +1,22 @@
 import json
 import re
 from pathlib import Path
+from career_bot.presets import resolve_running_style
+
+# Skill tag taxonomy (decoded from skill_data.json 'tags'): 101-104 = running style
+# (Front/Pace/Late/End), 201-204 = distance (sprint/mile/middle/long). A skill carrying a
+# style or distance tag only activates for that style/distance; effect-only skills (4xx) are
+# style/distance-agnostic and always fit. Used to avoid spending SP on skills that can't fire.
+STYLE_TAG = {1: 101, 2: 102, 3: 103, 4: 104}
+DISTANCE_TAG_KEYS = {
+    "proper_distance_short": 201,
+    "proper_distance_mile": 202,
+    "proper_distance_middle": 203,
+    "proper_distance_long": 204,
+}
+STYLE_TAGS_ALL = frozenset(STYLE_TAG.values())
+DISTANCE_TAGS_ALL = frozenset(DISTANCE_TAG_KEYS.values())
+
 MARK_WHITE_CIRCLE = "○"
 MARK_DOUBLE_CIRCLE = "◎"
 MARK_X = "×"
@@ -54,6 +70,7 @@ class SkillBuyer:
         self.skill_rarities = {}
         self.skill_costs = {}
         self.skill_grade_values = {}
+        self.skill_tags = {}
         self.skill_id_exists = set()
         self.group_to_skill_ids = {}
         self.skill_to_group_id = {}
@@ -77,6 +94,7 @@ class SkillBuyer:
             self.skill_rarities = {}
             self.skill_costs = {}
             self.skill_grade_values = {}
+            self.skill_tags = {}
             self.skill_to_group_id = {}
             for raw_id, raw_info in data.items():
                 skill_id = int(raw_id)
@@ -85,6 +103,8 @@ class SkillBuyer:
                     self.skill_rarities[skill_id] = int(raw_info.get("rarity") or 0)
                     self.skill_costs[skill_id] = int(raw_info.get("need_skill_point") or 0)
                     self.skill_grade_values[skill_id] = int(raw_info.get("grade_value") or 0)
+                    tags = raw_info.get("tags")
+                    self.skill_tags[skill_id] = [int(t) for t in tags] if isinstance(tags, list) else []
                     group_id = int(raw_info.get("group_id") or 0)
                     if group_id:
                         self.skill_to_group_id[skill_id] = group_id
@@ -197,8 +217,8 @@ class SkillBuyer:
             # once nothing better is left to buy.
             seen = {c["skill_id"] for c in candidates}
             for relaxed in (
-                {**preset, "learn_skill_only_user_provided": False},
-                {**preset, "learn_skill_only_user_provided": False, "learn_skill_blacklist": []},
+                {**preset, "learn_skill_only_user_provided": False, "skill_fit_gate": False},
+                {**preset, "learn_skill_only_user_provided": False, "learn_skill_blacklist": [], "skill_fit_gate": False},
             ):
                 for extra in self._candidates(chara, relaxed):
                     if extra["skill_id"] not in seen:
@@ -288,30 +308,87 @@ class SkillBuyer:
     def _blacklist(self, preset):
         return {norm(item) for item in preset.get("learn_skill_blacklist") or []}
 
+    def _uma_fit_profile(self, chara, preset):
+        """(style_tag, set-of-apt-distance-tags) describing what this uma can actually race,
+        for skill-fit checks. style_tag is None if the style is unknown; an empty distance set
+        means 'no aptitude data' and disables the distance check. Distance aptitude grades are
+        1(G)..8(S); default threshold 6 = B (tunable via preset skill_fit_distance_min_grade)."""
+        style_tag = STYLE_TAG.get(resolve_running_style(preset, chara))
+        try:
+            min_grade = int((preset or {}).get("skill_fit_distance_min_grade") or 6)
+        except (TypeError, ValueError):
+            min_grade = 6
+        dist_tags = {tag for key, tag in DISTANCE_TAG_KEYS.items()
+                     if int((chara or {}).get(key) or 0) >= min_grade}
+        return style_tag, dist_tags
+
+    def _skill_fits(self, skill_id, style_tag, dist_tags):
+        """False only when a skill is tagged for a running style this uma does not run, or for
+        distances it isn't apt at -- i.e. it physically can't/won't activate. Effect-only skills
+        (no style/distance tag) always fit. Unknown style/empty distance set disables that half.
+        Used for the SOFT candidate-sort demotion (D), which checks both style and distance."""
+        tags = self.skill_tags.get(int(skill_id) or 0) or []
+        style_in = [t for t in tags if t in STYLE_TAGS_ALL]
+        if style_in and style_tag and style_tag not in style_in:
+            return False
+        dist_in = [t for t in tags if t in DISTANCE_TAGS_ALL]
+        if dist_in and dist_tags and not (set(dist_in) & dist_tags):
+            return False
+        return True
+
+    def _skill_style_conflicts(self, skill_id, style_tag):
+        """True only when a skill is tagged for a DIFFERENT running style than the uma runs --
+        a HIGH-confidence 'will never activate' signal, since an uma runs exactly one style.
+        This (not the broader _skill_fits) is what the gold-skip GATE uses: distance mismatch is
+        deliberately NOT a skip reason, because the career's race schedule can include distances
+        the uma is only mid/low-apt at, and many distance-tagged golds are debuffs/recovery worth
+        buying anyway. Distance mismatch stays a soft demotion in the candidate sort instead."""
+        if not style_tag:
+            return False
+        style_in = [t for t in (self.skill_tags.get(int(skill_id) or 0) or []) if t in STYLE_TAGS_ALL]
+        return bool(style_in) and style_tag not in style_in
+
     def _candidates(self, chara, preset):
         owned = {int(item.get("skill_id") or 0) for item in chara.get("skill_array") or []}
         owned_groups = {self.skill_to_group_id.get(skill_id, skill_id // 10) for skill_id in owned}
         priority = self._priority_context(preset)
         blacklist = self._blacklist(preset)
+        style_tag, dist_tags = self._uma_fit_profile(chara, preset)
         result = []
         for tip in chara.get("skill_tips_array") or []:
-            resolved = self.resolve_skill_tip(tip, owned, owned_groups, priority, blacklist, preset)
+            resolved = self.resolve_skill_tip(tip, owned, owned_groups, priority, blacklist, preset,
+                                              style_tag=style_tag, dist_tags=dist_tags)
             if not resolved or resolved.get("skip_reason"):
                 continue
+            sid = resolved["resolved_skill_id"]
+            grade_value = int(self.skill_grade_values.get(sid, 0))
+            cost = int(resolved["cost"] or 0)
             result.append({
-                "skill_id": resolved["resolved_skill_id"],
+                "skill_id": sid,
                 "group_id": resolved["group_id"],
                 "tip_rarity": resolved["tip_rarity"],
                 "hint_level": resolved["hint_level"],
                 "name": resolved["resolved_name"],
                 "priority": resolved["priority"],
                 "cost": resolved["cost"],
+                "grade_value": grade_value,
+                "fits": self._skill_fits(sid, style_tag, dist_tags),
+                "value_per_sp": grade_value / max(cost, 1),
                 "bundled_skill_ids": resolved.get("bundled_skill_ids") or [],
                 "resolution_reason": resolved["resolution_reason"],
                 "failed_scope": resolved["failed_scope"],
                 "candidate_skill_ids": resolved["candidate_skill_ids"],
             })
-        result.sort(key=lambda item: (item["priority"], -item["hint_level"], item["cost"], item["skill_id"]))
+        # Order: user-priority first (unchanged), then skills that actually fit this uma's
+        # style/distance, then best value-per-SP (grade_value/cost) instead of merely cheapest,
+        # then richer hints, then id. So leftover/default SP buys the strongest ACTIVATING skills.
+        result.sort(key=lambda item: (
+            item["priority"],
+            0 if item.get("fits", True) else 1,
+            -item.get("value_per_sp", 0.0),
+            -item["hint_level"],
+            item["skill_id"],
+        ))
         
         deduped = []
         seen = set()
@@ -327,7 +404,8 @@ class SkillBuyer:
             return [item for item in result if item["priority"] < 999]
         return result
 
-    def resolve_skill_tip(self, tip, owned_skill_ids, owned_groups, priority, blacklist, preset):
+    def resolve_skill_tip(self, tip, owned_skill_ids, owned_groups, priority, blacklist, preset,
+                          style_tag=None, dist_tags=None):
         group_id = int(tip.get("group_id") or 0)
         tip_rarity = int(tip.get("rarity") or 0)
         hint_level = int(tip.get("level") or 0)
@@ -407,6 +485,18 @@ class SkillBuyer:
 
         row["resolved_skill_id"] = resolved
         row["resolved_name"] = name
+        # E: don't pay the gold premium + white bundle for a GOLD skill tagged for a running
+        # style this uma does NOT run (it can never activate). Only when not user-listed and the
+        # gate is on; the end-of-career SP dump passes skill_fit_gate=False so leftover SP can
+        # still grab any grade_value. Uses STYLE conflict only (high-confidence) -- a distance
+        # mismatch is left to the soft sort demotion so off-aptitude debuff/recovery golds and
+        # races at non-apt distances aren't wrongly skipped. Cheap mismatched whites aren't
+        # gated either; the _candidates sort already sinks non-fitting skills below fitting ones.
+        if (preset.get("skill_fit_gate", True) and best_priority >= 999
+                and self.skill_rarities.get(resolved, 0) == 2
+                and self._skill_style_conflicts(resolved, style_tag)):
+            row["skip_reason"] = "skill_fit"
+            return row
         bundled_skill_ids = []
         cost = self._estimate_cost({"skill_id": resolved, "hint_level": hint_level, "name": name})
         if self.skill_rarities.get(resolved, 0) == 2:

@@ -103,6 +103,31 @@ def _format_sparks(sparks):
     return "\n".join(lines)
 
 
+_GRADE_LETTERS = {8: "S", 7: "A", 6: "B", 5: "C", 4: "D", 3: "E", 2: "F", 1: "G"}
+_FORECAST_STATS = [("Speed", "speed"), ("Stamina", "stamina"), ("Power", "power"),
+                   ("Guts", "guts"), ("Wit", "wit")]
+
+
+def _apt_str(forecast):
+    """C+ apt distances as 'long A, middle B' (anything below C is dropped)."""
+    out = []
+    for entry in forecast.get("apt_distances") or []:
+        try:
+            cat, grade = entry[0], int(entry[1])
+        except Exception:
+            continue
+        if grade >= 5:
+            out.append(f"{cat} {_GRADE_LETTERS.get(grade, '?')}")
+    return ", ".join(out)
+
+
+def _targets_str(forecast):
+    t = forecast.get("stat_targets")
+    if not isinstance(t, dict):
+        t = {}
+    return " · ".join(f"{name[:3].upper()} {int(t.get(name, 0) or 0)}" for name, _ in _FORECAST_STATS)
+
+
 def _build_embed(summary):
     status = str(summary.get("status") or "?")
     color = {"finished": 0x2ECC71, "stopped": 0xF1C40F, "error": 0xE74C3C}.get(status, 0x95A5A6)
@@ -141,12 +166,88 @@ def _build_embed(summary):
         },
         {"name": "Race", "value": str(summary.get("races", 0)), "inline": True},
     ]
+    forecast = summary.get("forecast")
+    if forecast and forecast.get("active"):
+        # How the final build matched what the bot predicted this career should aim for.
+        targets = forecast.get("stat_targets") or {}
+        parts = []
+        for name, key in _FORECAST_STATS:
+            ach = int(stats.get(key, 0))
+            tgt = int(targets.get(name, 0))
+            mark = " ✓" if tgt and ach >= tgt * 0.95 else ""
+            parts.append(f"{name[:3].upper()} {ach}/{tgt}{mark}")
+        apt = _apt_str(forecast)
+        head = f"**{forecast.get('archetype') or '?'}**" + (f" (apt: {apt})" if apt else "")
+        fields.append({"name": "🔮 Predicted Direction (achieved / target)",
+                       "value": (head + "\n" + " · ".join(parts))[:1024], "inline": False})
+
     sparks = summary.get("sparks") or []
     if sparks:
         spark_text = _format_sparks(sparks)
         if spark_text:
             fields.append({"name": "✨ Sparks (inheritance factors)", "value": spark_text[:1024], "inline": False})
     return {"title": f"{title} — {status}", "description": description, "color": color, "fields": fields}
+
+
+def _build_forecast_embed(forecast, meta):
+    """A standalone 'predicted career direction' panel, sent when a career starts."""
+    meta = meta or {}
+    desc = ""
+    if meta.get("account"):
+        desc += f"👤 Account **{meta['account']}** · "
+    desc += f"**{meta.get('uma_name') or 'Unknown'}**"
+    if meta.get("preset"):
+        desc += f" · `{meta['preset']}`"
+    apt = _apt_str(forecast) or "no strong aptitude"
+    fields = [
+        {"name": "Direction", "value": forecast.get("archetype") or "?", "inline": True},
+        {"name": "Aptitude", "value": apt, "inline": True},
+        {"name": "🎯 Build Target", "value": _targets_str(forecast) or "—", "inline": False},
+    ]
+    return {"title": "🔮 Career Forecast", "description": desc, "color": 0x5865F2, "fields": fields}
+
+
+def _post(url, payload):
+    data = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        url, data=data,
+        headers={"Content-Type": "application/json", "User-Agent": "umamusume-sweepy/1.0"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            code = getattr(resp, "status", None) or resp.getcode()
+            return 200 <= int(code) < 300
+    except Exception as exc:
+        print(f"Discord webhook failed: {exc}", flush=True)
+        return False
+
+
+def get_notify_forecast(base_dir):
+    return bool(_read_config(base_dir).get("notify_forecast", True))
+
+
+def set_notify_forecast(base_dir, enabled):
+    cfg = _read_config(base_dir)
+    cfg["notify_forecast"] = bool(enabled)
+    _write_config(base_dir, cfg)
+    return True
+
+
+def send_forecast(base_dir, forecast, meta=None):
+    """POST the predicted-direction panel to Discord when a career starts. Gated by the webhook
+    URL + the notify_forecast flag (default on). Failures are swallowed so they never crash a run."""
+    url = get_webhook_url(base_dir)
+    forecast = dict(forecast or {})
+    if not url or not forecast.get("active", False):
+        return False
+    if not _read_config(base_dir).get("notify_forecast", True):
+        return False
+    meta = dict(meta or {})
+    label = get_account_name(base_dir)
+    if label:
+        meta["account"] = label  # UI-set display name overrides the env/--account label (matches summary)
+    return _post(url, {"embeds": [_build_forecast_embed(forecast, meta)]})
 
 
 def send_career_summary(base_dir, summary):
@@ -165,18 +266,4 @@ def send_career_summary(base_dir, summary):
         summary["uma_name"] = uma_name(base_dir, summary.get("card_id"))
     if "sparks" not in summary:
         summary["sparks"] = resolve_sparks(base_dir, summary.get("factor_ids") or [])
-    payload = {"embeds": [_build_embed(summary)]}
-    data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
-        url,
-        data=data,
-        headers={"Content-Type": "application/json", "User-Agent": "umamusume-sweepy/1.0"},
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            code = getattr(resp, "status", None) or resp.getcode()
-            return 200 <= int(code) < 300
-    except Exception as exc:
-        print(f"Discord webhook failed: {exc}", flush=True)
-        return False
+    return _post(url, {"embeds": [_build_embed(summary)]})
