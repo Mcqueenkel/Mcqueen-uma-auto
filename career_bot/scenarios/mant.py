@@ -22,6 +22,9 @@ TRAINING_COMMANDS = {101: 0, 105: 1, 102: 2, 103: 3, 106: 4, 601: 0, 602: 1, 603
 TRAINING_NAMES = ["Speed", "Stamina", "Power", "Guts", "Wit"]
 SUMMER_CAMP_TURNS = {36, 37, 38, 39, 40, 60, 61, 62, 63, 64}
 SUMMER_CONSERVE_TURNS = {35, 36, 59, 60}
+# Turn-quality lookahead: turns right before the high-yield summer camps / finals, where energy
+# is banked regardless of the board so the uma enters the event near full and spends freely.
+PRE_EVENT_BANK_TURNS = {33, 34, 35, 57, 58, 59, 71, 72, 73}
 SUMMER_CONSERVE_ENERGY = 60
 ENERGY_FAST_MEDIC = 80
 ENERGY_MEDIC_GENERAL = 85
@@ -53,6 +56,10 @@ class MantStrategy(ScenarioStrategy):
         # rather than raw single-turn gain. Recomputed each turn in next_decision.
         self.forecaster = CareerForecaster(base_dir)
         self._forecast = None
+        # Turn-quality lookahead: rolling history of each turn's best training score, so the
+        # rest gate can tell a weak board from a strong one and bank/spend energy accordingly.
+        self._score_history = []
+        self._quality_last_turn = -1
 
     def next_decision(self, state, preset):
         data = state.get("data") or {}
@@ -180,6 +187,11 @@ class MantStrategy(ScenarioStrategy):
         else:
             best_score, best = max(scored, key=lambda row: row[0])
         rest_threshold = int(preset.get("rest_threshold") or 48)
+        # Turn-quality lookahead: bank energy on a weak board (rest sooner), push on a strong one.
+        # Clamp below max_vital so a rest can always lift energy back above it (no rest deadlock).
+        eff_rest = min(self._turn_quality_threshold(best_score, preset, turn),
+                       int(chara.get("max_vital") or 100) - 5)
+        self._record_turn_quality(turn, best_score)
         failure = int(best.get("failure_rate") or 0)
         if medic and bad_status and vital <= ENERGY_FAST_MEDIC:
             return medic
@@ -189,7 +201,7 @@ class MantStrategy(ScenarioStrategy):
             return recreation
         if self._should_recreate(recreation, preset, turn, motivation, vital, best_score):
             return recreation
-        if rest and (vital <= rest_threshold or failure >= 35 or best_score < 0):
+        if rest and (vital <= eff_rest or failure >= 35 or best_score < 0):
             if not self._can_rescue_training(data, chara, preset, best, best_score, vital, failure, rest_threshold):
                 return rest
             # else: a strong/rainbow turn we can charm or energy-up into. Don't rest
@@ -200,6 +212,49 @@ class MantStrategy(ScenarioStrategy):
         if conserve:
             return conserve
         return best
+
+    def _record_turn_quality(self, turn, best_score):
+        """Log this turn's best training score once per turn, for the rolling baseline. Negative
+        scores (energy penalties / forbidden-facility sentinels) are skipped so they don't skew it."""
+        if best_score is None or best_score < 0 or turn == getattr(self, "_quality_last_turn", -1):
+            return
+        self._quality_last_turn = turn
+        self._score_history.append(float(best_score))
+        if len(self._score_history) > 16:
+            self._score_history = self._score_history[-16:]
+
+    def _turn_quality_threshold(self, best_score, preset, turn):
+        """Turn-quality lookahead -> effective rest threshold.
+
+        The base scorer is greedy, so it would burn a weak turn on mediocre training and then be
+        forced to rest on a later strong (rainbow) turn. Instead, compare this turn's best score to
+        a rolling baseline of recent turns: on a clearly WEAK board, raise the rest threshold so the
+        bot rests now and banks energy for a future strong turn; on a STRONG board, lower it so it
+        pushes through (the charm/Vita rescue + failure cap keep that safe). Energy is also banked
+        entering the summer camps / finals. Aggressive defaults (tunable via preset)."""
+        base = int(preset.get("rest_threshold") or 48)
+        # No banking once we're INSIDE the summer camp we banked for -- spend the camp, don't rest it.
+        if not preset.get("turn_quality_lookahead", True) or turn in SUMMER_CAMP_TURNS:
+            return base
+        boost = int(preset.get("turn_quality_rest_boost") or 18)
+        if turn in PRE_EVENT_BANK_TURNS:
+            base += boost // 2
+        hist = self._score_history
+        if turn == self._quality_last_turn and hist:
+            # _best_command can run twice on a race-candidate turn; this turn's score was already
+            # recorded on the first pass, so drop it from the baseline to keep both passes consistent.
+            hist = hist[:-1]
+        if best_score is None or len(hist) < 4:
+            return base
+        recent = sorted(hist[-8:])
+        baseline = recent[len(recent) // 2]  # median of recent boards
+        if baseline <= 0:
+            return base
+        if best_score < baseline * float(preset.get("turn_quality_weak_ratio") or 0.82):
+            return base + boost                      # weak board -> rest eagerly, bank energy
+        if best_score > baseline * float(preset.get("turn_quality_strong_ratio") or 1.20):
+            return max(30, base - boost)             # strong board -> push, spend energy
+        return base
 
     def _rest_command(self, commands):
         for cmd in commands:
