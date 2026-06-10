@@ -733,15 +733,34 @@ def _read_json_file(p):
     except Exception:
         return {}
 
+def _active_deck_card_ids():
+    """Support-card ids of the deck the bot is running with: the current (or most recently
+    loaded) career's 5 deck cards + the friend slot, read from active_account. Deliberately
+    NOT gated on career['active'] so the deck stays browsable between runs. Empty when no
+    login/career data is loaded."""
+    try:
+        career = (active_account or {}).get("career") or {}
+        ids = [int(c) for c in (career.get("support_card_ids") or []) if c]
+        friend_id = int(career.get("friend_card_id") or 0)
+        if friend_id and friend_id not in ids:
+            ids.append(friend_id)
+        return ids
+    except Exception:
+        return []
+
+
 @app.get("/api/events")
 async def get_events(cards: str = ""):
-    # `cards` = comma-separated support_card_ids (the active deck). When given, the
-    # event list is pre-populated from master.mdb for those cards so the user can
-    # configure a deck's events up front, merged with anything already seen / in the DB.
+    # `cards` = comma-separated support_card_ids. When omitted, the deck is resolved
+    # server-side from the ACTIVE career (the cards you actually brought), so the UI
+    # needs no deck picker. The event list is pre-populated from master.mdb for those
+    # cards, merged with anything already seen / in the outcome DB.
     seen_path, ov_path, db_path = _event_paths()
     seen = _read_json_file(seen_path)
     overrides = _read_json_file(ov_path)
     db = _read_json_file(db_path)
+    # Observed per-choice outcomes the bot has recorded while playing (stat deltas).
+    choice_obs = _read_json_file(base_dir / "uma_runtime" / "event_choice_outcomes.json")
     merged = {}
     for sid in set(seen.keys()) | set(db.keys()):
         s = seen.get(sid) or {}
@@ -755,8 +774,10 @@ async def get_events(cards: str = ""):
             "auto_source": s.get("source") or ("db" if d else ""),
             "count": int(s.get("count") or 0),
         }
-    if cards.strip():
-        ids = [c for c in cards.split(",") if c.strip()]
+    # Numeric-only + stripped: a malformed ?cards= entry must degrade, not 500 (int() below).
+    ids = ([s for s in (c.strip() for c in cards.split(",")) if s.isdigit()]
+           if cards.strip() else [str(c) for c in _active_deck_card_ids()])
+    if ids:
         try:
             from career_bot import master_data
             for ev in master_data.event_list_for_cards(base_dir, ids):
@@ -775,9 +796,69 @@ async def get_events(cards: str = ""):
     for sid, e in merged.items():
         ov = overrides.get(sid)
         e["override"] = (int(ov) if ov is not None else None)
+        # Per-choice descriptions: the known good/bad label (curated DB) + what the bot has
+        # actually OBSERVED each choice do (stat/energy/mood delta averaged over sightings).
+        # Both are keyed by the game's SELECT_INDEX; positions map to select indexes via the
+        # latest sighting's choice_selects (select sets vary/sparse across sightings). A
+        # malformed source file degrades this block to choices=[] -- never a 500.
+        try:
+            d = db.get(sid)
+            if not d and len(sid) >= 3:
+                # Same suffix fallback EventManager.choose() uses for the curated DB.
+                suffix = sid[-3:]
+                for k, v in db.items():
+                    if str(k).endswith(suffix):
+                        d = v
+                        break
+            labels = (d or {}).get("outcomes") or {}
+            observed = choice_obs.get(sid)
+            observed = observed if isinstance(observed, dict) else {}
+            raw_selects = (seen.get(sid) or {}).get("choice_selects") or []
+            selects = []
+            for x in raw_selects:
+                try:
+                    selects.append(int(x))
+                except (TypeError, ValueError):
+                    selects.append(0)
+            n_choices = int(e.get("num_choices") or 0) or len(selects)
+            n_choices = min(max(n_choices, 0), 8)
+            e["num_choices"] = n_choices
+            choices = []
+            for i in range(n_choices):
+                sel = selects[i] if i < len(selects) and selects[i] > 0 else (i + 1)
+                slot = observed.get(str(sel))
+                slot = slot if isinstance(slot, dict) else {}
+                avg = slot.get("avg")
+                avg = avg if isinstance(avg, dict) and avg else None
+                try:
+                    n_seen = int(slot.get("n") or 0)
+                except (TypeError, ValueError):
+                    n_seen = 0
+                choices.append({
+                    "index": i,
+                    "select_index": sel,
+                    "label": labels.get(str(sel)),
+                    "observed": avg,
+                    "seen": n_seen,
+                })
+            e["choices"] = choices
+        except Exception:
+            e["choices"] = []
         events.append(e)
-    events.sort(key=lambda x: (x.get("support_card_id") or 0, -x["count"], x["event_name"] or "~", x["story_id"]))
-    return {"success": True, "events": events}
+    # Deck-card groups first (story_id-ordered), the card-0 "Other / scenario events" bucket last.
+    events.sort(key=lambda x: (x.get("support_card_id") or 10**9, -x["count"], x["event_name"] or "~", x["story_id"]))
+    # Card metadata so the UI can label each group (name + type) without its own deck picker.
+    cards_meta = []
+    for cid in ids:
+        info = support_map.get(str(cid)) or {}
+        cards_meta.append({
+            "id": int(cid),
+            "name": info.get("name") or f"Support {cid}",
+            "type": display_support_type(info.get("type") or "?"),
+            "rarity": info.get("rarity") or "?",
+        })
+    return {"success": True, "events": events, "cards": cards_meta,
+            "deck_source": "request" if cards.strip() else ("active_career" if ids else "none")}
 
 @app.post("/api/events/override")
 async def set_event_override(req: EventOverrideRequest):

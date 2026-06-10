@@ -334,30 +334,40 @@ const els = {
             });
             setInitial();
         }
-        makeSectionToggle('decks-toggle',    'decks-chevron',    'decks-body',    true);
-        makeSectionToggle('friends-toggle',  'friends-chevron',  'friends-body',  true);
-        makeSectionToggle('trainees-toggle', 'trainees-chevron', 'trainees-body', true);
-        makeSectionToggle('parents-toggle',  'parents-chevron',  'parents-body',  true);
-        makeSectionToggle('cards-toggle',    'cards-chevron',    'card-grid-wrapper', false);
-        makeSectionToggle('events-toggle',   'events-chevron',   'events-body',       false);
+        makeSectionToggle('events-toggle',   'events-chevron',   'events-body',       true);
 
+        const CHOICE_STAT_LABELS = {
+            speed: 'SPD', stamina: 'STA', power: 'POW', guts: 'GUT', wiz: 'WIT',
+            skill_point: 'SP', vital: 'Energy', motivation: 'Mood'
+        };
+        function describeChoice(ci) {
+            // Human description of a choice from the bot's OBSERVED outcomes (avg stat deltas).
+            const obs = ci && ci.observed;
+            if (!obs) return '';
+            return Object.keys(CHOICE_STAT_LABELS)
+                .map(k => ({ k, v: Math.round((obs[k] || 0) * 10) / 10 }))
+                .filter(e => e.v !== 0)
+                .map(e => `${CHOICE_STAT_LABELS[e.k]} ${e.v > 0 ? '+' : ''}${e.v}`)
+                .join(', ');
+        }
+        function truncate(s, max) {
+            s = String(s || '');
+            return s.length > max ? s.slice(0, max - 1) + '…' : s;
+        }
         async function loadEvents() {
             const list = document.getElementById('events-list');
             const countEl = document.getElementById('events-count');
             if (!list) return;
-            // Active deck's support cards -> pre-populate their events from master.mdb.
-            let deckCards = [];
-            try { if (selection && selection.deck && selection.deck.cards) deckCards = selection.deck.cards; } catch (e) {}
-            const cardNames = {};
-            deckCards.forEach(c => { if (c && c.id != null) cardNames[String(c.id)] = c.name || ('Support ' + c.id); });
-            const ids = deckCards.map(c => c && c.id).filter(v => v != null);
-            const q = ids.length ? ('?cards=' + encodeURIComponent(ids.join(','))) : '';
+            // The server resolves the deck from the ACTIVE career (the support cards you
+            // actually brought) and returns their events from master.mdb + card metadata.
             try {
-                const data = await apiJson('/api/events' + q);
+                const data = await apiJson('/api/events');
                 const events = (data && data.events) || [];
+                const cardsMeta = {};
+                ((data && data.cards) || []).forEach(c => { cardsMeta[String(c.id)] = c; });
                 if (countEl) countEl.textContent = events.length ? `(${events.length})` : '';
                 if (!events.length) {
-                    list.innerHTML = '<div class="events-empty">No events yet. Select your deck, then hit REFRESH — its support-card events show up here.</div>';
+                    list.innerHTML = '<div class="events-empty">No events yet. Start or resume a career, then hit REFRESH — the events of every support card you brought show up here.</div>';
                     return;
                 }
                 let html = '';
@@ -366,39 +376,72 @@ const els = {
                     const cardId = ev.support_card_id || 0;
                     if (cardId !== lastCard) {
                         lastCard = cardId;
-                        const label = cardId ? (cardNames[String(cardId)] || ('Support ' + cardId)) : 'Other / scenario events';
+                        const meta = cardsMeta[String(cardId)];
+                        const label = meta ? `${meta.name} — ${meta.type}${meta.rarity && meta.rarity !== '?' ? ' · ' + meta.rarity : ''}`
+                            : (cardId ? ('Support ' + cardId) : 'Other / scenario events');
                         html += `<div class="event-group-head">${escapeHtml(label)}</div>`;
                     }
-                    const n = (ev.num_choices && ev.num_choices > 0) ? ev.num_choices : 3;
+                    // Trust the server's per-choice rows when present (it knows the observed
+                    // option count); only fall back to 3 generic rows for never-seen events.
+                    const n = Math.max(ev.num_choices || 0, (ev.choices || []).length) || 3;
                     const name = ev.event_name || `Event ${ev.story_id}`;
                     const autoTxt = (ev.auto_pick == null) ? 'auto'
                         : `auto: #${ev.auto_pick + 1}${ev.auto_source ? ' (' + ev.auto_source + ')' : ''}`;
                     const seenTxt = ev.count ? `seen ${ev.count}×` : 'not seen yet';
+                    const choiceInfo = {};
+                    (ev.choices || []).forEach(c => { choiceInfo[c.index] = c; });
                     let opts = `<option value="-1"${ev.override == null ? ' selected' : ''}>Auto</option>`;
-                    for (let i = 0; i < n; i++) opts += `<option value="${i}"${ev.override === i ? ' selected' : ''}>Choice ${i + 1}</option>`;
+                    let detailLines = '';
+                    for (let i = 0; i < n; i++) {
+                        const ci = choiceInfo[i] || {};
+                        const desc = describeChoice(ci);
+                        opts += `<option value="${i}"${ev.override === i ? ' selected' : ''}>Choice ${i + 1}${desc ? ' — ' + escapeHtml(truncate(desc, 36)) : ''}</option>`;
+                        if (desc || ci.label || ci.seen) {
+                            const mark = ci.label === 'good' ? '<span class="choice-good">✓</span>'
+                                : (ci.label === 'bad' ? '<span class="choice-bad">✗</span>' : '');
+                            const text = desc
+                                || (ci.label === 'good' ? 'known good pick'
+                                    : ci.label === 'bad' ? 'known bad pick'
+                                    : 'no stat change observed');
+                            const seenN = ci.seen ? ` <span class="choice-seen">(×${escapeHtml(String(ci.seen))})</span>` : '';
+                            detailLines += `<div class="event-choice-line">${i + 1} · ${mark} ${escapeHtml(text)}${seenN}</div>`;
+                        }
+                    }
                     html += `
                         <div class="event-row${ev.override != null ? ' has-override' : ''}">
                             <div class="event-row-main">
                                 <span class="event-name">${escapeHtml(name)}</span>
-                                <span class="event-meta">${seenTxt} &middot; ${autoTxt}</span>
+                                <span class="event-meta">${escapeHtml(seenTxt)} &middot; ${escapeHtml(autoTxt)}</span>
+                                ${detailLines ? `<div class="event-choice-details">${detailLines}</div>` : ''}
                             </div>
                             <select class="event-override" data-sid="${escapeAttr(ev.story_id)}">${opts}</select>
                         </div>`;
                 });
                 list.innerHTML = html;
                 list.querySelectorAll('.event-override').forEach(sel => {
+                    let lastValue = sel.value;
                     sel.addEventListener('change', async () => {
                         const sid = sel.getAttribute('data-sid');
                         const choice = parseInt(sel.value, 10);
+                        const row = sel.closest('.event-row');
                         try {
-                            await apiJson('/api/events/override', {
+                            const res = await apiJson('/api/events/override', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ story_id: sid, choice })
                             });
-                            const row = sel.closest('.event-row');
+                            if (res && res.success === false) throw new Error('save rejected');
+                            lastValue = sel.value;
                             if (row) row.classList.toggle('has-override', choice >= 0);
-                        } catch (e) {}
+                        } catch (e) {
+                            // Save failed: revert the dropdown so the UI never lies about
+                            // which choice the bot will actually use.
+                            sel.value = lastValue;
+                            if (row) {
+                                row.classList.add('save-failed');
+                                setTimeout(() => row.classList.remove('save-failed'), 1500);
+                            }
+                        }
                     });
                 });
             } catch (e) {
@@ -971,6 +1014,11 @@ const els = {
         }
 
         function deselect(action, idx) {
+            // With the library pickers removed there is no way to RE-select a cleared slot.
+            // The team panel mirrors the active in-game career, so clearing is meaningless --
+            // keep the slots read-only instead of stranding the user with an empty slot.
+            const activeCareer = state.account && state.account.career && state.account.career.active;
+            if (activeCareer) return;
             if (action === 'deck') {
                 document.querySelectorAll('.deck-container.selected').forEach(el => el.classList.remove('selected'));
                 selection.deck = null;
@@ -996,15 +1044,10 @@ const els = {
             const activeCareer = state.account && state.account.career && state.account.career.active;
             if (!state.selectedPreset) return 'Select a preset';
             if (activeCareer) return '';
-            if (!selection.deck) return 'Select a deck';
-            if (!selection.friend) return 'Select a friend support';
-            if (!selection.trainee) return 'Select a trainee';
-            if (selection.veterans.length < 2) return 'Select two parents';
-            const parentError = getParentSelectionError();
-            if (parentError) return parentError;
-            const tp = state.account && state.account.tp ? Number(state.account.tp.current || 0) : 0;
-            if (state.account && tp < 30 && state.runCount === 1) return `Not enough TP: ${tp}/30`;
-            return '';
+            // The in-UI deck/friend/trainee/parent pickers were removed -- careers are set up
+            // in-game and the bot resumes them, so without an active career there is nothing
+            // the UI can select anymore.
+            return 'No active career — start one in-game, then refresh the session';
         }
         function getParentLineageCards(parent) {
             if (!parent || !parent.tree) return [];
@@ -2025,7 +2068,8 @@ const els = {
                 }
             }
 
-            els.friendCount.innerText = `(${visibleFriends.length}/${friends.length})`;
+            if (els.friendCount) els.friendCount.innerText = `(${visibleFriends.length}/${friends.length})`;
+            if (!els.friendGrid) { renderTeamPanel(); return; }
             els.friendGrid.innerHTML = visibleFriends.map(friend => {
                 const imgId = friend.support_card_id || '10001';
                 const lb = friend.limit_break_count ?? '?';
@@ -2050,6 +2094,9 @@ const els = {
             dashData.friendExcludeIds = Array.from(seen);
         }
         async function loadFriends(refresh = false) {
+            // Friend browser UI was removed from the LIBRARY panel; the bot resumes careers
+            // with the friend already chosen in-game, so there is nothing to load into.
+            if (!els.friendGrid || !els.friendStatus) return;
             if (!dashData || state.isFetchingFriends) return;
             const isCareerActive = dashData.account && dashData.account.career && dashData.account.career.active;
             if (isCareerActive) {
@@ -2415,7 +2462,7 @@ const els = {
             refreshRunnerStatus();
             state.runnerTimer = bgSetInterval(refreshRunnerStatus, 1500);
         }
-        els.friendRefreshBtn.addEventListener('click', event => {
+        if (els.friendRefreshBtn) els.friendRefreshBtn.addEventListener('click', event => {
             event.stopPropagation();
             loadFriends(true);
         });
@@ -2487,11 +2534,13 @@ const els = {
             });
         }
         function renderCounts(data) {
-            els.umaCount.innerText = `(${data.umas.length})`;
-            els.cardCount.innerText = `(${data.supports.length})`;
-            els.parentCount.innerText = `(${data.parents.length})`;
+            // LIBRARY browser sections were removed; counts only render where elements remain.
+            if (els.umaCount) els.umaCount.innerText = `(${data.umas.length})`;
+            if (els.cardCount) els.cardCount.innerText = `(${data.supports.length})`;
+            if (els.parentCount) els.parentCount.innerText = `(${data.parents.length})`;
         }
         function renderDecks(decks) {
+            if (!els.deckList) return;
             els.deckList.innerHTML = decks.map(deck => {
                 const cards = deck.cards.map(card => {
                     const imgId = card.id || '10001';
@@ -2550,6 +2599,7 @@ const els = {
             }).join('');
         }
         function renderParents(parents) {
+            if (!els.parentGrid) return;
             els.parentGrid.innerHTML = parents.map(parent => {
                 const imgId = parent.card_id || '100101';
                 return `<div class="grid-card">
@@ -2571,6 +2621,7 @@ const els = {
             }).join('');
         }
         function renderTrainees(umas) {
+            if (!els.umaGrid) return;
             els.umaGrid.innerHTML = umas.map(uma => {
                 const imgId = uma.id || '100101';
                 return `<div class="grid-card">
@@ -2580,6 +2631,7 @@ const els = {
             }).join('');
         }
         function renderSupports(supports) {
+            if (!els.cardGrid) return;
             els.cardGrid.innerHTML = supports.map(card => {
                 const imgId = card.id || '10001';
                 return `<div class="grid-card support-card">
@@ -2699,6 +2751,9 @@ const els = {
             resetSelection();
             if (data.selection) applyServerSelection(data.selection);
             autoLoadCareerSelection();
+            // EVENT CHOICES is the library's main content now and starts expanded —
+            // populate it from the active career's deck as soon as the dashboard lands.
+            loadEvents();
 
             await loadPresets();
             if (!dashData.friends.length) {

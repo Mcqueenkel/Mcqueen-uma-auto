@@ -878,15 +878,28 @@ class CareerRunner:
         data = dict(payload)
         event = data.pop("_event", None)
         current_turn = data.pop("_current_turn", 0)
+        before_chara = data.pop("_before_chara", None)
         if event:
             choice = strategy.choose_from_event(event, current_turn)
             self._log("event_choice", current_turn, f"{data.get('event_id')} -> {choice}")
-            return client.check_event(
+            result = client.check_event(
                 event_id=data["event_id"],
                 chara_id=event.get("chara_id", 0),
                 choice_number=choice,
                 current_turn=current_turn
             )
+            # Learn what this choice actually did (stat/energy/mood delta) so the EVENT
+            # CHOICES panel can describe each option from real observations. Recorded by
+            # the game's select_index (stable meaning), not the position (varies per sighting).
+            manager = getattr(strategy, "event_manager", None)
+            if manager is not None and before_chara:
+                choices = (event.get("event_contents_info") or {}).get("choice_array") or []
+                select_index = 0
+                if isinstance(choice, int) and 0 <= choice < len(choices):
+                    select_index = int((choices[choice] or {}).get("select_index") or 0)
+                after_chara = ((result or {}).get("data") or {}).get("chara_info") or {}
+                manager.record_choice_outcome(event.get("story_id"), select_index, before_chara, after_chara)
+            return result
         if "event_id" not in data:
             self._log("recover", current_turn, "event requested without event_id, forcing state refresh")
             return self._fresh_career_state(client, strategy)
@@ -905,7 +918,10 @@ class CareerRunner:
             turn = chara_turn if chara_turn is not None else self.status["turn"]
             payload = {"event_id": event.get("event_id"), "chara_id": event.get("chara_id", 0), "choice_number": choice, "current_turn": turn}
             if choice is None:
-                payload = {"event_id": event.get("event_id"), "_event": event, "_current_turn": turn}
+                # Multi-choice event: pass the pre-event chara stats so the picked choice's
+                # observed outcome (stat delta) can be recorded for the EVENT CHOICES panel.
+                payload = {"event_id": event.get("event_id"), "_event": event, "_current_turn": turn,
+                           "_before_chara": dict(data.get("chara_info") or {})}
             current = self._event(client, strategy, payload)
         return current
 
