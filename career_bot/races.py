@@ -125,6 +125,11 @@ class RacePlanner:
     
         wanted = self.wanted_programs(preset, turn)
         valid_wanted = [pid for pid in wanted if pid in available and (turn, pid) not in self.rejected]
+        # When several wanted races land on the same turn, prefer the highest grade
+        # (race_instance_id prefix 1=G1, 2=G2, 3=G3/open): G1s bypass the train-vs-race
+        # gate and a G2 clears a harder bar than a G3, so grade order decides which race
+        # the gate actually evaluates -- a G3 must not shadow a same-turn G2.
+        valid_wanted.sort(key=self._grade_rank)
         
         if not valid_wanted:
             chara = data.get("chara_info") or {}
@@ -150,6 +155,13 @@ class RacePlanner:
                 return overwrite_pid
                 
         return main_race_id
+
+    def _grade_rank(self, program_id):
+        """0=G1, 1=G2, 2=G3/open, 3=unknown -- from the race_instance_id first-digit
+        convention used across the codebase (cleats, train-vs-race gate)."""
+        info = self.program.get(int(program_id or 0)) or {}
+        first = str(info.get("race_instance_id") or "")[:1]
+        return {"1": 0, "2": 1, "3": 2}.get(first, 3)
 
     def reject(self, turn, program_id):
         self.rejected.add((int(turn or 0), int(program_id or 0)))

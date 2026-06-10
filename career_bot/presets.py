@@ -24,6 +24,29 @@ RENAMES = {
 MANT_SCENARIO_ID = 4
 URA_SCENARIO_ID = 1
 
+# Optional behavior knobs a preset file may set; passed through serialization verbatim so
+# they actually reach the strategy (everything else is whitelisted). Defaults live in code.
+TUNABLE_KEYS = (
+    # train-vs-race gate
+    "race_skip_train_stat", "race_skip_min_fans", "race_value_base", "race_value_g2_bonus",
+    "race_value_camp_mult", "race_value_junior_bonus",
+    # turn-quality lookahead
+    "turn_quality_lookahead", "turn_quality_rest_boost", "turn_quality_weak_ratio",
+    "turn_quality_strong_ratio",
+    # career foresight + rainbow scoring
+    "career_foresight", "rainbow_unlock_lookahead", "rainbow_unlock_band_lo",
+    "rainbow_unlock_bonus", "rainbow_unlock_cap", "rainbow_explicit", "rainbow_bonus",
+    "rainbow_stack_bonus", "rainbow_useful_ref", "stat_balance", "stat_balance_threshold",
+    "stat_balance_boost",
+    # running style + skills
+    "auto_running_style", "running_style_min_grade", "skill_fit_gate",
+    "skill_fit_distance_min_grade", "skill_dump_leftover", "score_skill_points",
+    "skill_point_weight",
+    # safety/energy/mood + misc
+    "failure_hard_cap", "mood_target_recreate", "mood_recreate_max_score",
+    "junior_bond_rush", "buy_notepads", "ura_force_races",
+)
+
 # Sentinel meaning "no user-imposed soft cap on this stat". The scorer then attenuates
 # toward the stat's REAL in-game cap, which the game sends per-stat in chara_info
 # (max_speed/max_stamina/max_power/max_guts/max_wiz) -- 1200 by default but raised by blue
@@ -169,6 +192,13 @@ def serialize_preset(raw):
     # code dropped it here, then hardcoded 9999 in hydrate, so a user target never landed).
     if data.get("expect_attribute") is not None or data.get("stat_targets") is not None:
         serialized["expect_attribute"] = _resolve_stat_targets(data)
+
+    # Behavior tunables: optional knobs the strategy/scorer reads at runtime. Persist them
+    # verbatim when the preset file sets them -- serialize otherwise whitelists fields, which
+    # silently stripped every such knob and made the documented preset overrides unreachable.
+    for key in TUNABLE_KEYS:
+        if data.get(key) is not None:
+            serialized[key] = data[key]
 
     return serialized
 

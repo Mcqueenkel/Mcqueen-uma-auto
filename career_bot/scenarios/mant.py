@@ -25,9 +25,16 @@ SUMMER_CONSERVE_TURNS = {35, 36, 59, 60}
 # Turn-quality lookahead: turns right before the high-yield summer camps / finals, where energy
 # is banked regardless of the board so the uma enters the event near full and spends freely.
 PRE_EVENT_BANK_TURNS = {33, 34, 35, 57, 58, 59, 71, 72, 73}
+# Turns the train-vs-race gate discounts a race's value: the ACTUAL in-camp turns with Lv5
+# facilities (verified 37-40 / 61-64 in master.mdb). Deliberately NOT SUMMER_CAMP_TURNS --
+# that set also contains 36/60, which are the late-June G1 race week, not camp training.
+RACE_VALUE_CAMP_TURNS = {37, 38, 39, 40, 61, 62, 63, 64}
 SUMMER_CONSERVE_ENERGY = 60
 ENERGY_FAST_MEDIC = 80
 ENERGY_MEDIC_GENERAL = 85
+# Historical default for the train-vs-race gate. The comparison itself is value-based now
+# (_race_value); this remains only as the enabled/disabled sentinel -- preset
+# "race_skip_train_stat": 0 keeps its long-standing meaning of "never skip a race".
 RACE_SKIP_TRAIN_STAT = 30
 ENERGY_ITEM_VALUES = {2001: 20, 2002: 40, 2003: 65, 2101: 100}  # Vita 20/40/65, Royal Kale Juice
 GOOD_LUCK_CHARM_ID = 10001
@@ -172,20 +179,7 @@ class MantStrategy(ScenarioStrategy):
             if medic and bad_status and vital <= ENERGY_MEDIC_GENERAL:
                 return medic
             return rest or recreation
-        scored = [(self._score_command(cmd, data, chara, preset), cmd) for cmd in training]
-        if 48 < turn <= 72:
-            stat_keys = ["speed", "stamina", "power", "guts", "wiz"]
-            highest_idx = max(range(5), key=lambda idx: int(chara.get(stat_keys[idx]) or 0))
-            scored = [(score * 0.95 if TRAINING_COMMANDS.get(cmd.get("command_id"), 0) == highest_idx and score > 0 else score, cmd) for score, cmd in scored]
-        if turn <= 24 and preset.get("junior_bond_rush", True):
-            # Junior bond-rush: on non-race training turns, prioritize the training
-            # that gathers the most not-yet-maxed support partners (building toward
-            # rainbow) over taking an existing rainbow, using the normal score only
-            # as a tiebreak. The score magnitude is kept intact so the rest/medic/
-            # recreation thresholds below behave exactly as before.
-            best_score, best = max(scored, key=lambda row: (self._bondable_count(row[1], chara), row[0]))
-        else:
-            best_score, best = max(scored, key=lambda row: row[0])
+        best_score, best = self._pick_scored_training(training, data, chara, preset, turn)
         rest_threshold = int(preset.get("rest_threshold") or 48)
         # Turn-quality lookahead: bank energy on a weak board (rest sooner), push on a strong one.
         # Clamp below max_vital so a rest can always lift energy back above it (no rest deadlock).
@@ -212,6 +206,25 @@ class MantStrategy(ScenarioStrategy):
         if conserve:
             return conserve
         return best
+
+    def _pick_scored_training(self, training, data, chara, preset, turn):
+        """Score the enabled trainings and pick what the brain would train, including the
+        senior-phase highest-stat nudge and the junior bond-rush ordering. Single source of
+        truth shared by _best_command AND the train-vs-race gate, so both always reason from
+        the SAME effective score. Returns (best_score, command)."""
+        scored = [(self._score_command(cmd, data, chara, preset), cmd) for cmd in training]
+        if 48 < turn <= 72:
+            stat_keys = ["speed", "stamina", "power", "guts", "wiz"]
+            highest_idx = max(range(5), key=lambda idx: int(chara.get(stat_keys[idx]) or 0))
+            scored = [(score * 0.95 if TRAINING_COMMANDS.get(cmd.get("command_id"), 0) == highest_idx and score > 0 else score, cmd) for score, cmd in scored]
+        if turn <= 24 and preset.get("junior_bond_rush", True):
+            # Junior bond-rush: on non-race training turns, prioritize the training
+            # that gathers the most not-yet-maxed support partners (building toward
+            # rainbow) over taking an existing rainbow, using the normal score only
+            # as a tiebreak. The score magnitude is kept intact so the rest/medic/
+            # recreation thresholds behave exactly as before.
+            return max(scored, key=lambda row: (self._bondable_count(row[1], chara), row[0]))
+        return max(scored, key=lambda row: row[0])
 
     def _record_turn_quality(self, turn, best_score):
         """Log this turn's best training score once per turn, for the rolling baseline. Negative
@@ -692,16 +705,34 @@ class MantStrategy(ScenarioStrategy):
     def _train_outvalues_race(self, data, chara, preset, program_id=0):
         """Should a scheduled race be skipped in favor of training this turn?
 
-        Never for a G1 race -- those are too valuable to pass up, so the bot always
-        runs a scheduled G1 regardless of how good the training is. Otherwise True
-        only when (a) some enabled training yields >= the configured raw stat
-        threshold (default 30 = ~2 rainbow), and (b) the bot would actually train
-        (not rest/recreate for low energy/mood). Applies to wanted and fan races.
+        Value-based: compare what the training brain would actually get this turn (the
+        full cap/rainbow/foresight-aware command score) against the race's estimated
+        worth, instead of the old flat raw-stat threshold that ignored both sides' real
+        value. Hard rules first: a G1 is never skipped, and while the uma is still below
+        the fan-grind threshold no race is skipped either (fans gate career goals).
+        Otherwise skip only when the bot would genuinely train (not rest/recreate) AND
+        that training's score beats the race value -- which is grade-aware (G2 worth
+        more than G3/open) and discounted during summer camp, where Lv5 facilities make
+        training the better trade for anything below G1. Applies to wanted + fan races
+        via the planner's choose() path; race-only turns never reach this (no training
+        exists to compare).
         """
         if self._is_g1_program(program_id):
             return False
-        threshold = preset.get("race_skip_train_stat", RACE_SKIP_TRAIN_STAT)
-        if not threshold:
+        # Fail safe: a program we can't grade (absent from race_map) might be a G1 --
+        # never trade an unknown race away.
+        if not self.race_planner or int(program_id or 0) not in (self.race_planner.program or {}):
+            return False
+        # Legacy kill-switch: race_skip_train_stat 0/None has always meant "never skip a race".
+        if not preset.get("race_skip_train_stat", RACE_SKIP_TRAIN_STAT):
+            return False
+        # Fan-grind consistency guard: below the planner's auto fan-grind threshold the
+        # planner proposes a race every turn, so skipping would just re-litigate the same
+        # decision forever. Clamped to the planner's 350 so a preset can only RAISE it.
+        fans = int(chara.get("fans") or 0)
+        min_fans = preset.get("race_skip_min_fans")
+        min_fans = 350 if min_fans is None else max(350, int(min_fans))
+        if fans < min_fans:
             return False
         commands = (data.get("home_info") or {}).get("command_info_array") or []
         training = [
@@ -710,11 +741,40 @@ class MantStrategy(ScenarioStrategy):
         ]
         if not training:
             return False
-        best_stat = max(self._command_stat_gain(cmd) for cmd in training)
-        if best_stat < float(threshold):
-            return False
         command = self._best_command(data, chara, preset)
-        return bool(command) and int(command.get("command_type") or 0) == 1
+        if not (command and int(command.get("command_type") or 0) == 1):
+            return False  # the bot would rest/recreate anyway -> the race is the better turn
+        # Same effective score the selector itself used (incl. senior nudge / bond-rush pick),
+        # so the gate can never disagree with the brain about what the turn is worth.
+        turn = int(chara.get("turn") or 0)
+        train_score, _ = self._pick_scored_training(training, data, chara, preset, turn)
+        return train_score > self._race_value(program_id, chara, preset)
+
+    def _race_value(self, program_id, chara, preset):
+        """Estimated turn-value of running a scheduled non-G1 race, in command-score
+        units (a plain single training scores ~0.3, a multi-rainbow turn 0.8+). Grade
+        comes from the race_instance_id convention already used by the cleat logic
+        (1xxxxx=G1, 2xxxxx=G2, 3xxxxx=G3/open): a G2's stat/fan/SP reward outranks a
+        G3's, so it takes a stronger board to skip. In the junior year the bar is raised
+        further -- bond-rush boards score inflated bond/hint value there, and early fan
+        races are cheap fans the career needs. During the in-camp turns the value is
+        discounted instead: the opportunity cost of skipping a Lv5-facility turn is far
+        higher, so anything below G1 must clear a much better race to be worth it."""
+        def knob(key, default):
+            value = preset.get(key)
+            return default if value is None else float(value)
+        base = knob("race_value_base", 0.50)
+        info = {}
+        if self.race_planner:
+            info = (self.race_planner.program or {}).get(int(program_id or 0)) or {}
+        if str(info.get("race_instance_id") or "").startswith("2"):
+            base += knob("race_value_g2_bonus", 0.15)
+        turn = int(chara.get("turn") or 0)
+        if turn <= 24:
+            base += knob("race_value_junior_bonus", 0.25)
+        if turn in RACE_VALUE_CAMP_TURNS:
+            base *= knob("race_value_camp_mult", 0.65)
+        return base
 
     def _npc_score(self, bond, turn, preset):
         if bond >= 80:
