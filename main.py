@@ -1021,7 +1021,19 @@ def start_career_from_request(req):
                 active_dashboard_data["account"] = active_account
     except Exception:
         pass
-        
+
+    # Cheap pre-check: if the just-refreshed live state already shows a career in progress,
+    # resume it instead of attempting a start that is guaranteed to 205 (the start path's 205
+    # recovery is the backstop when read_info doesn't carry the career flag).
+    if active_account and (active_account.get("career") or {}).get("active"):
+        try:
+            career_result = active_client.load_career()
+            if ((career_result or {}).get("data") or {}).get("chara_info"):
+                print("start_career_from_request: career already active -> resuming it", flush=True)
+                return {"success": True, "result": career_result, "resumed": True}
+        except Exception:
+            pass
+
     if not active_start_state.get('tp_info'):
         return {"success": False, "detail": "Missing live TP state; login again before starting career"}
     if 'current_money' not in active_start_state:
@@ -1059,7 +1071,7 @@ def start_career_from_request(req):
     except Exception:
         pass
 
-    result = active_client.start_career(
+    start_kwargs = dict(
         card_id=req.card_id,
         support_card_ids=req.support_card_ids,
         friend_viewer_id=req.friend_viewer_id,
@@ -1075,8 +1087,32 @@ def start_career_from_request(req):
         difficulty_id=req.difficulty_id,
         difficulty=req.difficulty,
         is_boost=req.is_boost,
-        boost_story_event_id=req.boost_story_event_id
+        boost_story_event_id=req.boost_story_event_id,
     )
+    try:
+        result = active_client.start_career(**start_kwargs)
+    except Exception as e:
+        # A persistent 205 on single_mode_free/start means the session/state is stale OR a
+        # career is already active server-side (e.g. the previous loop career didn't fully
+        # clean up). Retrying the same start just 205s forever -- which is the loop-killer.
+        # hard_reset re-establishes a clean session; if that reveals an in-progress career,
+        # resume THAT instead of starting a new one; otherwise retry start once on the fresh
+        # session. (Mirrors the load_career 205 recovery.)
+        if "205" not in str(e):
+            raise
+        print(f"start_career: persistent 205 -> hard_reset ({e})", flush=True)
+        try:
+            active_client.hard_reset()
+        except Exception as reset_exc:
+            print(f"start_career hard_reset failed: {reset_exc}", flush=True)
+        try:
+            career_result = active_client.load_career()
+            if ((career_result or {}).get("data") or {}).get("chara_info"):
+                print("start_career: a career is already active -> resuming it instead", flush=True)
+                return {"success": True, "result": career_result, "resumed": True}
+        except Exception:
+            pass
+        result = active_client.start_career(**start_kwargs)
     return {"success": True, "result": result}
 
 def apply_career_result(result):
