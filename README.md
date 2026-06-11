@@ -59,18 +59,19 @@ pip install -r requirements.txt
 ## ▶️ Usage
 
 ```bash
-# First run, or when switching accounts: capture auth live from the running game
-python main.py 1616 --account A --reauth
-
-# Later runs reuse the saved credentials for that account
 python main.py 1616 --account A
 ```
+
+Every start captures auth **fresh**: the game launches via Steam, the login is
+captured at the menu, the game closes, and the bot serves. Auth lives only in
+memory for that process — nothing is saved to disk. (Saved auth was removed: the
+short-lived Steam ticket can't be persisted anyway, so "saved" logins only
+produced confusing `No Steam ticket available` dead-ends.)
 
 Then open the dashboard at **http://127.0.0.1:1616**.
 
 - `PORT` defaults to `1616` (or the `SWEEPY_PORT` env var).
-- `--account NAME` keeps each account's captured auth separate.
-- `--reauth` forces a fresh in-game capture (launches the game, attaches, captures, closes it).
+- `--account NAME` is a display label (Discord notifications / multi-instance bookkeeping).
 
 ### Multiple accounts at once
 

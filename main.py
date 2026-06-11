@@ -1110,16 +1110,13 @@ async def login(req: LoginRequest):
     global active_client, active_account, active_dashboard_data, active_start_state, active_parent_cards, active_parent_rank_points, pending_game_auth_config, raw_load_index_response, active_selection
     try:
         chara = None
+        # Auth lives only in memory for this process: the freshly captured config.
+        # (Saving auth to disk was removed -- the persisted file could never hold the
+        # short-lived Steam ticket anyway, so "saved" logins kept dead-ending at
+        # "No Steam ticket available". Capture fresh, log in, done.)
+        # Pending is consumed only on SUCCESS, so a transient login failure can be
+        # retried without forcing another capture.
         cfg = dict(pending_game_auth_config)
-        pending_game_auth_config = {}
-
-        if not cfg.get('auth_key'):
-            # Saved-account mode: the persistent in-game auth lives in
-            # accounts/<name>.json. Reload it so a previous failed login attempt
-            # (which consumed `pending`) doesn't lock us out of retrying.
-            saved_account = os.environ.get("SWEEPY_ACCOUNT")
-            if saved_account:
-                cfg = load_account_config(saved_account) or cfg
 
         active_client = None
         active_account = None
@@ -1345,6 +1342,9 @@ async def login(req: LoginRequest):
             "decks": decks,
             "parents": parents
         }
+        # Login succeeded: the captured auth has served its purpose -- consume it now
+        # (failures above keep it, so a retry doesn't need a fresh capture).
+        pending_game_auth_config = {}
         return active_dashboard_data
     except Exception as e:
         msg = str(e)
@@ -2024,10 +2024,11 @@ def refresh_auth_before_serving(timeout_sec=None):
 
 
 def parse_cli_args(argv):
-    # Usage: python main.py [PORT] [--account NAME] [--reauth]
-    # Each account runs as its own process on its own port. --account NAME lets
-    # the captured credentials be saved and reused, so you don't have to relaunch
-    # the game and re-capture every time. --reauth forces a fresh capture.
+    # Usage: python main.py [PORT] [--account NAME]
+    # Each account runs as its own process on its own port. --account NAME is a
+    # display label (Discord notifications / multi-instance bookkeeping) -- auth is
+    # always captured fresh at startup and never saved to disk. --reauth is
+    # accepted for backward compatibility but is a no-op now (every start reauths).
     port = None
     account = os.environ.get("SWEEPY_ACCOUNT") or None
     reauth = False
@@ -2050,42 +2051,6 @@ def parse_cli_args(argv):
     return port, account, reauth
 
 
-def account_store_path(name):
-    safe = re.sub(r"[^A-Za-z0-9._-]+", "_", str(name or "").strip()) or "default"
-    # uma_runtime is gitignored, so saved credentials never reach the repo/GitHub.
-    return base_dir / "uma_runtime" / "accounts" / f"{safe}.json"
-
-
-def save_account_config(name, cfg):
-    if not name or not cfg:
-        return False
-    safe_cfg = dict(cfg)
-    # The Steam session ticket is short-lived, so we drop it and let a fresh one
-    # be generated at login. What we keep is the persistent in-game auth
-    # (auth_key / viewer_id / udid / app_ver / res_ver / device fingerprint).
-    safe_cfg.pop("steam_session_ticket", None)
-    try:
-        path = account_store_path(name)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(safe_cfg, ensure_ascii=False, indent=2), encoding="utf-8")
-        return True
-    except Exception as exc:
-        print(f"Failed to save account '{name}': {exc}", flush=True)
-        return False
-
-
-def load_account_config(name):
-    if not name:
-        return None
-    path = account_store_path(name)
-    if not path.exists():
-        return None
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-
-
 if __name__ == "__main__":
     import uvicorn
 
@@ -2099,18 +2064,12 @@ if __name__ == "__main__":
     set_console_topmost()
     kill_listeners_on_port(port)
 
-    saved_cfg = None if reauth else load_account_config(account)
-    if saved_cfg:
-        # Reuse saved in-game auth -> skip the game launch + Frida capture.
-        pending_game_auth_config = saved_cfg
-        print(f"Loaded saved credentials for account '{account}' (skipping in-game capture; use --reauth to refresh).", flush=True)
-    else:
-        # No saved creds (or --reauth): do the live in-game Frida capture...
-        if not refresh_auth_before_serving():
-            raise SystemExit(1)
-        # ...then persist them for this account so next time we can skip capture.
-        if account and save_account_config(account, pending_game_auth_config):
-            print(f"Saved credentials for account '{account}' to {account_store_path(account)}", flush=True)
+    # Auth is captured fresh every start (saved-auth was removed: the persisted file
+    # could never hold the short-lived Steam ticket, so it only produced confusing
+    # "No Steam ticket available" dead-ends). The game launches, Frida captures the
+    # login, the game closes, and the auth lives in memory for this process only.
+    if not refresh_auth_before_serving():
+        raise SystemExit(1)
 
     print(f"Access the Web UI at: http://127.0.0.1:{port}", flush=True)
     uvicorn.run(app, host="127.0.0.1", port=port, log_level="error")
