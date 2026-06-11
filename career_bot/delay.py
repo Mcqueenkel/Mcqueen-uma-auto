@@ -144,9 +144,13 @@ class TimingDNA:
 
     def backoff_sleep(self, attempt, base=1.0, cap=15.0, factor=2.0):
         """Exponential backoff with "equal jitter": grows with `attempt` up to
-        `cap`, always at least half the exponential target, never identical."""
-        if GLOBAL_DELAYS_DISABLED:
-            return 0.0
+        `cap`, always at least half the exponential target, never identical.
+
+        Deliberately NOT gated on GLOBAL_DELAYS_DISABLED: this is only ever used
+        for SERVER-error retries (208 busy, HTTP failures, recovery), where the
+        server is explicitly telling us to slow down. The delay kill-switch turns
+        off humanization pacing, not obedience -- zero-sleep retry hammering is
+        exactly the pattern that gets accounts throttled/flagged."""
         attempt = max(0, int(attempt))
         base = max(0.0, float(base))
         cap = max(base, float(cap))
@@ -243,6 +247,17 @@ def dna_randint(min_val, max_val):
 
 def dna_sleep(min_val, max_val, mean=None, stddev=None):
     return current_dna().sleep(min_val, max_val, mean, stddev)
+
+
+def server_sleep(min_val, max_val):
+    """A wait that ALWAYS happens, even with GLOBAL_DELAYS_DISABLED on. For
+    server-mandated pauses (205 stale retries, throttle walls, loop spacing
+    between careers) -- the kill-switch only skips humanization pacing, it must
+    never turn structural waits into a zero-delay hammer."""
+    import random as _random
+    dt = max(0.0, _random.uniform(float(min_val), float(max_val)))
+    time.sleep(dt)
+    return dt
 
 
 def dna_uniform(min_val, max_val):

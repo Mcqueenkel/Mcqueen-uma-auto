@@ -23,7 +23,7 @@ from career_bot import master_data
 from career_bot.presets import PresetStore
 from career_bot.runner import CareerRunner
 from uma_api.client import UmaClient
-from career_bot.delay import GateKeeper, dna_sleep, dna_uniform, backoff_sleep
+from career_bot.delay import GateKeeper, dna_sleep, dna_uniform, backoff_sleep, server_sleep
 
 PROCESS_NAME = "UmamusumePrettyDerby.exe"
 APP_ID = "3224770"
@@ -398,7 +398,11 @@ def parent_rank_point(parent_id):
     rank = int(parent.get('rank') or 0)
     if rank == 13:
         return 62
-    return int(parent.get('rank_point') or 0)
+    # trained_chara rows only carry rank/rank_score (no rank_point field).
+    # Scale rank_score down to the same units as the rank==13 anchor above and
+    # the item-75 fallback (master.mdb single_mode_rank: rank 13 spans scores
+    # 10000-12099, so //200 gives 50-60, in line with the observed 62).
+    return int(parent.get('rank_score') or 0) // 200
 
 
 def selected_succession_rank_point(req):
@@ -929,6 +933,13 @@ async def test_discord_webhook():
         "loop_index": 2,
         "loop_target": 5,
         "forecast": _TEST_FORECAST,
+        "rank": 14,
+        "rank_score": 14250,
+        "ranking": {"place": 2, "total": 7, "top": [
+            {"pos": 1, "uma_name": "Gold Ship", "rank": 15, "rank_score": 15890, "current": False},
+            {"pos": 2, "uma_name": "Webhook Test", "rank": 14, "rank_score": 14250, "current": True},
+            {"pos": 3, "uma_name": "Haru Urara", "rank": 11, "rank_score": 9120, "current": False},
+        ]},
     })
     return {"success": ok}
 
@@ -1447,7 +1458,9 @@ def manage_career_loop(req, preset, initial_result):
             if backend_loop_stop:
                 career_runner.stop()
                 return
-            dna_sleep(1.0, 1.0)
+            # server_sleep: a real 1s poll even when humanization delays are disabled
+            # (dna_sleep would return instantly and busy-spin this loop).
+            server_sleep(0.9, 1.1)
 
         status = career_runner.snapshot()
         if status.get("circuit_tripped"):
@@ -1470,11 +1483,12 @@ def manage_career_loop(req, preset, initial_result):
             print(f"[LOOP] target reached ({runs_done}/{target}) — stopping loop", flush=True)
             break
 
+        # Real pause between careers, immune to the delay kill-switch.
         for _ in range(6):
             if backend_loop_stop:
                 return
-            dna_sleep(1.0, 1.0)
-            
+            server_sleep(0.9, 1.1)
+
         started_ok = False
         while not started_ok and not backend_loop_stop:
             try:
@@ -1483,10 +1497,16 @@ def manage_career_loop(req, preset, initial_result):
                     consecutive_fails += 1
                     if consecutive_fails >= 5:
                         break
-                    for _ in range(15):
+                    # Escalating cool-down between failed starts (15s, 30s, 45s, 60s):
+                    # a 205/208 wall here means the server is throttling -- hammering
+                    # it on a fixed short timer is what got accounts flagged.
+                    wait_s = min(60, 15 * consecutive_fails)
+                    print(f"[LOOP] career start failed ({started.get('detail') or '?'}) -- "
+                          f"cooling down {wait_s}s before retry {consecutive_fails}/5", flush=True)
+                    for _ in range(wait_s):
                         if backend_loop_stop:
                             return
-                        dna_sleep(1.0, 1.0)
+                        server_sleep(0.9, 1.1)
                     continue
                 current_result = started["result"]
                 account, chara_info = apply_career_result(current_result)

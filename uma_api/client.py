@@ -17,7 +17,7 @@ import shutil
 import collections
 from datetime import datetime
 from pathlib import Path
-from career_bot.delay import dna_sleep, dna_uniform, dna_gauss, dna_randint, backoff_sleep, jittered_sleep
+from career_bot.delay import dna_sleep, dna_uniform, dna_gauss, dna_randint, backoff_sleep, jittered_sleep, server_sleep
 
 # --- Auto-backoff circuit breaker -------------------------------------------
 # If the game server rejects this many API calls within the rolling window
@@ -656,7 +656,8 @@ class UmaClient:
         if rc != 1:
             if rc == 205 and retry_205 > 0:
                 print(f"205 on {ep}, retrying... ({retry_205} left)")
-                dna_sleep(0.14, 0.19, 0.166, 0.0083)
+                # server_sleep: must wait even with the delay kill-switch on.
+                server_sleep(0.3, 0.7)
                 return self.call(ep, args, retry_208=retry_208, retry_205=retry_205 - 1)
 
             if rc == 208 and retry_208 > 0:
@@ -664,8 +665,12 @@ class UmaClient:
                     return res
 
                 if retry_208 < 6:
-                    print(f"API error 208 (SERVER BUSY) on {ep}, sleeping and retrying... (attempts left: {retry_208-1})")
-                    dna_sleep(0.6, 1.4, 1.0, 0.1)
+                    # 208 = the server explicitly saying "slow down". Back off
+                    # EXPONENTIALLY (1s -> 2s -> 4s -> 8s -> 15s, jittered) and never
+                    # skip the wait -- instant re-hits are what get accounts flagged.
+                    attempt = max(0, 6 - retry_208)
+                    print(f"API error 208 (SERVER BUSY) on {ep}, backing off and retrying... (attempts left: {retry_208-1})")
+                    backoff_sleep(attempt, base=1.0, cap=15.0)
                 return self.call(ep, args, retry_208=retry_208 - 1)
             err_detail = format_api_error(ep, rc, res)
             err_msg = f'API error {rc} on {ep}: {err_detail}'
@@ -794,7 +799,19 @@ class UmaClient:
         })
 
     def load_career(self):
-        return self.call('single_mode_free/load', {})
+        try:
+            return self.call('single_mode_free/load', {})
+        except Exception as e:
+            # Persistent 205 on the career load means the session/sid is out of sync with
+            # the server -- common right after a fresh auth capture, or when the game
+            # advanced the state. A hard_reset regenerates the sid and re-runs
+            # start_session/load_index to re-establish a clean session; then retry the load
+            # once. If it still fails, the error propagates (it's a genuine state issue).
+            if "API error 205" in str(e) or "205 on single_mode_free/load" in str(e):
+                print(f"load_career: persistent 205 -> hard_reset + retry ({e})", flush=True)
+                self.hard_reset()
+                return self.call('single_mode_free/load', {})
+            raise
 
     def minigame_end(self, current_turn, result_state=1, result_value=0, result_detail_array=None):
         return self.call('single_mode_free/minigame_end', {
