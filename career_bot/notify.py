@@ -6,6 +6,7 @@ dependency is needed.
 """
 
 import json
+import time
 import urllib.request
 from pathlib import Path
 
@@ -103,7 +104,90 @@ def _format_sparks(sparks):
     return "\n".join(lines)
 
 
+# Aptitude grade (1..8) -> letter, used by the forecast panel's aptitude line.
 _GRADE_LETTERS = {8: "S", 7: "A", 6: "B", 5: "C", 4: "D", 3: "E", 2: "F", 1: "G"}
+
+# Final career evaluation rank -> letter (the game's trained-chara rank scale,
+# same mapping the dashboard's parents grid uses).
+_RANK_LETTERS = {
+    1: "G", 2: "G+", 3: "F", 4: "F+", 5: "E", 6: "E+", 7: "D", 8: "D+",
+    9: "C", 10: "C+", 11: "B", 12: "B+", 13: "A", 14: "A+", 15: "S", 16: "S+",
+    17: "SS", 18: "SS+", 19: "UG", 20: "UF", 21: "UE", 22: "UD",
+}
+
+
+def rank_letter(rank):
+    try:
+        return _RANK_LETTERS.get(int(rank), "")
+    except (TypeError, ValueError):
+        return ""
+
+
+def _history_path(base_dir):
+    return Path(base_dir) / "uma_runtime" / "career_history.json"
+
+
+def record_career_history(base_dir, summary):
+    """Append a finished career to the all-time history and return its TOTAL RANKING:
+    {place, total, top: [{uma_name, rank, rank_score, when, current}]}.
+
+    Only careers that produced a final evaluation (rank_score > 0, i.e. actually
+    finished) are ranked; stopped/errored runs are not recorded. The history lives in
+    uma_runtime/ (gitignored) and works with or without a webhook configured."""
+    summary = dict(summary or {})
+    score = int(summary.get("rank_score") or 0)
+    if str(summary.get("status")) != "finished" or score <= 0:
+        return None
+    path = _history_path(base_dir)
+    history = []
+    if path.exists():
+        try:
+            history = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(history, list):
+                raise ValueError("history is not a list")
+        except Exception as exc:
+            # Never silently wipe the all-time record: preserve the unreadable file
+            # and start a fresh history beside it.
+            history = []
+            try:
+                import os
+                corrupt = path.with_name(f"career_history.corrupt-{time.strftime('%Y%m%d_%H%M%S')}.json")
+                os.replace(path, corrupt)
+                print(f"career history unreadable ({exc}); preserved as {corrupt.name}", flush=True)
+            except Exception:
+                pass
+    entry = {
+        "when": time.strftime("%Y-%m-%d %H:%M"),
+        "uma_name": summary.get("uma_name") or uma_name(base_dir, summary.get("card_id")) or "Unknown",
+        "card_id": str(summary.get("card_id") or ""),
+        "rank": int(summary.get("rank") or 0),
+        "rank_score": score,
+        "fans": int(summary.get("fans") or 0),
+        "preset": summary.get("preset") or "",
+        "account": summary.get("account") or "",
+    }
+    history.append(entry)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    import os
+    # pid-suffixed tmp so two bot instances sharing uma_runtime can't collide mid-write.
+    tmp = path.with_suffix(f".json.{os.getpid()}.tmp")
+    tmp.write_text(json.dumps(history, ensure_ascii=False, indent=1), encoding="utf-8")
+    os.replace(tmp, path)
+
+    ranked = sorted(history, key=lambda e: int(e.get("rank_score") or 0), reverse=True)
+    # Standard competition ranking: a tie with the all-time best is shared #1.
+    place = 1 + sum(1 for e in history if int(e.get("rank_score") or 0) > score)
+    top = []
+    for i, e in enumerate(ranked[:5]):
+        top.append({
+            "pos": i + 1,
+            "uma_name": e.get("uma_name") or "Unknown",
+            "rank": int(e.get("rank") or 0),
+            "rank_score": int(e.get("rank_score") or 0),
+            "when": e.get("when") or "",
+            "current": e is entry,
+        })
+    return {"place": place, "total": len(ranked), "top": top}
 _FORECAST_STATS = [("Speed", "speed"), ("Stamina", "stamina"), ("Power", "power"),
                    ("Guts", "guts"), ("Wit", "wit")]
 
@@ -153,6 +237,15 @@ def _build_embed(summary):
         {"name": "Status", "value": status, "inline": True},
         {"name": "Turn", "value": str(summary.get("final_turn") or 0), "inline": True},
         {"name": "Duration", "value": str(summary.get("duration") or "?"), "inline": True},
+    ]
+    # Final evaluation grade (from the finish response's trained-chara entry).
+    letter = rank_letter(summary.get("rank"))
+    score = int(summary.get("rank_score") or 0)
+    if letter or score:
+        fields.append({"name": "Grade",
+                       "value": f"**{letter or '?'}** ({score:,} pts)" if score else f"**{letter}**",
+                       "inline": True})
+    fields += [
         {"name": "Total Fans", "value": f"{fans:,}", "inline": True},
         {"name": "Skill Point", "value": str(stats.get("skill_point", 0)), "inline": True},
         {"name": "Skills bought", "value": str(summary.get("skills_bought", 0)), "inline": True},
@@ -180,6 +273,18 @@ def _build_embed(summary):
         head = f"**{forecast.get('archetype') or '?'}**" + (f" (apt: {apt})" if apt else "")
         fields.append({"name": "🔮 Predicted Direction (achieved / target)",
                        "value": (head + "\n" + " · ".join(parts))[:1024], "inline": False})
+
+    ranking = summary.get("ranking")
+    if ranking and ranking.get("top"):
+        # All-time standing across every finished career (uma_runtime/career_history.json).
+        lines = []
+        for e in ranking["top"]:
+            mark = " **← this run**" if e.get("current") else ""
+            letter_e = rank_letter(e.get("rank"))
+            lines.append(f"{e.get('pos')}. {e.get('uma_name')} — {letter_e or '?'} ({int(e.get('rank_score') or 0):,}){mark}")
+        head = f"**#{ranking.get('place')} of {ranking.get('total')}** all-time"
+        fields.append({"name": "🏆 Total Ranking",
+                       "value": (head + "\n" + "\n".join(lines))[:1024], "inline": False})
 
     sparks = summary.get("sparks") or []
     if sparks:

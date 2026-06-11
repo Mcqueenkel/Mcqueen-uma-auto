@@ -207,6 +207,8 @@ class CareerRunner:
         self._notify_card_id = str(((state.get("data") or {}).get("chara_info") or {}).get("card_id") or "")
         self._notify_factor_ids = []
         self._notify_forecast = None
+        self._notify_rank = 0
+        self._notify_rank_score = 0
         self._forecast_sent = False
         self._last_forecast_summary = None
         last_turn = -1
@@ -397,6 +399,13 @@ class CareerRunner:
                         else:
                             raise
                     self._capture_sparks(state)
+                    if not getattr(self, "_notify_rank_score", 0):
+                        # A reconciled finish (102/201 graceful exit) leaves no
+                        # single_mode_finish_common in `state`, so the final grade is
+                        # unknown and this career won't enter the all-time ranking.
+                        # Log it so the gap is diagnosable rather than silent.
+                        self._log("rank_unknown", decision.payload["current_turn"],
+                                  "finish response carried no evaluation; career left out of total ranking")
                     self._mark(last_action="finish", finished=True)
                     break
                 else:
@@ -445,7 +454,15 @@ class CareerRunner:
                 except Exception as e:
                     print(f"failed to write report: {e}", flush=True)
                 try:
-                    notify.send_career_summary(self.base_dir, self._build_notify_summary())
+                    summary = self._build_notify_summary()
+                    # Record this career into the all-time history FIRST (works with or
+                    # without a webhook), then attach the resulting total ranking
+                    # (placement + top list) so the finished embed can show it.
+                    try:
+                        summary["ranking"] = notify.record_career_history(self.base_dir, summary)
+                    except Exception as exc:
+                        print(f"career history record failed: {exc}", flush=True)
+                    notify.send_career_summary(self.base_dir, summary)
                 except Exception as e:
                     print(f"discord notify failed: {e}", flush=True)
 
@@ -454,15 +471,18 @@ class CareerRunner:
             return self.stop_requested
 
     def _capture_sparks(self, state):
-        # The just-finished uma's inheritance factors (sparks) live in the finish
-        # response under single_mode_finish_common: the trained_chara entry whose
-        # trained_chara_id matches the new trained_chara_id.
+        # The just-finished uma's inheritance factors (sparks) AND final evaluation
+        # (rank grade + rank score) live in the finish response under
+        # single_mode_finish_common: the trained_chara entry whose trained_chara_id
+        # matches the new trained_chara_id.
         try:
             sfc = ((state or {}).get("data") or {}).get("single_mode_finish_common") or {}
             tcid = sfc.get("trained_chara_id")
             for row in sfc.get("trained_chara") or []:
                 if row.get("trained_chara_id") == tcid:
                     self._notify_factor_ids = list(row.get("factor_id_array") or [])
+                    self._notify_rank = int(row.get("rank") or 0)
+                    self._notify_rank_score = int(row.get("rank_score") or 0)
                     return
         except Exception:
             pass
@@ -502,6 +522,8 @@ class CareerRunner:
             "loop_index": int(getattr(self, "_loop_index", 1) or 1),
             "loop_target": int(getattr(self, "_loop_target", 1) or 0),
             "forecast": getattr(self, "_notify_forecast", None),
+            "rank": int(getattr(self, "_notify_rank", 0) or 0),
+            "rank_score": int(getattr(self, "_notify_rank_score", 0) or 0),
         }
 
     def _advance(self, action):
