@@ -940,8 +940,16 @@ async def test_discord_webhook():
             {"pos": 2, "uma_name": "Webhook Test", "rank": 14, "rank_score": 14250, "current": True},
             {"pos": 3, "uma_name": "Haru Urara", "rank": 11, "rank_score": 9120, "current": False},
         ]},
+        "fan_summary": {"day": "today", "total": 130000, "accounts": [
+            {"account": "A", "fans": 80000}, {"account": "B", "fans": 50000}]},
     })
     return {"success": ok}
+
+@app.get("/api/fans/daily")
+async def get_daily_fans():
+    # Per-account fans earned today; auto-resets at 22:00 WIB (Indonesia time).
+    from career_bot import notify
+    return {"success": True, "reset": "22:00 WIB (UTC+7)", **notify.daily_fan_summary(base_dir)}
 
 @app.get("/api/master-data/status")
 async def master_data_status():

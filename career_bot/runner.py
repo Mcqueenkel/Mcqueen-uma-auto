@@ -462,6 +462,18 @@ class CareerRunner:
                         summary["ranking"] = notify.record_career_history(self.base_dir, summary)
                     except Exception as exc:
                         print(f"career history record failed: {exc}", flush=True)
+                    # Add this career's fans to the account's daily total (resets 22:00 WIB)
+                    # and attach the cross-account summary for the embed.
+                    try:
+                        if str(summary.get("status")) == "finished":
+                            # Bucket under the SAME label the embed shows (UI name override first,
+                            # then the --account/env label) so the total can't diverge from display.
+                            account = (notify.get_account_name(self.base_dir)
+                                       or summary.get("account") or os.environ.get("SWEEPY_ACCOUNT") or "")
+                            summary["fan_summary"] = notify.record_account_fans(
+                                self.base_dir, account, summary.get("fans"))
+                    except Exception as exc:
+                        print(f"daily fan record failed: {exc}", flush=True)
                     notify.send_career_summary(self.base_dir, summary)
                 except Exception as e:
                     print(f"discord notify failed: {e}", flush=True)

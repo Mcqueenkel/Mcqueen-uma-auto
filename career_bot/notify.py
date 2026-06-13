@@ -5,10 +5,19 @@ reaches the repo. Sending uses only the standard library (urllib), so no extra
 dependency is needed.
 """
 
+import hashlib
 import json
+import os
+import re
 import time
 import urllib.request
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+# Daily fan tracking resets at 22:00 Indonesia time (WIB = UTC+7) -- timezone-aware so it is
+# correct regardless of the machine's local clock.
+WIB = timezone(timedelta(hours=7))
+FAN_RESET_HOUR = 22
 
 
 def _discord_path(base_dir):
@@ -121,6 +130,95 @@ def rank_letter(rank):
         return _RANK_LETTERS.get(int(rank), "")
     except (TypeError, ValueError):
         return ""
+
+
+def fan_day_key(now=None):
+    """The 'fan-day' a moment belongs to = the DATE of the most recent 22:00 WIB boundary.
+    Shifting back 22 hours folds the day so that 22:00 today .. 21:59 tomorrow share one key:
+    e.g. 23:00 Mon -> Mon, 21:00 Mon -> Sun, 22:00 Mon -> Mon. Auto-reset is then just 'the
+    stored key no longer matches the current one' -- no timer, correct even if the bot was off
+    at 22:00."""
+    now = now or datetime.now(WIB)
+    return (now - timedelta(hours=FAN_RESET_HOUR)).date().isoformat()
+
+
+def _fan_dir(base_dir):
+    return Path(base_dir) / "uma_runtime" / "fan_totals"
+
+
+def _account_slug(account):
+    # Hash-suffixed so DISTINCT account names never collide into one file -- in-game names are
+    # often non-ASCII (Japanese), which would otherwise all sanitize to the same slug and merge
+    # two accounts' fan totals. The display label comes from the stored `account` field, not this.
+    raw = str(account or "").strip()
+    if not raw:
+        return "default"
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "_", raw).strip("_") or "acct"
+    return f"{safe}-{hashlib.sha1(raw.encode('utf-8')).hexdigest()[:8]}"
+
+
+def _read_account_fans(path, day):
+    """Read one account's daily fan file, returning 0 when its fan-day has rolled over."""
+    try:
+        d = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    except Exception:
+        d = {}
+    if not isinstance(d, dict) or d.get("day") != day:
+        return 0
+    try:
+        return int(d.get("fans") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def record_account_fans(base_dir, account, fans):
+    """Add a finished career's fans to this account's running daily total (auto-resets at 22:00
+    WIB). Per-account file so parallel account-instances never clobber each other. Returns the
+    cross-account daily summary dict for the webhook."""
+    fans = max(0, int(fans or 0))
+    day = fan_day_key()
+    slug = _account_slug(account)
+    path = _fan_dir(base_dir) / f"{slug}.json"
+    try:
+        total = _read_account_fans(path, day) + fans
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_suffix(f".json.{os.getpid()}.tmp")
+        tmp.write_text(json.dumps({"day": day, "fans": total,
+                                   "account": str(account or "").strip(),
+                                   "updated": datetime.now(WIB).strftime("%Y-%m-%d %H:%M")},
+                                  ensure_ascii=False, indent=1), encoding="utf-8")
+        os.replace(tmp, path)
+    except Exception as exc:
+        print(f"record_account_fans failed: {exc}", flush=True)
+    return daily_fan_summary(base_dir)
+
+
+def daily_fan_summary(base_dir):
+    """Current daily fan totals across all accounts that have run today (post-22:00-WIB reset
+    applied on read). Returns {day, accounts: [{account, fans}], total}."""
+    day = fan_day_key()
+    accounts = []
+    fan_dir = _fan_dir(base_dir)
+    try:
+        files = sorted(fan_dir.glob("*.json")) if fan_dir.exists() else []
+    except Exception:
+        files = []
+    for path in files:
+        if path.name.endswith(".tmp") or ".json." in path.name:
+            continue
+        fans = _read_account_fans(path, day)
+        if fans <= 0:
+            continue
+        label = path.stem
+        try:
+            stored = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(stored, dict) and stored.get("account"):
+                label = stored["account"]
+        except Exception:
+            pass
+        accounts.append({"account": label, "fans": fans})
+    accounts.sort(key=lambda a: a["fans"], reverse=True)
+    return {"day": day, "accounts": accounts, "total": sum(a["fans"] for a in accounts)}
 
 
 def _history_path(base_dir):
@@ -285,6 +383,16 @@ def _build_embed(summary):
         head = f"**#{ranking.get('place')} of {ranking.get('total')}** all-time"
         fields.append({"name": "🏆 Total Ranking",
                        "value": (head + "\n" + "\n".join(lines))[:1024], "inline": False})
+
+    fan_summary = summary.get("fan_summary")
+    if fan_summary and fan_summary.get("accounts"):
+        # Fans earned per account today; auto-resets at 22:00 WIB (Indonesia time).
+        lines = [f"**{a['account'] or 'default'}**: {int(a['fans']):,}" for a in fan_summary["accounts"]]
+        head = ""
+        if len(fan_summary["accounts"]) > 1:
+            head = f"Total **{int(fan_summary.get('total') or 0):,}** · "
+        fields.append({"name": "🇮🇩 Daily Fans (resets 22:00 WIB)",
+                       "value": (head + " · ".join(lines))[:1024], "inline": False})
 
     sparks = summary.get("sparks") or []
     if sparks:
