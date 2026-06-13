@@ -947,9 +947,12 @@ async def test_discord_webhook():
 
 @app.get("/api/fans/daily")
 async def get_daily_fans():
-    # Per-account fans earned today; auto-resets at 22:00 WIB (Indonesia time).
+    # Per-account fans earned this game-day; resets with the in-game daily reset
+    # (15:00 UTC), driven by the game's server clock when a session is live.
     from career_bot import notify
-    return {"success": True, "reset": "22:00 WIB (UTC+7)", **notify.daily_fan_summary(base_dir)}
+    server_ts = getattr(active_client, "last_servertime", 0) if active_client else 0
+    return {"success": True, "reset": "in-game daily reset (15:00 UTC)",
+            **notify.daily_fan_summary(base_dir, server_ts)}
 
 @app.get("/api/master-data/status")
 async def master_data_status():

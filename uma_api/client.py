@@ -627,7 +627,15 @@ class UmaClient:
         res = unpack(resp.text.strip(), self.udid_str)
         dh = res.get('data_headers', {})
         rc = dh.get('result_code', 0)
-        
+        # Latest game server time (Unix UTC) -- the authoritative clock for the daily reset,
+        # so the fan tally rolls over with the GAME's new day, not the local machine clock.
+        st = dh.get('servertime')
+        if st:
+            try:
+                self.last_servertime = int(st)
+            except (TypeError, ValueError):
+                pass
+
         self.api_log("RES", ep, res, req_id)
         
         data = res.get('data', {})

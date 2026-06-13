@@ -14,10 +14,10 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-# Daily fan tracking resets at 22:00 Indonesia time (WIB = UTC+7) -- timezone-aware so it is
-# correct regardless of the machine's local clock.
-WIB = timezone(timedelta(hours=7))
-FAN_RESET_HOUR = 22
+# Daily fan tracking rolls over with the GAME's daily reset, not a local timezone. That reset
+# is a fixed instant -- 15:00 UTC (= midnight in the game's JST server day) -- so the fan-day is
+# derived from the game's server clock (or UTC) shifted by this hour. No locale assumptions.
+GAME_DAY_RESET_UTC_HOUR = 15
 
 
 def _discord_path(base_dir):
@@ -132,14 +132,20 @@ def rank_letter(rank):
         return ""
 
 
-def fan_day_key(now=None):
-    """The 'fan-day' a moment belongs to = the DATE of the most recent 22:00 WIB boundary.
-    Shifting back 22 hours folds the day so that 22:00 today .. 21:59 tomorrow share one key:
-    e.g. 23:00 Mon -> Mon, 21:00 Mon -> Sun, 22:00 Mon -> Mon. Auto-reset is then just 'the
-    stored key no longer matches the current one' -- no timer, correct even if the bot was off
-    at 22:00."""
-    now = now or datetime.now(WIB)
-    return (now - timedelta(hours=FAN_RESET_HOUR)).date().isoformat()
+def fan_day_key(server_ts=None):
+    """The 'game-day' a moment belongs to = the DATE of the most recent in-game daily reset
+    (15:00 UTC). Prefer the GAME's server time (Unix UTC) so the tally rolls over exactly with
+    the game's new day regardless of the machine clock; fall back to UTC now. Shifting back the
+    reset hour folds the day so reset-time today .. reset-time tomorrow share one key. Auto-reset
+    is then just 'the stored key no longer matches the current one' -- no timer needed."""
+    if server_ts:
+        try:
+            t = datetime.fromtimestamp(int(server_ts), tz=timezone.utc)
+        except (TypeError, ValueError, OSError, OverflowError):
+            t = datetime.now(timezone.utc)
+    else:
+        t = datetime.now(timezone.utc)
+    return (t - timedelta(hours=GAME_DAY_RESET_UTC_HOUR)).date().isoformat()
 
 
 def _fan_dir(base_dir):
@@ -171,12 +177,12 @@ def _read_account_fans(path, day):
         return 0
 
 
-def record_account_fans(base_dir, account, fans):
-    """Add a finished career's fans to this account's running daily total (auto-resets at 22:00
-    WIB). Per-account file so parallel account-instances never clobber each other. Returns the
-    cross-account daily summary dict for the webhook."""
+def record_account_fans(base_dir, account, fans, server_ts=None):
+    """Add a finished career's fans to this account's running daily total (auto-resets on the
+    game's daily reset, using server_ts when given). Per-account file so parallel account-
+    instances never clobber each other. Returns the cross-account daily summary for the webhook."""
     fans = max(0, int(fans or 0))
-    day = fan_day_key()
+    day = fan_day_key(server_ts)
     slug = _account_slug(account)
     path = _fan_dir(base_dir) / f"{slug}.json"
     try:
@@ -185,18 +191,18 @@ def record_account_fans(base_dir, account, fans):
         tmp = path.with_suffix(f".json.{os.getpid()}.tmp")
         tmp.write_text(json.dumps({"day": day, "fans": total,
                                    "account": str(account or "").strip(),
-                                   "updated": datetime.now(WIB).strftime("%Y-%m-%d %H:%M")},
+                                   "updated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%MZ")},
                                   ensure_ascii=False, indent=1), encoding="utf-8")
         os.replace(tmp, path)
     except Exception as exc:
         print(f"record_account_fans failed: {exc}", flush=True)
-    return daily_fan_summary(base_dir)
+    return daily_fan_summary(base_dir, server_ts)
 
 
-def daily_fan_summary(base_dir):
-    """Current daily fan totals across all accounts that have run today (post-22:00-WIB reset
-    applied on read). Returns {day, accounts: [{account, fans}], total}."""
-    day = fan_day_key()
+def daily_fan_summary(base_dir, server_ts=None):
+    """Current daily fan totals across all accounts (game-day reset applied on read using
+    server_ts when given). Returns {day, accounts: [{account, fans}], total}."""
+    day = fan_day_key(server_ts)
     accounts = []
     fan_dir = _fan_dir(base_dir)
     try:
@@ -386,12 +392,12 @@ def _build_embed(summary):
 
     fan_summary = summary.get("fan_summary")
     if fan_summary and fan_summary.get("accounts"):
-        # Fans earned per account today; auto-resets at 22:00 WIB (Indonesia time).
+        # Fans earned per account this game-day; resets with the in-game daily reset.
         lines = [f"**{a['account'] or 'default'}**: {int(a['fans']):,}" for a in fan_summary["accounts"]]
         head = ""
         if len(fan_summary["accounts"]) > 1:
             head = f"Total **{int(fan_summary.get('total') or 0):,}** · "
-        fields.append({"name": "🇮🇩 Daily Fans (resets 22:00 WIB)",
+        fields.append({"name": "📅 Daily Fans (resets at the daily game reset)",
                        "value": (head + " · ".join(lines))[:1024], "inline": False})
 
     sparks = summary.get("sparks") or []

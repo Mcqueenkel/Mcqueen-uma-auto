@@ -471,7 +471,8 @@ class CareerRunner:
                             account = (notify.get_account_name(self.base_dir)
                                        or summary.get("account") or os.environ.get("SWEEPY_ACCOUNT") or "")
                             summary["fan_summary"] = notify.record_account_fans(
-                                self.base_dir, account, summary.get("fans"))
+                                self.base_dir, account, summary.get("fans"),
+                                server_ts=getattr(client, "last_servertime", 0))
                     except Exception as exc:
                         print(f"daily fan record failed: {exc}", flush=True)
                     notify.send_career_summary(self.base_dir, summary)
