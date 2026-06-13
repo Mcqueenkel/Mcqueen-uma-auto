@@ -788,7 +788,12 @@ class MantItemManager:
                     continue
                 targets.append((name, 1))
             else:
-
+                # Notepad/Manual/Scroll give flat PERMANENT stats that are truncated to +0
+                # once the stat hits its in-game cap -- dumping them on a capped stat wastes
+                # them. Skip an instant stat item when its stat has no headroom left.
+                if (preset.get("skip_capped_stat_items", True)
+                        and not self._stat_item_has_headroom(name, chara)):
+                    continue
                 targets.append((name, qty))
 
         energy_targets = self._energy_targets(chara, owned, preset)
@@ -888,8 +893,17 @@ class MantItemManager:
             print(f"Item Use Error at turn {current_turn}: {exc}")
             if any(code in str(exc) for code in ("201", "205", "208")):
                 self.recover_after_use_error = True
+                # A batched multi_item_use fails wholesale if ANY single item is currently
+                # invalid (e.g. a megaphone/charm that needs a training context). Don't
+                # blacklist the always-valid instant stat items + energy bundled into the same
+                # call -- only the context-sensitive ones -- so the recovery retry can still
+                # use owned Scrolls/Vita instead of wrongly skipping them for the whole turn.
                 for item in payload:
-                    self.failed_use_this_turn.add(int(item.get("item_id") or 0))
+                    iid = int(item.get("item_id") or 0)
+                    nm = ITEM_NAMES.get(iid, "")
+                    if self._is_instant_stat_item(nm) or nm in ENERGY_ITEMS:
+                        continue
+                    self.failed_use_this_turn.add(iid)
             self.last_use_result = {"result": "failed", "turn": current_turn, "error": str(exc), "payload": payload}
             event["result"] = self.last_use_result
             return state, 0
@@ -908,6 +922,28 @@ class MantItemManager:
     def _is_instant_stat_item(self, name):
         slug = display_to_slug(name)
         return slug.endswith("_notepad") or slug.endswith("_manual") or slug.endswith("_scroll")
+
+    # Per-stat (current, cap) chara_info keys -- Wit maps to wiz/max_wiz, matching mant.py.
+    _STAT_ITEM_KEYS = {
+        "speed": ("speed", "max_speed"), "stamina": ("stamina", "max_stamina"),
+        "power": ("power", "max_power"), "guts": ("guts", "max_guts"), "wit": ("wiz", "max_wiz"),
+    }
+
+    def _stat_item_has_headroom(self, name, chara):
+        """For an instant flat-stat item, is its stat below its in-game cap? Returns True
+        (don't block) for non-stat items or when cap info is missing -- only a genuinely
+        capped stat returns False, so the use path skips a scroll that would gain nothing."""
+        if not self._is_instant_stat_item(name):
+            return True
+        prefix = display_to_slug(name).split("_")[0]
+        pair = self._STAT_ITEM_KEYS.get(prefix)
+        if not pair:
+            return True
+        cur = int((chara or {}).get(pair[0]) or 0)
+        cap = int((chara or {}).get(pair[1]) or 0)
+        if cap <= 0:
+            return True  # no cap info -> never block
+        return cur < cap
 
     def _coin_reserve(self, turn, budget, cfg):
         if turn <= 20:
