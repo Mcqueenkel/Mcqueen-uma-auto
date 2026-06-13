@@ -20,9 +20,14 @@ It is deliberately data-driven and side-effect free: forecast(data, preset) -> C
 If anything is missing it falls back to all-9999 targets (a no-op that reverts to raw scoring).
 """
 
+import json
+from pathlib import Path
+
 from career_bot.presets import resolve_running_style
 
 STAT_NAMES = ["Speed", "Stamina", "Power", "Guts", "Wit"]
+# Support-card type -> stat index, for counting the deck composition.
+SUPPORT_TYPE_INDEX = {"Speed": 0, "Stamina": 1, "Power": 2, "Guts": 3, "Wisdom": 4}
 STAT_KEYS = ["speed", "stamina", "power", "guts", "wiz"]
 CAP_KEYS = ["max_speed", "max_stamina", "max_power", "max_guts", "max_wiz"]
 NO_TARGET = 9999
@@ -96,6 +101,39 @@ def _inactive(turn=0, reason="no data"):
 class CareerForecaster:
     def __init__(self, base_dir=None):
         self.base_dir = base_dir
+        self._support_map_cache = None
+
+    def _support_map(self):
+        if self._support_map_cache is None:
+            self._support_map_cache = {}
+            try:
+                p = Path(self.base_dir) / "data" / "support_list.json"
+                loaded = json.loads(p.read_text(encoding="utf-8"))
+                self._support_map_cache = loaded if isinstance(loaded, dict) else {}
+            except Exception:
+                self._support_map_cache = {}
+        return self._support_map_cache
+
+    def _deck_type_counts(self, chara, preset):
+        """Deck composition as [Speed, Stamina, Power, Guts, Wit] support-card counts. Prefers
+        the runtime-computed preset['_deck_type_counts'] (set at career start); otherwise derives
+        it from the deck's support_card_array + support_list.json types. Friend/Pal-type cards
+        don't match a stat type, so they're naturally excluded from the stat counts."""
+        pc = (preset or {}).get("_deck_type_counts")
+        if isinstance(pc, (list, tuple)) and len(pc) >= 5:
+            try:
+                return [int(x or 0) for x in pc[:5]]
+            except (TypeError, ValueError):
+                pass
+        counts = [0] * 5
+        smap = self._support_map()
+        for card in (chara or {}).get("support_card_array") or []:
+            info = smap.get(str(card.get("support_card_id") or ""))
+            if info:
+                idx = SUPPORT_TYPE_INDEX.get(info.get("type"))
+                if idx is not None:
+                    counts[idx] += 1
+        return counts
 
     def forecast(self, data, preset=None):
         """Predict the career direction from the live chara_info. Always returns a CareerForecast;
@@ -140,8 +178,26 @@ class CareerForecaster:
         for i, adj in enumerate(STYLE_ADJUST.get(style, [0, 0, 0, 0, 0])):
             profile[i] += adj
 
-        # 3. Clamp to the real in-game caps (raised by inheritance) and a sane floor.
         caps = [int(chara.get(CAP_KEYS[i]) or BASE_CAP) for i in range(5)]
+
+        # 2b. Deck-aware stat policy: Speed is always maxed; Stamina and Power are pushed to a
+        #     1100 baseline ONLY when the deck has enough support cards of that type to train it
+        #     efficiently (>= 2 by default). Stats with no support keep their aptitude target.
+        deck_counts = self._deck_type_counts(chara, preset)
+        deck_targets = []
+        # On by default; only an explicit False disables it. NOTE: an explicit per-preset
+        # expect_attribute/stat_targets Speed cap still wins in the scorer (mant.py min(game_cap,
+        # soft_target)), so "Speed maxed" means "up to the game cap unless the user capped it lower".
+        if preset.get("deck_stat_policy", True) is not False:
+            profile[0] = max(profile[0], caps[0])  # Speed -> maxed (clamped to the real cap below)
+            thr = int(preset.get("secondary_stat_card_threshold") or 2)
+            baseline = float(preset.get("secondary_stat_baseline") or 1100)
+            for idx, label in ((1, "Stamina"), (2, "Power")):
+                if idx < len(deck_counts) and deck_counts[idx] >= thr:
+                    profile[idx] = max(profile[idx], baseline)
+                    deck_targets.append(label)
+
+        # 3. Clamp to the real in-game caps (raised by inheritance) and a sane floor.
         targets = [int(max(TARGET_FLOOR, min(profile[i], caps[i]))) for i in range(5)]
 
         # 4. Trajectory: where each stat should be by now vs where it is. Stats accumulate faster
@@ -177,7 +233,10 @@ class CareerForecaster:
         tgt_str = " ".join(f"{STAT_NAMES[i][:3].upper()} {targets[i]}" for i in range(5))
         strong = [s for s, g in apt_distances if g >= APT_GRADE_FLOOR]
         focus = ", ".join(strong[:2]) if strong else f"no strong aptitude -> {primary}"
-        summary = f"Direction: {archetype} (apt: {focus}). Build target -> {tgt_str}."
+        deck_str = (f" Deck [Spd {deck_counts[0]} Sta {deck_counts[1]} Pow {deck_counts[2]}]"
+                    if any(deck_counts) else "")
+        policy = f" Speed maxed; 1100 secondaries: {', '.join(deck_targets) or 'none'}." if preset.get("deck_stat_policy", True) is not False else ""
+        summary = f"Direction: {archetype} (apt: {focus}).{deck_str} Build target -> {tgt_str}.{policy}"
         if behind and turn >= 8:
             summary += f" Behind on: {', '.join(behind)}."
 
